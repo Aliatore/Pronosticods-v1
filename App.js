@@ -21,16 +21,16 @@ import {
   DarkTheme as PaperDarkTheme 
 } from 'react-native-paper';
 
-import { DrawerContent } from './screens/DrawerContent';
+import { DrawerContent } from './src/screens/SideBar/DrawerContent';
 
-import MainTabScreen from './screens/MainTabScreen';
-import SupportScreen from './screens/SupportScreen';
-import SettingsScreen from './screens/SettingsScreen';
-import BookmarkScreen from './screens/BookmarkScreen';
+import MainTabScreen from './src/screens/Home/MainTabScreen';
+import SupportScreen from './src/screens/Stacks/SupportScreen';
+import SettingsScreen from './src/screens/Stacks/SettingsScreen';
+import BookmarkScreen from './src/screens/Stacks/BookmarkScreen';
 
-import { AuthContext } from './components/context';
+import { AuthContext } from './src/components/context';
 
-import RootStackScreen from './screens/RootStackScreen';
+import RootStackScreen from './src/screens/Auth/RootStackScreen';
 
 import AsyncStorage from '@react-native-community/async-storage';
 
