@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { 
     View, 
     Text, 
@@ -9,24 +9,31 @@ import {
     Platform,
     StyleSheet,
     ScrollView,
-    StatusBar
+    StatusBar,
 } from 'react-native';
 
 import * as Animatable from 'react-native-animatable';
 import LinearGradient from 'react-native-linear-gradient';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Feather from 'react-native-vector-icons/Feather';
+import Layer from '../../assets/img/svg/Layer.svg';
+import {Picker} from '@react-native-community/picker';
+import DateTimePicker from '@react-native-community/datetimepicker';    
+import Countries from '../../model/countries'
+import { log } from 'react-native-reanimated';
 
-const SignInScreen = ({navigation}) => {
+const SignUpScreen = ({navigation}) => {
 
     const [data, setData] = React.useState({
         username: '',
         password: '',
         confirm_password: '',
+        date_selected: '',
         check_textInputChange: false,
         secureTextEntry: true,
         confirm_secureTextEntry: true,
     });
+    const [show, setShow] = useState(false);
 
     const textInputChange = (val) => {
         if( val.length !== 0 ) {
@@ -72,218 +79,337 @@ const SignInScreen = ({navigation}) => {
         });
     }
 
+    const setCountries = () =>{
+        return Countries.map((e, i) => {
+          return <Picker.Item key={i} label={e.name} value={e.name} />
+        }) 
+    }
+    
+    const setDate = (event, selectedDate) => {
+        setShow(false);
+        console.log(event);
+        if (event.type === "set") {
+        let dates = JSON.stringify(selectedDate);
+        let [date, hour] = dates.split('T');
+        let [year, month, day] = date.split('-');
+        const newDate = `${day}-${month}-${year}`
+        const newNewDate = newDate.replace(/"/g,"");
+      
+        if( newNewDate.length !== 0 ) {
+            setData({
+                ...data,
+                date_selected: newNewDate,
+            });
+        } else {
+            setData({
+                ...data,
+                date_selected: newNewDate,
+            });
+        }
+        } else {
+            null
+        }
+    }
+
     return (
-      <View style={styles.container}>
-          <StatusBar backgroundColor='#009387' barStyle="light-content"/>
-        <View style={styles.header}>
-            <Text style={styles.text_header}>Register Now!</Text>
-        </View>
-        <Animatable.View 
-            animation="fadeInUpBig"
-            style={styles.footer}
-        >
-            <ScrollView>
-            <Text style={styles.text_footer}>Username</Text>
-            <View style={styles.action}>
-                <FontAwesome 
-                    name="user-o"
-                    color="#05375a"
-                    size={20}
+        <View style={styles.container}>
+          <StatusBar backgroundColor='#3d3d3d' barStyle="light-content"/>
+          <Animatable.View
+              animation="fadeInUpBig"
+              style={styles.top}
+          >   
+            <View style={{justifyContent: 'center', alignItems: 'center'}}>
+                <Layer 
+                    style={{marginBottom: 20, marginTop: 20}}
                 />
-                <TextInput 
-                    placeholder="Your Username"
-                    style={styles.textInput}
-                    autoCapitalize="none"
-                    onChangeText={(val) => textInputChange(val)}
-                />
-                {data.check_textInputChange ? 
-                <Animatable.View
-                    animation="bounceIn"
-                >
-                    <Feather 
-                        name="check-circle"
-                        color="green"
-                        size={20}
-                    />
-                </Animatable.View>
-                : null}
+                <Text style={styles.text_title}>¡BIENVENIDO!</Text>
+                <Text style={styles.text_title}>COMPLETA TU REGISTRO</Text>
             </View>
+              
+          </Animatable.View>
+          <Animatable.View
+              animation="fadeInUpBig"
+              style={styles.bot}
+          > 
+                <ScrollView style={styles.scrollviewSize} showsVerticalScrollIndicator={false}>
+                    <View style={styles.login}>
+                        {/* <Text style={styles.text_footer}>EMAIL</Text> */}
+                        <View style={styles.action}>
+                            <TextInput 
+                                placeholder="NOMBRE"
+                                style={styles.textInput}
+                                autoCapitalize="none"
+                                placeholderTextColor='#fff'
+                                onChangeText={(val) => textInputChange(val)}
+                            />
+                        </View>
+                        <View style={[styles.action, {marginTop: 20}]}>
+                            <TextInput 
+                                placeholder="APELLIDO"
+                                style={styles.textInput}
+                                autoCapitalize="none"
+                                placeholderTextColor='#fff'
+                                onChangeText={(val) => textInputChange(val)}
+                            />
+                        </View>
+                        <View style={[styles.action_picker, {marginTop: 20}]}>
+                            <Picker
+                                // selectedValue={this.state.language}
+                                style={styles.picker}
+                                mode={'dialog'}
+                                // onValueChange={(itemValue, itemIndex) =>
+                                //     this.setState({language: itemValue})
+                                // }
+                            >
+                                <Picker.Item value="" label="SELECCIONA TU PAIS" />
+                                {Countries !== null ? setCountries() : null}
+                            </Picker>
+                        </View>
+                        <View style={[styles.action_date, {marginTop: 20}]}>
+                            <View style={styles.container_date}>
+                                <View style={styles.c1}>
+                                    <Text style={styles.text_date}>
+                                    {data.date_selected !== '' ? data.date_selected : 'FECHA DE NACIMIENTO'} 
+                                    </Text>
+                                </View>
+                                <View style={styles.c2}>
+                                    <TouchableOpacity
+                                        style={styles.signIn_date}
+                                        onPress={() => setShow(true)}
+                                    >
+                                        <Feather 
+                                            name="calendar"
+                                            color="green"
+                                            size={20}
+                                        />
+                                    </TouchableOpacity>
+                                </View>  
+                            </View>
+                            {show && (
+                                <DateTimePicker
+                                    style={styles.picker}
+                                    value={new Date()}
+                                    mode={'date'}
+                                    is24Hour={true}
+                                    display="default"
+                                    onChange={setDate}
+                                />
+                            )}
+                        </View>
+                        <View style={[styles.action, {marginTop: 20}]}>
+                            <TextInput 
+                                placeholder="CORREO"
+                                style={styles.textInput}
+                                autoCapitalize="none"
+                                placeholderTextColor='#fff'
+                                onChangeText={(val) => textInputChange(val)}
+                            />
+                        </View>
+                        {/* <Text style={[styles.text_footer, {marginTop: 20}]}>CONTRASEÑA</Text> */}
+                        <View style={[styles.action, {marginTop: 20}]}>
+                            <TextInput 
+                                placeholder="CONTRASEÑA"
+                                style={[styles.textInput, {color: '#fff'}]}
+                                placeholderTextColor='#fff'
+                                secureTextEntry={true}
+                                autoCapitalize="none"
+                                onChangeText={(val) => textInputChange(val)}
+                            />
+                        </View>
+                        <View style={[styles.action, {marginTop: 20, marginBottom: 20}]}>
+                            <TextInput 
+                                placeholder="CONFIRMAR CONTRASEÑA"
+                                style={[styles.textInput, {color: '#fff'}]}
+                                placeholderTextColor='#fff'
+                                secureTextEntry={true}
+                                autoCapitalize="none"
+                                onChangeText={(val) => textInputChange(val)}
+                            />
+                        </View>
+                    </View>
+                </ScrollView>
+                <View style={styles.button}>
+                    <TouchableOpacity
+                        style={styles.signIn}
+                        onPress={() => console.warn('Registrado!')}
+                    >
+                        <LinearGradient
+                            colors={['#01CD01', '#01CD01']}
+                            style={styles.signIn}
+                        >
+                            <Text style={[styles.textSign, {
+                                color:'#fff'
+                            }]}>ENTRAR</Text>
+                        </LinearGradient>
+                    </TouchableOpacity>
 
-            <Text style={[styles.text_footer, {
-                marginTop: 35
-            }]}>Password</Text>
-            <View style={styles.action}>
-                <Feather 
-                    name="lock"
-                    color="#05375a"
-                    size={20}
-                />
-                <TextInput 
-                    placeholder="Your Password"
-                    secureTextEntry={data.secureTextEntry ? true : false}
-                    style={styles.textInput}
-                    autoCapitalize="none"
-                    onChangeText={(val) => handlePasswordChange(val)}
-                />
-                <TouchableOpacity
-                    onPress={updateSecureTextEntry}
-                >
-                    {data.secureTextEntry ? 
-                    <Feather 
-                        name="eye-off"
-                        color="grey"
-                        size={20}
-                    />
-                    :
-                    <Feather 
-                        name="eye"
-                        color="grey"
-                        size={20}
-                    />
-                    }
-                </TouchableOpacity>
-            </View>
-
-            <Text style={[styles.text_footer, {
-                marginTop: 35
-            }]}>Confirm Password</Text>
-            <View style={styles.action}>
-                <Feather 
-                    name="lock"
-                    color="#05375a"
-                    size={20}
-                />
-                <TextInput 
-                    placeholder="Confirm Your Password"
-                    secureTextEntry={data.confirm_secureTextEntry ? true : false}
-                    style={styles.textInput}
-                    autoCapitalize="none"
-                    onChangeText={(val) => handleConfirmPasswordChange(val)}
-                />
-                <TouchableOpacity
-                    onPress={updateConfirmSecureTextEntry}
-                >
-                    {data.secureTextEntry ? 
-                    <Feather 
-                        name="eye-off"
-                        color="grey"
-                        size={20}
-                    />
-                    :
-                    <Feather 
-                        name="eye"
-                        color="grey"
-                        size={20}
-                    />
-                    }
-                </TouchableOpacity>
-            </View>
-            <View style={styles.textPrivate}>
-                <Text style={styles.color_textPrivate}>
-                    By signing up you agree to our
-                </Text>
-                <Text style={[styles.color_textPrivate, {fontWeight: 'bold'}]}>{" "}Terms of service</Text>
-                <Text style={styles.color_textPrivate}>{" "}and</Text>
-                <Text style={[styles.color_textPrivate, {fontWeight: 'bold'}]}>{" "}Privacy policy</Text>
-            </View>
-            <View style={styles.button}>
-                <TouchableOpacity
-                    style={styles.signIn}
-                    onPress={() => {}}
-                >
-                <LinearGradient
-                    colors={['#08d4c4', '#01ab9d']}
-                    style={styles.signIn}
-                >
-                    <Text style={[styles.textSign, {
-                        color:'#fff'
-                    }]}>Sign Up</Text>
-                </LinearGradient>
-                </TouchableOpacity>
-
-                <TouchableOpacity
-                    onPress={() => navigation.goBack()}
-                    style={[styles.signIn, {
-                        borderColor: '#009387',
-                        borderWidth: 1,
-                        marginTop: 15
-                    }]}
-                >
-                    <Text style={[styles.textSign, {
-                        color: '#009387'
-                    }]}>Sign In</Text>
-                </TouchableOpacity>
-            </View>
-            </ScrollView>
-        </Animatable.View>
-      </View>
+                </View>
+          </Animatable.View>
+    </View>
     );
 };
 
-export default SignInScreen;
+export default SignUpScreen;
+
+const {height} = Dimensions.get("screen");
+const height_logo = height * 0.28;
 
 const styles = StyleSheet.create({
     container: {
       flex: 1, 
-      backgroundColor: '#009387'
+      justifyContent: 'center',
+      alignItems: 'center',
+      backgroundColor: '#3d3d3d',
+    },
+    top: {
+      flex: 1, 
+      justifyContent: 'center',
+      alignItems: 'center',
+      width: '80%',
+    },
+    bot: {
+      flex: 2, 
+      justifyContent: 'center',
+      width: '80%',
+      marginTop: 50
     },
     header: {
-        flex: 1,
-        justifyContent: 'flex-end',
-        paddingHorizontal: 20,
-        paddingBottom: 50
+        flex: 2,
+        justifyContent: 'center',
+        alignItems: 'center'
     },
     footer: {
-        flex: Platform.OS === 'ios' ? 3 : 5,
+        flex: 1,
         backgroundColor: '#fff',
         borderTopLeftRadius: 30,
         borderTopRightRadius: 30,
-        paddingHorizontal: 20,
-        paddingVertical: 30
+        paddingVertical: 50,
+        paddingHorizontal: 30
     },
-    text_header: {
-        color: '#fff',
-        fontWeight: 'bold',
-        fontSize: 30
+    logo: {
+        width: height_logo,
+        height: height_logo
     },
-    text_footer: {
+    title: {
         color: '#05375a',
-        fontSize: 18
+        fontSize: 30,
+        fontWeight: 'bold'
     },
-    action: {
-        flexDirection: 'row',
-        marginTop: 10,
-        borderBottomWidth: 1,
-        borderBottomColor: '#f2f2f2',
-        paddingBottom: 5
-    },
-    textInput: {
-        flex: 1,
-        marginTop: Platform.OS === 'ios' ? 0 : -12,
-        paddingLeft: 10,
-        color: '#05375a',
+    text: {
+        color: 'grey',
+        marginTop:5
     },
     button: {
         alignItems: 'center',
-        marginTop: 50
+        justifyContent: 'center',
+        marginBottom: 20
     },
     signIn: {
-        width: '100%',
-        height: 50,
+        width: 290,
+        height: 40,
         justifyContent: 'center',
         alignItems: 'center',
-        borderRadius: 10
+        borderRadius: 5,
+        flexDirection: 'row'
     },
     textSign: {
-        fontSize: 18,
-        fontWeight: 'bold'
+        color: 'red',
+        fontFamily: 'Montserrat-SemiBold',
+        fontSize: 15,
     },
-    textPrivate: {
+    text_header: {
+        color: '#fff',
+        fontSize: 20,
+        fontFamily: 'Montserrat-Bold'
+    },
+    action: {
+      flexDirection: 'row',
+      marginTop: 10,
+      color: '#fff',
+      borderColor: '#fff',
+      borderWidth: 1.5,
+      borderRadius: 5,
+      paddingTop: 10,
+      paddingLeft: 10
+    },
+    text_footer: {
+      color: '#fff',
+      fontSize: 15,
+      fontFamily: 'Montserrat-SemiBold',
+    },
+    text_title: {
+      color: '#fff',
+      fontSize: 18,
+      fontFamily: 'Montserrat-Bold',
+    },
+    login: {
+      width: '100%'
+    },
+    textInput: {
+      flex: 1,
+      marginTop: Platform.OS === 'ios' ? 0 : -15,
+      padding: 10,
+      color: '#fff'
+    },
+    scrollviewSize: {
+      width: '100%'
+    },
+    picker: {
+        height: 30, 
+        width: '100%', 
+        paddingBottom: 5,
+        marginBottom: 7,
+        marginTop: -5,
+        color: '#fff',
+    },
+    action_picker: {
         flexDirection: 'row',
-        flexWrap: 'wrap',
-        marginTop: 20
+        marginTop: 10,
+        color: '#fff',
+        backgroundColor: '#262222',
+        borderColor: '#262222',
+        borderWidth: 1.5,
+        borderRadius: 5,
+        paddingTop: 10,
+        paddingLeft: 10
     },
-    color_textPrivate: {
-        color: 'grey'
-    }
+    action_date: {
+        flexDirection: 'row',
+        marginTop: 10,
+        paddingBottom: 10,
+        color: '#fff',
+        backgroundColor: '#262222',
+        borderColor: '#262222',
+        borderWidth: 1.5,
+        borderRadius: 5,
+        paddingTop: 10,
+        paddingLeft: 10
+    },
+    container_date: {
+        flex:1, 
+        flexDirection: 'row', 
+        marginLeft: 10
+    },
+    c1: {
+        flex:2, 
+    },
+    c2: {
+        flex:1, 
+        alignItems: 'flex-end'
+    },
+    text_date: {
+        color: '#fff', 
+        fontSize: 16,
+    },
+    signIn_date: {
+        width: 30,
+        height: 20,
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderRadius: 5,
+        flexDirection: 'row',
+        marginRight: 10
+    },
   });
+  
+  
