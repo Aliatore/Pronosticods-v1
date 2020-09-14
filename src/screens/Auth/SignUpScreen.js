@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { 
     View, 
-    Text, 
     Button, 
     TouchableOpacity, 
     Dimensions,
@@ -20,71 +19,73 @@ import Layer from '../../assets/img/svg/Layer.svg';
 import {Picker} from '@react-native-community/picker';
 import DateTimePicker from '@react-native-community/datetimepicker';    
 import Countries from '../../model/countries'
-import { log } from 'react-native-reanimated';
+import { Portal, Text, Dialog } from 'react-native-paper';
+import { Spinner } from 'native-base'
+import AwesomeAlert from 'react-native-awesome-alerts';
+import axios from 'axios';
 
 const SignUpScreen = ({navigation}) => {
 
     const [data, setData] = React.useState({
-        username: '',
+        name: '',
+        lastname: '',
+        country: '',
+        date_selected: '',
+        email: '',
         password: '',
         confirm_password: '',
-        date_selected: '',
-        check_textInputChange: false,
-        secureTextEntry: true,
-        confirm_secureTextEntry: true,
+        error_message: ''
     });
-    const [show, setShow] = useState(false);
 
-    const textInputChange = (val) => {
-        if( val.length !== 0 ) {
+    const [show, setShow] = useState(false);
+    const [visible, setVisible] = React.useState(false);
+    const [alert, setAlert] = React.useState(false);
+
+    const setName = (e) => {
+        if(e.trim().length >= 3 ) {
             setData({
                 ...data,
-                username: val,
-                check_textInputChange: true
+                name: e
             });
         } else {
             setData({
                 ...data,
-                username: val,
-                check_textInputChange: false
+                name: e
             });
         }
-    }
-    
-    const handlePasswordChange = (val) => {
-        setData({
-            ...data,
-            password: val
-        });
+        console.log(e);
     }
 
-    const handleConfirmPasswordChange = (val) => {
-        setData({
-            ...data,
-            confirm_password: val
-        });
+    const setLastname = (e) => {
+        if(e.trim().length >= 3 ) {
+            setData({
+                ...data,
+                lastname: e
+            });
+        } else {
+            setData({
+                ...data,
+                lastname: e
+            });
+        }
+        console.log(e);
     }
 
-    const updateSecureTextEntry = () => {
-        setData({
-            ...data,
-            secureTextEntry: !data.secureTextEntry
-        });
+    const setCountry = (e) => {
+        if(e.length !== 0 ) {
+            setData({
+                ...data,
+                country: e
+            });
+        } else {
+            setData({
+                ...data,
+                country: e
+            });
+        }
+        console.log(e);
     }
 
-    const updateConfirmSecureTextEntry = () => {
-        setData({
-            ...data,
-            confirm_secureTextEntry: !data.confirm_secureTextEntry
-        });
-    }
-
-    const setCountries = () =>{
-        return Countries.map((e, i) => {
-          return <Picker.Item key={i} label={e.name} value={e.name} />
-        }) 
-    }
-    
     const setDate = (event, selectedDate) => {
         setShow(false);
         console.log(event);
@@ -92,7 +93,7 @@ const SignUpScreen = ({navigation}) => {
         let dates = JSON.stringify(selectedDate);
         let [date, hour] = dates.split('T');
         let [year, month, day] = date.split('-');
-        const newDate = `${day}-${month}-${year}`
+        const newDate = `${year}-${month}-${day}`
         const newNewDate = newDate.replace(/"/g,"");
       
         if( newNewDate.length !== 0 ) {
@@ -111,141 +112,327 @@ const SignUpScreen = ({navigation}) => {
         }
     }
 
-    return (
-        <View style={styles.container}>
-          <StatusBar backgroundColor='#3d3d3d' barStyle="light-content"/>
-          <Animatable.View
-              animation="fadeInUpBig"
-              style={styles.top}
-          >   
-            <View style={{justifyContent: 'center', alignItems: 'center'}}>
-                <Layer 
-                    style={{marginBottom: 20, marginTop: 20}}
-                />
-                <Text style={styles.text_title}>¡BIENVENIDO!</Text>
-                <Text style={styles.text_title}>COMPLETA TU REGISTRO</Text>
-            </View>
-              
-          </Animatable.View>
-          <Animatable.View
-              animation="fadeInUpBig"
-              style={styles.bot}
-          > 
-                <ScrollView style={styles.scrollviewSize} showsVerticalScrollIndicator={false}>
-                    <View style={styles.login}>
-                        {/* <Text style={styles.text_footer}>EMAIL</Text> */}
-                        <View style={styles.action}>
-                            <TextInput 
-                                placeholder="NOMBRE"
-                                style={styles.textInput}
-                                autoCapitalize="none"
-                                placeholderTextColor='#fff'
-                                onChangeText={(val) => textInputChange(val)}
-                            />
-                        </View>
-                        <View style={[styles.action, {marginTop: 20}]}>
-                            <TextInput 
-                                placeholder="APELLIDO"
-                                style={styles.textInput}
-                                autoCapitalize="none"
-                                placeholderTextColor='#fff'
-                                onChangeText={(val) => textInputChange(val)}
-                            />
-                        </View>
-                        <View style={[styles.action_picker, {marginTop: 20}]}>
-                            <Picker
-                                // selectedValue={this.state.language}
-                                style={styles.picker}
-                                mode={'dialog'}
-                                // onValueChange={(itemValue, itemIndex) =>
-                                //     this.setState({language: itemValue})
-                                // }
-                            >
-                                <Picker.Item value="" label="SELECCIONA TU PAIS" />
-                                {Countries !== null ? setCountries() : null}
-                            </Picker>
-                        </View>
-                        <View style={[styles.action_date, {marginTop: 20}]}>
-                            <View style={styles.container_date}>
-                                <View style={styles.c1}>
-                                    <Text style={styles.text_date}>
-                                    {data.date_selected !== '' ? data.date_selected : 'FECHA DE NACIMIENTO'} 
-                                    </Text>
-                                </View>
-                                <View style={styles.c2}>
-                                    <TouchableOpacity
-                                        style={styles.signIn_date}
-                                        onPress={() => setShow(true)}
-                                    >
-                                        <Feather 
-                                            name="calendar"
-                                            color="green"
-                                            size={20}
-                                        />
-                                    </TouchableOpacity>
-                                </View>  
-                            </View>
-                            {show && (
-                                <DateTimePicker
-                                    style={styles.picker}
-                                    value={new Date()}
-                                    mode={'date'}
-                                    is24Hour={true}
-                                    display="default"
-                                    onChange={setDate}
-                                />
-                            )}
-                        </View>
-                        <View style={[styles.action, {marginTop: 20}]}>
-                            <TextInput 
-                                placeholder="CORREO"
-                                style={styles.textInput}
-                                autoCapitalize="none"
-                                placeholderTextColor='#fff'
-                                onChangeText={(val) => textInputChange(val)}
-                            />
-                        </View>
-                        {/* <Text style={[styles.text_footer, {marginTop: 20}]}>CONTRASEÑA</Text> */}
-                        <View style={[styles.action, {marginTop: 20}]}>
-                            <TextInput 
-                                placeholder="CONTRASEÑA"
-                                style={[styles.textInput, {color: '#fff'}]}
-                                placeholderTextColor='#fff'
-                                secureTextEntry={true}
-                                autoCapitalize="none"
-                                onChangeText={(val) => textInputChange(val)}
-                            />
-                        </View>
-                        <View style={[styles.action, {marginTop: 20, marginBottom: 20}]}>
-                            <TextInput 
-                                placeholder="CONFIRMAR CONTRASEÑA"
-                                style={[styles.textInput, {color: '#fff'}]}
-                                placeholderTextColor='#fff'
-                                secureTextEntry={true}
-                                autoCapitalize="none"
-                                onChangeText={(val) => textInputChange(val)}
-                            />
-                        </View>
-                    </View>
-                </ScrollView>
-                <View style={styles.button}>
-                    <TouchableOpacity
-                        style={styles.signIn}
-                        onPress={() => console.warn('Registrado!')}
-                    >
-                        <LinearGradient
-                            colors={['#01CD01', '#01CD01']}
-                            style={styles.signIn}
-                        >
-                            <Text style={[styles.textSign, {
-                                color:'#fff'
-                            }]}>ENTRAR</Text>
-                        </LinearGradient>
-                    </TouchableOpacity>
+    const setEmail = (e) => {
+        if(e.length !== 0 ) {
+            setData({
+                ...data,
+                email: e
+            });
+        } else {
+            setData({
+                ...data,
+                email: e
+            });
+        }
+        console.log(e);
+    }
 
+    const setPassword = (e) => {
+        if(e.trim().length >= 8) {
+            setData({
+                ...data,
+                password: e
+            });
+        } else {
+            setData({
+                ...data,
+                password: e
+            });
+        }
+        console.log(e);
+    }
+
+    const setConfirmPassword = (e) => {
+        if(e.trim().length >= 8) {
+            setData({
+                ...data,
+                confirm_password: e
+            });
+        } else {
+            setData({
+                ...data,
+                confirm_password: e
+            });
+        }
+        console.log(e);
+    }
+
+    const setCountries = () =>{
+        return Countries.map((e, i) => {
+          return <Picker.Item key={i} label={e.name} value={e.id} />
+        }) 
+    }
+    
+    const sendRegister = (name, lastname, email, password, birthday, countryid) => {   
+        setVisible(true)
+        if (data.name.length === 0 && data.lastname.length === 0 && data.country.length === 0 &&
+            data.date_selected.length === 0 && data.email.length === 0 && data.password.length === 0 &&
+            data.confirm_password.length === 0 ) {
+            setVisible(false)
+            setAlert(true)
+            setData({
+                ...data,
+                error_message: `Los campos no deben de estar vacios`
+            })
+        } else {
+            if (data.password === data.confirm_password) {
+                try {
+                    axios({
+                        method: 'post',
+                        url: 'https://app.pronosticodds.com/api/register',
+                        data: {
+                            first_name: name,
+                            last_name: lastname,
+                            email: email,
+                            password: password,
+                            birth_day: birthday,
+                            country_id: parseInt(countryid),
+                            check: '1'
+                        },
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-Requested-With': 'XMLHttpRequest'
+                        },
+                        validateStatus: (status) => {
+                            return true; 
+                        },
+                    })
+                    .catch(function(error) {
+                            console.log(error);
+                            setVisible(false)
+                            setAlert(true)
+                            setData({
+                                ...data,
+                                error_message: `Ha ocurrido un error, ${error}`
+                            })
+                        })
+                    .then(response => {
+                            console.log("status", response.status);
+                            console.log("data", response.data);
+                            if (response.status === 200 || response.status === 201) {
+                                console.log('correcto');
+                                setVisible(false)
+                                setAlert(true)
+                                setData({
+                                    ...data,
+                                    error_message: `Registro realizado satisfatoriamente`
+                                })
+                                navigation.navigate('SignInScreen')
+                            }else{
+                                let error = response.data.errors
+                                let parsed_error = JSON.stringify(error)
+                                console.log(parsed_error);
+                                setVisible(false)
+                                setAlert(true)
+                                setData({
+                                    ...data,
+                                    error_message: `Ha ocurrido un error, ${parsed_error}`
+                                })
+                            }
+                        })
+                } catch (err) {
+                    console.log('catch de errores: ', err);
+                    setVisible(false)
+                    setAlert(true)
+                    setData({
+                        ...data,
+                        error_message: `Ha ocurrido un error, ${err}`
+                    })
+                } 
+            } else {
+                setVisible(false)
+                setAlert(true)
+                setData({
+                    ...data,
+                    error_message: `Las contraseñas no coinciden, intentelo nuevamente`
+                })
+            }
+        }
+    }
+    
+
+    return (
+        <>
+            <View style={styles.container}>
+                <StatusBar backgroundColor='#3d3d3d' barStyle="light-content"/>
+                <Animatable.View
+                animation="fadeInUpBig"
+                style={styles.top}
+            >   
+                <View style={{justifyContent: 'center', alignItems: 'center'}}>
+                    <Layer 
+                        style={{marginBottom: 20, marginTop: 20}}
+                    />
+                    <Text style={styles.text_title}>¡BIENVENIDO!</Text>
+                    <Text style={styles.text_title}>COMPLETA TU REGISTRO</Text>
                 </View>
-          </Animatable.View>
-    </View>
+                
+            </Animatable.View>
+                <Animatable.View
+                animation="fadeInUpBig"
+                style={styles.bot}
+            > 
+                    <ScrollView style={styles.scrollviewSize} showsVerticalScrollIndicator={false}>
+                        <View style={styles.login}>
+                            <View style={styles.action}>
+                                <TextInput 
+                                    placeholder="NOMBRE"
+                                    style={styles.textInput}
+                                    autoCapitalize="none"
+                                    placeholderTextColor='#fff'
+                                    onChangeText={(e) => setName(e)}
+                                />
+                            </View>
+                            <View style={[styles.action, {marginTop: 20}]}>
+                                <TextInput 
+                                    placeholder="APELLIDO"
+                                    style={styles.textInput}
+                                    autoCapitalize="none"
+                                    placeholderTextColor='#fff'
+                                    onChangeText={(e) => setLastname(e)}
+                                />
+                            </View>
+                            <View style={[styles.action_picker, {marginTop: 20}]}>
+                                <Picker
+                                    selectedValue={data.country}
+                                    style={styles.picker}
+                                    mode={'dialog'}
+                                    onValueChange={(e) => setCountry(e)}
+                                >
+                                    <Picker.Item value="" label="SELECCIONA TU PAIS" />
+                                    {Countries !== null ? setCountries() : null}
+                                </Picker>
+                            </View>
+                            <View style={[styles.action_date, {marginTop: 20}]}>
+                                <View style={styles.container_date}>
+                                    <View style={styles.c1}>
+                                        <Text style={styles.text_date}>
+                                        {data.date_selected !== '' ? data.date_selected : 'FECHA DE NACIMIENTO'} 
+                                        </Text>
+                                    </View>
+                                    <View style={styles.c2}>
+                                        <TouchableOpacity
+                                            style={styles.signIn_date}
+                                            onPress={() => setShow(true)}
+                                        >
+                                            <Feather 
+                                                name="calendar"
+                                                color="green"
+                                                size={20}
+                                            />
+                                        </TouchableOpacity>
+                                    </View>  
+                                </View>
+                                {show && (
+                                    <DateTimePicker
+                                        locale='es-ES'
+                                        style={styles.picker}
+                                        value={new Date()}
+                                        mode={'date'}
+                                        is24Hour={true}
+                                        display="default"
+                                        onChange={setDate}
+                                    />
+                                )}
+                            </View>
+                            <View style={[styles.action, {marginTop: 20}]}>
+                                <TextInput 
+                                    placeholder="CORREO"
+                                    style={styles.textInput}
+                                    autoCapitalize="none"
+                                    placeholderTextColor='#fff'
+                                    onChangeText={(e) => setEmail(e)}
+                                />
+                            </View>
+                            
+                            <View style={[styles.action, {marginTop: 20}]}>
+                                <TextInput 
+                                    placeholder="CONTRASEÑA"
+                                    style={[styles.textInput, {color: '#fff'}]}
+                                    placeholderTextColor='#fff'
+                                    secureTextEntry={true}
+                                    autoCapitalize="none"
+                                    onChangeText={(e) => setPassword(e)}
+                                />
+                            </View>
+                            <View style={[styles.action, {marginTop: 20, marginBottom: 20}]}>
+                                <TextInput 
+                                    placeholder="CONFIRMAR CONTRASEÑA"
+                                    style={[styles.textInput, {color: '#fff'}]}
+                                    placeholderTextColor='#fff'
+                                    secureTextEntry={true}
+                                    autoCapitalize="none"
+                                    onChangeText={(e) => setConfirmPassword(e)}
+                                />
+                            </View>
+                        </View>
+                    </ScrollView>
+                    <View style={styles.button}>
+                        <TouchableOpacity
+                            style={styles.signIn}
+                            onPress={() => sendRegister(data.name, data.lastname, data.email,data.password, data.date_selected, data.country)}
+                        >
+                            <LinearGradient
+                                colors={['#01CD01', '#01CD01']}
+                                style={styles.signIn}
+                            >
+                                <Text style={[styles.textSign, {
+                                    color:'#fff'
+                                }]}>ENTRAR</Text>
+                            </LinearGradient>
+                        </TouchableOpacity>
+
+                    </View>
+            </Animatable.View>                    
+            </View>
+            <View>
+                <Portal>
+                    <StatusBar
+                        barStyle={Platform.OS === true && theme.dark ? 'light-content' : 'light-content'}
+                        backgroundColor='#000000'
+                    />
+                    <Dialog 
+                        visible={visible} 
+                        // onDismiss={() => setVisible(false)}
+                        dismissable={false}
+                        style={{borderRadius: 20, backgroundColor: 'transparent'}}
+                    >
+                        <Dialog.ScrollArea>
+                        <ScrollView contentContainerStyle={{paddingHorizontal: 24, marginTop: 50, marginBottom: 50, alignItems: 'center'}}>
+                            <Spinner 
+                                color={"#fff"}
+                            />             
+                            <Text>Cargando</Text>                 
+                        </ScrollView>
+                        </Dialog.ScrollArea>
+                    </Dialog>
+                </Portal>
+            </View>
+            <View>
+                <AwesomeAlert
+                    show={alert}
+                    showProgress={false}
+                    title="INFORMACIÓN"
+                    message={data.error_message}
+                    closeOnTouchOutside={true}
+                    closeOnHardwareBackPress={false}
+                    showCancelButton={false}
+                    showConfirmButton={true}
+                    // cancelText="CANCELAR"
+                    confirmText="ACEPTAR"
+                    confirmButtonColor="#01CD01"
+                    contentContainerStyle={{backgroundColor: '#262222'}}
+                    titleStyle={{color: '#fff'}}
+                    messageStyle={{color: '#fff', textAlign: 'center'}}
+                    // onCancelPressed={() => {
+                    //     this.hideAlert();
+                    // }}
+                    onConfirmPressed={() => {
+                        setAlert(false);
+                    }}
+                />
+            </View>
+        </>
     );
 };
 
