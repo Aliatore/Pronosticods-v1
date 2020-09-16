@@ -16,10 +16,10 @@ import { Spinner } from 'native-base'
 import AwesomeAlert from 'react-native-awesome-alerts';
 import * as Animatable from 'react-native-animatable';
 import LinearGradient from 'react-native-linear-gradient';
-import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Feather from 'react-native-vector-icons/Feather';
 import Layer from '../../assets/img/svg/Layer.svg';
 import axios from 'axios';
+import NetInfo from "@react-native-community/netinfo";
 
 import { useTheme } from 'react-native-paper';
 
@@ -30,7 +30,9 @@ const SignInScreen = ({navigation}) => {
     const [data, setData] = React.useState({
         email: '',
         password: '',
-        error_message: ''
+        error_message: '',
+        viewSecure: true
+
     });
     const [visible, setVisible] = React.useState(false);
     const [alert, setAlert] = React.useState(false);
@@ -64,67 +66,86 @@ const SignInScreen = ({navigation}) => {
             });
         }
     }
+    const viewPassword = () => {
+        setData({
+            ...data,
+            viewSecure: !data.viewSecure
+        });
+    }
     const loginHandle = (email, password) => {
         setVisible(true)
-        if (data.email.length === 0 || data.password.length === 0) {
-            setVisible(false)
-            setAlert(true)
-            setData({
-                ...data,
-                error_message: `Los campos no deben de estar vacios`
-            })
-        } else {
-            try {
-                axios({
-                        method: 'post',
-                        url: 'https://app.pronosticodds.com/api/login',
-                        data: {
-                            email: email,
-                            password: password
-                        },
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'X-Requested-With': 'XMLHttpRequest'
-                        },
-                        validateStatus: (status) => {
-                            return true; 
-                        },
-                    })
-                .catch(function(error) {
-                        console.log(error);
-                        setVisible(false)
-                        setAlert(true)
-                        setData({
-                            ...data,
-                            error_message: `Ha ocurrido un error, ${error}`
-                        })
-                    })
-                .then(response => {
-                        console.log("status", response.status);
-                        console.log("data", response.data);
-                        if (response.status === 200) {
-                            const token_user = response.data.token
-                            executeValidation(email, password, token_user)
-                            setVisible(false)
-                        }else{
-                            setVisible(false)
-                            setAlert(true)
-                            setData({
-                                ...data,
-                                error_message: `Ha ocurrido un error, ${response.data.errors.email}`
-                            })
-                        }
-                    })
-            } catch (err) {
-                    console.log('catch de errores: ', err);
+        NetInfo.fetch().then(state => {
+            console.log(state.isConnected);
+            if (state.isConnected === true){
+                if (data.email.length === 0 || data.password.length === 0) {
                     setVisible(false)
                     setAlert(true)
                     setData({
                         ...data,
-                        error_message: `Ha ocurrido un error, ${err}`
+                        error_message: `Los campos no deben de estar vacios`
                     })
-            }   
-        }
+                } else {
+                    try {
+                        axios({
+                                method: 'post',
+                                url: 'https://app.pronosticodds.com/api/login',
+                                timeout: 9000,
+                                data: {
+                                    email: email,
+                                    password: password
+                                },
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                    'X-Requested-With': 'XMLHttpRequest'
+                                },
+                                validateStatus: (status) => {
+                                    return true; 
+                                },
+                            })
+                        .catch(function(error) {
+                                console.log(error);
+                                setVisible(false)
+                                setAlert(true)
+                                setData({
+                                    ...data,
+                                    error_message: `Ha ocurrido un error, ${error}`
+                                })
+                            })
+                        .then(response => {
+                                console.log("status", response.status);
+                                console.log("data", response.data);
+                                if (response.status === 200) {
+                                    const token_user = response.data.token
+                                    executeValidation(email, password, token_user)
+                                    setVisible(false)
+                                }else{
+                                    setVisible(false)
+                                    setAlert(true)
+                                    setData({
+                                        ...data,
+                                        error_message: `Ha ocurrido un error, ${response.data.errors.email}`
+                                    })
+                                }
+                            })
+                    } catch (err) {
+                            console.log('catch de errores: ', err);
+                            setVisible(false)
+                            setAlert(true)
+                            setData({
+                                ...data,
+                                error_message: `Ha ocurrido un error, ${err}`
+                            })
+                    }   
+                }
+            }else{
+                setData({
+                    ...data,
+                    error_message: 'Por favor, revise su conexión a internet.',
+                });
+                setVisible(true)
+                setLoginState(false)
+            }
+        }); 
     }
     const executeValidation = async (email, password, token) => {
         const email_user = await email;
@@ -134,82 +155,68 @@ const SignInScreen = ({navigation}) => {
         console.log(password_user);
         console.log(token_user);
         // logica para validacion de usuario
-
-        try {
-            axios({
-                method: 'get',
-                url: 'https://app.pronosticodds.com/api/user',
-                headers: {
-                    'Authorization': `Bearer ${token_user}`,
-                    'Content-Type': 'application/json',
-                    'X-Requested-With': 'XMLHttpRequest'
-                },
-                validateStatus: (status) => {
-                    return true; 
-                },
-            })
-            .catch(function(error) {
-                setVisible(false)
-                setAlert(true)
+        NetInfo.fetch().then(state => {
+            console.log(state.isConnected);
+            if (state.isConnected === true){
+                try {
+                    axios({
+                        method: 'get',
+                        url: 'https://app.pronosticodds.com/api/user',
+                        headers: {
+                            'Authorization': `Bearer ${token_user}`,
+                            'Content-Type': 'application/json',
+                            'X-Requested-With': 'XMLHttpRequest'
+                        },
+                        validateStatus: (status) => {
+                            return true; 
+                        },
+                    })
+                    .catch(function(error) {
+                        setVisible(false)
+                        setAlert(true)
+                        setData({
+                            ...data,
+                            error_message: `Ha ocurrido un error, ${error}`
+                        })
+                    })
+                    .then(response => {
+                        // console.log(response.data);
+                        if (response !== null) {
+                                const api_token = response.data.data.api_token
+                                console.log(api_token);
+                                let foundUser = api_token === token_user ? token_user : false
+                                console.log(foundUser);
+        
+                                if (foundUser === false) {
+                                    setVisible(false)
+                                    setAlert(true)
+                                    setData({
+                                        ...data,
+                                        error_message: `Usuario invalido.`
+                                    })
+                                }
+                                setVisible(false)
+                                signIn(foundUser)
+                        }
+                    })
+                } catch (err) {
+                    setVisible(false)
+                    setAlert(true)
+                    setData({
+                        ...data,
+                        error_message: `Ha ocurrido un error, ${err}`
+                    })
+                }
+            }else{
                 setData({
                     ...data,
-                    error_message: `Ha ocurrido un error, ${error}`
-                })
-            })
-            .then(response => {
-                // console.log(response.data);
-                if (response !== null) {
-                        const api_token = response.data.data.api_token
-                        console.log(api_token);
-                        let foundUser = api_token === token_user ? token_user : false
-                        console.log(foundUser);
-
-                        if (foundUser === false) {
-                            setVisible(false)
-                            setAlert(true)
-                            setData({
-                                ...data,
-                                error_message: `Usuario invalido.`
-                            })
-                        }
-                        setVisible(false)
-                        signIn(foundUser)
-                }
-            })
-        } catch (err) {
-            setVisible(false)
-            setAlert(true)
-            setData({
-                ...data,
-                error_message: `Ha ocurrido un error, ${err}`
-            })
-        }
+                    error_message: 'Por favor, revise su conexión a internet.',
+                });
+                setVisible(true)
+                setLoginState(false)
+            }
+        });
     }
-
-  
-
-    // const loginHandle = (userName, password) => {
-
-    //     const foundUser = Users.filter( item => {
-    //         return userName == item.username && password == item.password;
-    //     } );
-
-    //     if ( data.username.length == 0 || data.password.length == 0 ) {
-    //         Alert.alert('Wrong Input!', 'Username or password field cannot be empty.', [
-    //             {text: 'Okay'}
-    //         ]);
-    //         return;
-    //     }
-
-    //     if ( foundUser.length == 0 ) {
-    //         Alert.alert('Invalid User!', 'Username or password is incorrect.', [
-    //             {text: 'Okay'}
-    //         ]);
-    //         return;
-    //     }
-
-    //     signIn(foundUser);
-    // }
     
     return (
         <>
@@ -240,10 +247,29 @@ const SignInScreen = ({navigation}) => {
                                     <TextInput 
                                         style={[styles.textInput, {color: '#fff'}]}
                                         placeholderTextColor='#c4c4c4'
-                                        secureTextEntry={true}
+                                        secureTextEntry={data.viewSecure ? true : false}
                                         autoCapitalize="none"
                                         onChangeText={(e) => setPassword(e)}
                                     />
+                                    <TouchableOpacity
+                                        onPress={viewPassword}
+                                    >
+                                        {data.viewSecure ?
+                                            <Feather 
+                                                name="eye-off"
+                                                color="grey"
+                                                size={20}
+                                                style={{color: "#fff", marginRight: 10}}
+                                            />
+                                        :
+                                            <Feather 
+                                                name="eye"
+                                                color="grey"
+                                                size={20}
+                                                style={{color: "#fff", marginRight: 10}}
+                                            />
+                                        }   
+                                    </TouchableOpacity>
                                 </View>
                             </View>
                         </ScrollView>

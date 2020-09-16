@@ -23,6 +23,7 @@ import { Portal, Text, Dialog } from 'react-native-paper';
 import { Spinner } from 'native-base'
 import AwesomeAlert from 'react-native-awesome-alerts';
 import axios from 'axios';
+import NetInfo from "@react-native-community/netinfo";
 
 const SignUpScreen = ({navigation}) => {
 
@@ -34,7 +35,9 @@ const SignUpScreen = ({navigation}) => {
         email: '',
         password: '',
         confirm_password: '',
-        error_message: ''
+        error_message: '',
+        viewSecure: true,
+        viewSecure2: true,
     });
 
     const [show, setShow] = useState(false);
@@ -142,6 +145,13 @@ const SignUpScreen = ({navigation}) => {
         console.log(e);
     }
 
+    const viewPassword = () => {
+        setData({
+            ...data,
+            viewSecure: !data.viewSecure
+        });
+    }
+
     const setConfirmPassword = (e) => {
         if(e.trim().length >= 8) {
             setData({
@@ -157,6 +167,13 @@ const SignUpScreen = ({navigation}) => {
         console.log(e);
     }
 
+    const viewConPassword = () => {
+        setData({
+            ...data,
+            viewSecure2: !data.viewSecure2
+        });
+    }
+
     const setCountries = () =>{
         return Countries.map((e, i) => {
           return <Picker.Item key={i} label={e.name} value={e.id} />
@@ -165,89 +182,102 @@ const SignUpScreen = ({navigation}) => {
     
     const sendRegister = (name, lastname, email, password, birthday, countryid) => {   
         setVisible(true)
-        if (data.name.length === 0 && data.lastname.length === 0 && data.country.length === 0 &&
-            data.date_selected.length === 0 && data.email.length === 0 && data.password.length === 0 &&
-            data.confirm_password.length === 0 ) {
-            setVisible(false)
-            setAlert(true)
-            setData({
-                ...data,
-                error_message: `Los campos no deben de estar vacios`
-            })
-        } else {
-            if (data.password === data.confirm_password) {
-                try {
-                    axios({
-                        method: 'post',
-                        url: 'https://app.pronosticodds.com/api/register',
-                        data: {
-                            first_name: name,
-                            last_name: lastname,
-                            email: email,
-                            password: password,
-                            birth_day: birthday,
-                            country_id: parseInt(countryid),
-                            check: '1'
-                        },
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'X-Requested-With': 'XMLHttpRequest'
-                        },
-                        validateStatus: (status) => {
-                            return true; 
-                        },
-                    })
-                    .catch(function(error) {
-                            console.log(error);
-                            setVisible(false)
-                            setAlert(true)
-                            setData({
-                                ...data,
-                                error_message: `Ha ocurrido un error, ${error}`
-                            })
-                        })
-                    .then(response => {
-                            console.log("status", response.status);
-                            console.log("data", response.data);
-                            if (response.status === 200 || response.status === 201) {
-                                console.log('correcto');
-                                setVisible(false)
-                                setAlert(true)
-                                setData({
-                                    ...data,
-                                    error_message: `Registro realizado satisfatoriamente`
-                                })
-                                navigation.navigate('SignInScreen')
-                            }else{
-                                let error = response.data.errors
-                                let parsed_error = JSON.stringify(error)
-                                console.log(parsed_error);
-                                setVisible(false)
-                                setAlert(true)
-                                setData({
-                                    ...data,
-                                    error_message: `Ha ocurrido un error, ${parsed_error}`
-                                })
-                            }
-                        })
-                } catch (err) {
-                    console.log('catch de errores: ', err);
+        NetInfo.fetch().then(state => {
+            console.log(state.isConnected);
+            if (state.isConnected === true){
+                if (data.name.length === 0 && data.lastname.length === 0 && data.country.length === 0 &&
+                    data.date_selected.length === 0 && data.email.length === 0 && data.password.length === 0 &&
+                    data.confirm_password.length === 0 ) {
                     setVisible(false)
                     setAlert(true)
                     setData({
                         ...data,
-                        error_message: `Ha ocurrido un error, ${err}`
+                        error_message: `Los campos no deben de estar vacios`
                     })
-                } 
-            } else {
-                setVisible(false)
-                setAlert(true)
+                } else {
+                    if (data.password === data.confirm_password) {
+                        try {
+                            axios({
+                                method: 'post',
+                                url: 'https://app.pronosticodds.com/api/register',
+                                timeout: 9000,
+                                data: {
+                                    first_name: name,
+                                    last_name: lastname,
+                                    email: email,
+                                    password: password,
+                                    birth_day: birthday,
+                                    country_id: parseInt(countryid),
+                                    check: '1'
+                                },
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                    'X-Requested-With': 'XMLHttpRequest'
+                                },
+                                validateStatus: (status) => {
+                                    return true; 
+                                },
+                            })
+                            .catch(function(error) {
+                                    console.log(error);
+                                    setVisible(false)
+                                    setAlert(true)
+                                    setData({
+                                        ...data,
+                                        error_message: `Ha ocurrido un error, ${error}`
+                                    })
+                                })
+                            .then(response => {
+                                    console.log("status", response.status);
+                                    console.log("data", response.data);
+                                    if (response.status === 200 || response.status === 201) {
+                                        console.log('correcto');
+                                        setVisible(false)
+                                        setAlert(true)
+                                        setData({
+                                            ...data,
+                                            error_message: `Registro realizado satisfatoriamente`
+                                        })
+                                        navigation.navigate('SignInScreen')
+                                    }else{
+                                        let error = response.data.errors
+                                        let parsed_error = JSON.stringify(error)
+                                        console.log(parsed_error);
+                                        setVisible(false)
+                                        setAlert(true)
+                                        setData({
+                                            ...data,
+                                            error_message: `Ha ocurrido un error, ${parsed_error}`
+                                        })
+                                    }
+                                })
+                        } catch (err) {
+                            console.log('catch de errores: ', err);
+                            setVisible(false)
+                            setAlert(true)
+                            setData({
+                                ...data,
+                                error_message: `Ha ocurrido un error, ${err}`
+                            })
+                        } 
+                    } else {
+                        setVisible(false)
+                        setAlert(true)
+                        setData({
+                            ...data,
+                            error_message: `Las contraseñas no coinciden, intentelo nuevamente`
+                        })
+                    }
+                }
+            }else{
                 setData({
                     ...data,
-                    error_message: `Las contraseñas no coinciden, intentelo nuevamente`
-                })
+                    error_message: 'Por favor, revise su conexión a internet.',
+                });
+                setVisible(true)
+                setLoginState(false)
             }
-        }
+        }); 
     }
     
 
@@ -350,20 +380,58 @@ const SignUpScreen = ({navigation}) => {
                                     placeholder="CONTRASEÑA"
                                     style={[styles.textInput, {color: '#fff'}]}
                                     placeholderTextColor='#fff'
-                                    secureTextEntry={true}
+                                    secureTextEntry={data.viewSecure ? true : false}
                                     autoCapitalize="none"
                                     onChangeText={(e) => setPassword(e)}
                                 />
+                                <TouchableOpacity
+                                        onPress={viewPassword}
+                                    >
+                                        {data.viewSecure ?
+                                            <Feather 
+                                                name="eye-off"
+                                                color="grey"
+                                                size={20}
+                                                style={{color: "#fff", marginRight: 10}}
+                                            />
+                                        :
+                                            <Feather 
+                                                name="eye"
+                                                color="grey"
+                                                size={20}
+                                                style={{color: "#fff", marginRight: 10}}
+                                            />
+                                        }   
+                                </TouchableOpacity>
                             </View>
                             <View style={[styles.action, {marginTop: 20, marginBottom: 20}]}>
                                 <TextInput 
                                     placeholder="CONFIRMAR CONTRASEÑA"
                                     style={[styles.textInput, {color: '#fff'}]}
                                     placeholderTextColor='#fff'
-                                    secureTextEntry={true}
+                                    secureTextEntry={data.viewSecure2 ? true : false}
                                     autoCapitalize="none"
                                     onChangeText={(e) => setConfirmPassword(e)}
                                 />
+                                <TouchableOpacity
+                                        onPress={viewConPassword}
+                                    >
+                                        {data.viewSecure2 ?
+                                            <Feather 
+                                                name="eye-off"
+                                                color="grey"
+                                                size={20}
+                                                style={{color: "#fff", marginRight: 10}}
+                                            />
+                                        :
+                                            <Feather 
+                                                name="eye"
+                                                color="grey"
+                                                size={20}
+                                                style={{color: "#fff", marginRight: 10}}
+                                            />
+                                        }   
+                                </TouchableOpacity>
                             </View>
                         </View>
                     </ScrollView>

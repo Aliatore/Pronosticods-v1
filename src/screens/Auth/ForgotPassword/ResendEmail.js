@@ -20,6 +20,7 @@ import { Portal, Text, Dialog } from 'react-native-paper';
 import { Spinner } from 'native-base'
 import AwesomeAlert from 'react-native-awesome-alerts';
 import axios from 'axios';
+import NetInfo from "@react-native-community/netinfo";
 
 import { useTheme } from 'react-native-paper';
 
@@ -36,67 +37,80 @@ const ResendEmailScreen = ({navigation, route}) => {
 
     const sendEmail = (email) => {   
         setVisible(true)
-        if (data.email.length === 0) {
-            setVisible(false)
-            setAlert(true)
-            setData({
-                ...data,
-                error_message: `Los campos no deben de estar vacios`
-            })
-        } else {
-            try {
-                axios({
-                    method: 'post',
-                    url: 'https://app.pronosticodds.com/api/password/email',
-                    data: {
-                        email: email,
-                    },
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-Requested-With': 'XMLHttpRequest'
-                    },
-                    validateStatus: (status) => {
-                        return true; 
-                    },
-                })
-                .catch(function(error) {
-                        console.log(error);
-                        setVisible(false)
-                        setAlert(true)
-                        setData({
-                            ...data,
-                            error_message: `Ha ocurrido un error, ${error}`
-                        })
-                    })
-                .then(response => {
-                        console.log("status", response.status);
-                        console.log("data", response.data);
-                        if (response.status === 200) {
-                            setVisible(false)
-                            setAlert(true)
-                            setData({
-                                ...data,
-                                error_message: `Correo reenviado satisfactoriamente.`
-                            })
-                        }else{
-                            setVisible(false)
-                            setAlert(true)
-                            setData({
-                                ...data,
-                                error_message: `Ha ocurrido un error, ${response.data.errors.email}`
-                            })
-                        }
-                    })
-            } catch (err) {
-                    console.log('catch de errores: ', err);
+        NetInfo.fetch().then(state => {
+            console.log(state.isConnected);
+            if (state.isConnected === true){
+                if (data.email.length === 0) {
                     setVisible(false)
                     setAlert(true)
                     setData({
                         ...data,
-                        error_message: `Ha ocurrido un error, ${err}`
+                        error_message: `Los campos no deben de estar vacios`
                     })
-            } 
-        }
+                } else {
+                    try {
+                        axios({
+                            method: 'post',
+                            url: 'https://app.pronosticodds.com/api/password/email',
+                            timeout: 9000,
+                            data: {
+                                email: email,
+                            },
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-Requested-With': 'XMLHttpRequest'
+                            },
+                            validateStatus: (status) => {
+                                return true; 
+                            },
+                        })
+                        .catch(function(error) {
+                                console.log(error);
+                                setVisible(false)
+                                setAlert(true)
+                                setData({
+                                    ...data,
+                                    error_message: `Ha ocurrido un error, ${error}`
+                                })
+                            })
+                        .then(response => {
+                                console.log("status", response.status);
+                                console.log("data", response.data);
+                                if (response.status === 200) {
+                                    setVisible(false)
+                                    setAlert(true)
+                                    setData({
+                                        ...data,
+                                        error_message: `Correo reenviado satisfactoriamente.`
+                                    })
+                                }else{
+                                    setVisible(false)
+                                    setAlert(true)
+                                    setData({
+                                        ...data,
+                                        error_message: `Ha ocurrido un error, ${response.data.errors.email}`
+                                    })
+                                }
+                            })
+                    } catch (err) {
+                            console.log('catch de errores: ', err);
+                            setVisible(false)
+                            setAlert(true)
+                            setData({
+                                ...data,
+                                error_message: `Ha ocurrido un error, ${err}`
+                            })
+                    } 
+                }
+            }else{
+                setData({
+                    ...data,
+                    error_message: 'Por favor, revise su conexión a internet.',
+                });
+                setVisible(true)
+                setLoginState(false)
+            }
+        }); 
     }
     
     return (
