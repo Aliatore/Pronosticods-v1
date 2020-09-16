@@ -329,7 +329,7 @@ const SignUpScreen = ({navigation}) => {
                                     mode={'dialog'}
                                     onValueChange={(e) => setCountry(e)}
                                 >
-                                    <Picker.Item value="" label="SELECCIONA TU PAIS" />
+                                    <Picker.Item value="" label="SELECCIONA TU PAÍS" />
                                     {Countries !== null ? setCountries() : null}
                                 </Picker>
                             </View>

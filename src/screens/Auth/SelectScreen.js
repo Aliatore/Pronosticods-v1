@@ -27,7 +27,7 @@ const SelectScreen = ({navigation}) => {
                 animation="fadeInUpBig"
                 style={styles.top}
             >
-                <Text style={styles.text_header}>MEJORES PRONOSTICOS</Text>
+                <Text style={styles.text_header}>MEJORES PRONÓSTICOS</Text>
                 <Text style={styles.text_header}>MAYORES BENEFICIOS</Text>
                 <Layer style={{marginTop: 50}}/>
             </Animatable.View>
@@ -46,7 +46,7 @@ const SelectScreen = ({navigation}) => {
                         >
                             <Text style={[styles.textSign, {
                                 color:'#fff'
-                            }]}>REGISTRATE</Text>
+                            }]}>REGÍSTRATE</Text>
                         </LinearGradient>
                     </TouchableOpacity>
                     <TouchableOpacity
