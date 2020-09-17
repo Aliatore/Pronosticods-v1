@@ -238,7 +238,7 @@ const SignUpScreen = ({navigation}) => {
                                             ...data,
                                             error_message: `Registro realizado satisfatoriamente`
                                         })
-                                        navigation.navigate('SignInScreen')
+                                        navigation.navigate('ResumeSignUpScreen')
                                     }else{
                                         let error = response.data.errors
                                         let parsed_error = JSON.stringify(error)
