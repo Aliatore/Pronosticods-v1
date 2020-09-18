@@ -183,6 +183,7 @@ const SignInScreen = ({navigation}) => {
                         // console.log(response.data);
                         if (response !== null) {
                                 const api_token = response.data.data.api_token
+                                const data_user = response.data.data
                                 console.log(api_token);
                                 let foundUser = api_token === token_user ? token_user : false
                                 console.log(foundUser);
@@ -196,7 +197,7 @@ const SignInScreen = ({navigation}) => {
                                     })
                                 }
                                 setVisible(false)
-                                signIn(foundUser)
+                                signIn(foundUser, data_user)
                         }
                     })
                 } catch (err) {

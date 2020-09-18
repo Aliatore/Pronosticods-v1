@@ -8,7 +8,6 @@ import NetInfo from "@react-native-community/netinfo";
 import { useTheme } from '@react-navigation/native';
 import AsyncStorage from '@react-native-community/async-storage';
 import Noticias from '../../mixins/Noticias'
-import { log } from 'react-native-reanimated';
 
 const HomeScreen = ({navigation}) => {
 

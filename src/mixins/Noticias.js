@@ -23,7 +23,7 @@ const Noticias = ({dataNews}) => {
                             <Card style={styles.card} onPress={() => openLink(e.url)}>
                                 <Card.Cover style={styles.card_cover} source={{ uri: e.imagen_preview }} />
                                 <Card.Content>
-                                    <Title numberOfLines={1}numberOfLines={1}  style={styles.title_text}>{e.titulo}</Title>
+                                    <Title numberOfLines={1} style={styles.title_text}>{e.titulo}</Title>
                                     <Paragraph numberOfLines={1} style={styles.paragraph_white}>{e.subtitulo}</Paragraph>
                                     <Paragraph numberOfLines={1} style={styles.paragraph_grey}>{e.url}</Paragraph>
                                 </Card.Content>

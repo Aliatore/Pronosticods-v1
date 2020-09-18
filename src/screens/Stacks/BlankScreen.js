@@ -4,11 +4,7 @@ import { View, Text, Button, StyleSheet } from 'react-native';
 const BlankScreen = () => {
     return (
       <View style={styles.container}>
-        <Text>Support Screen</Text>
-        <Button
-          title="Click Here"
-          onPress={() => alert('Button Clicked!')}
-        />
+        <Text>Test 4</Text>
       </View>
     );
 };

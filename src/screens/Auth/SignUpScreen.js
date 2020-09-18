@@ -584,7 +584,7 @@ const styles = StyleSheet.create({
       borderColor: '#fff',
       borderWidth: 1.5,
       borderRadius: 5,
-      paddingTop: 10,
+      paddingTop: 15,
       paddingLeft: 10
     },
     text_footer: {
