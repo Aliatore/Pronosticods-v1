@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text, Button, StyleSheet } from 'react-native';
 
-const SupportScreen = () => {
+const BlankScreen = () => {
     return (
       <View style={styles.container}>
         <Text>Support Screen</Text>
@@ -13,7 +13,7 @@ const SupportScreen = () => {
     );
 };
 
-export default SupportScreen;
+export default BlankScreen;
 
 const styles = StyleSheet.create({
   container: {

@@ -203,11 +203,11 @@ const ForgotPasswordScreen = ({navigation}) => {
                         style={{borderRadius: 20, backgroundColor: 'transparent'}}
                     >
                         <Dialog.ScrollArea>
-                        <ScrollView contentContainerStyle={{paddingHorizontal: 24, marginTop: 50, marginBottom: 50, alignItems: 'center'}}>
+                        <ScrollView contentContainerStyle={{paddingHorizontal: 24, marginTop: 50, marginBottom: 30, alignItems: 'center'}}>
                             <Spinner 
                                 color={"#fff"}
                             />             
-                            <Text>Cargando</Text>                 
+                                            
                         </ScrollView>
                         </Dialog.ScrollArea>
                     </Dialog>

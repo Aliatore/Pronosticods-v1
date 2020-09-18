@@ -108,7 +108,6 @@ const App = () => {
 
   const authContext = React.useMemo(() => ({
     signIn: async(foundUser) => {
-      console.log("found user", foundUser);
       const userToken = String(foundUser);
       try {
         await AsyncStorage.setItem('userToken', userToken);

@@ -17,6 +17,7 @@ import {
 } from '@react-navigation/drawer';
 
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import Feather from 'react-native-vector-icons/Feather';
 
 import{ AuthContext } from '../../components/context';
 
@@ -92,8 +93,8 @@ export function DrawerContent(props) {
                         />
                         <DrawerItem 
                             icon={({color, size}) => (
-                                <Icon 
-                                name="settings-outline" 
+                                <Feather 
+                                name="settings" 
                                 color={color}
                                 size={size}
                                 />
