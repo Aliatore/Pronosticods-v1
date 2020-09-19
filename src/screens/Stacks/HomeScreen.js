@@ -15,7 +15,7 @@ const HomeScreen = ({navigation}) => {
     client_token: '',
     data_news: null,
     error_message: '',
-    number_of_news: 6,
+    page: 1,
     date_today: ''
   });
 
@@ -69,7 +69,8 @@ const HomeScreen = ({navigation}) => {
                         url: 'https://app.pronosticodds.com/api/noticias',
                         timeout: 9000,
                         params: {
-                            limit: data.number_of_news
+                            limit: 16,
+                            page: data.page
                         },
                         data: {
                           date: dateToday
@@ -93,6 +94,7 @@ const HomeScreen = ({navigation}) => {
                         })
                     })
                     .then(response => {
+                        console.log(response)
                         if (response.status === 200 || response.status === 201) {
                             console.log('correcto');
                             setVisible(false)
@@ -100,7 +102,8 @@ const HomeScreen = ({navigation}) => {
                                 ...data,
                                 data_news: response.data.data,
                                 client_token: token_user,
-                                date_today: dateToday
+                                date_today: dateToday,
+                                page: data.page += 1,
                             })
                         }else{
                             let error = response.data.errors
@@ -153,7 +156,8 @@ const HomeScreen = ({navigation}) => {
                         url: 'https://app.pronosticodds.com/api/noticias',
                         timeout: 9000,
                         params: {
-                            limit: data.number_of_news += 2
+                            limit: 16,
+                            page: data.page
                         },
                         data: {
                           date: data.date_today
@@ -183,7 +187,8 @@ const HomeScreen = ({navigation}) => {
                             setVisible(false)
                             setData({
                                 ...data,
-                                data_news: data.data_news.concat(response.data.data)
+                                data_news: data.data_news.concat(response.data.data),
+                                page: data.page += 1
                             })
                         }else{
                             let error = response.data.errors

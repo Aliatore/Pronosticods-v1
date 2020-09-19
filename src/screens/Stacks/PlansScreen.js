@@ -229,7 +229,7 @@ const PlansScreen = ({navigation}) => {
                         {item.nickname.toUpperCase() === 'TRIAL' ? 
                           <FlatList
                             data={[
-                              {key: 'La pienso y no disparo'},
+                              {key: 'Trial text'},
                             ]}
                             renderItem={({item}) => <Text style={styles.bot_text2}><Text style={{color: '#01CD01'}}>&bull;</Text> &nbsp;&nbsp;{item.key}</Text>}
                           />
