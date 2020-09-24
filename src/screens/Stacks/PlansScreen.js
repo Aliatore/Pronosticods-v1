@@ -300,9 +300,10 @@ const PlansScreen = ({navigation}) => {
                             <TouchableOpacity
                               style={styles.signIn}
                               onPress={() => console.log('skere')}
+                              disabled={true}
                             >
                                 <LinearGradient
-                                    colors={['#01CD01', '#01CD01']}
+                                    colors={['#989898', '#989898']}
                                     style={styles.signIn}
                                 >
                                     <Text style={[styles.textSign, {

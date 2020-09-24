@@ -27,7 +27,7 @@ const SelectScreen = ({navigation}) => {
                 animation="fadeInUpBig"
                 style={styles.top}
             >
-                <Text style={styles.text_header}>MEJORES PRONÓSTICOS</Text>
+                <Text style={styles.text_header}>MEJORES PRONÓSTICOS,</Text>
                 <Text style={styles.text_header}>MAYORES BENEFICIOS</Text>
                 <Layer style={{marginTop: 50}}/>
             </Animatable.View>

@@ -23,9 +23,9 @@ const Noticias = ({dataNews}) => {
                             <Card style={styles.card} onPress={() => openLink(e.url)}>
                                 <Card.Cover style={styles.card_cover} source={{ uri: e.imagen_preview }} />
                                 <Card.Content>
-                                    <Title numberOfLines={1} style={styles.title_text}>{e.titulo}</Title>
-                                    <Paragraph numberOfLines={1} style={styles.paragraph_white}>{e.subtitulo}</Paragraph>
-                                    <Paragraph numberOfLines={1} style={styles.paragraph_grey}>{e.url}</Paragraph>
+                                    <Title numberOfLines={1} style={styles.title_text}>{e.titulo.toUpperCase()}</Title>
+                                    <Paragraph numberOfLines={1} style={styles.paragraph_white}>{e.subtitulo.toUpperCase()}</Paragraph>
+                                    {/* <Paragraph numberOfLines={1} style={styles.paragraph_grey}>{e.url}</Paragraph> */}
                                 </Card.Content>
                             </Card>
                         </View>
@@ -39,7 +39,7 @@ const Noticias = ({dataNews}) => {
                     <Card.Content>
                         <Title style={styles.title_text}>Sin resultados</Title>
                         <Paragraph style={styles.paragraph_white}>Sin resultados</Paragraph>
-                        <Paragraph style={styles.paragraph_grey}>Sin resultados</Paragraph>
+                        {/* <Paragraph style={styles.paragraph_grey}>Sin resultados</Paragraph> */}
                     </Card.Content>
                 </Card>
             </View>
@@ -61,20 +61,25 @@ const styles = StyleSheet.create({
         borderRadius: 5
     },
     card_cover:{
-        marginLeft: 9, 
-        marginTop: 5, 
-        marginRight: 9, 
+        marginLeft: 25, 
+        marginTop: 15, 
+        marginRight: 25, 
         borderRadius: 5
     },
     title_text:{
         color: '#01CD01',
-        fontFamily: 'Montserrat-Medium',
+        fontFamily: 'Montserrat-Regular',
         fontSize: 25,
+        marginTop: 20,
+        marginLeft: 10
     },
     paragraph_white:{
         color: '#fff',
         fontFamily: 'Montserrat-Regular',
-        fontSize: 18,
+        fontSize: 17,
+        marginTop: 7,
+        marginLeft: 10,
+        marginBottom: 18
     },
     paragraph_grey:{
         color: '#8e8e8e',
