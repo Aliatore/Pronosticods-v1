@@ -57,7 +57,7 @@ const styles = StyleSheet.create({
         alignContent: 'center',
         width: widthScreen,
         marginTop: 10,
-        backgroundColor: '#212121',
+        backgroundColor: '#131011',
         borderRadius: 5
     },
     card_cover:{
@@ -69,15 +69,15 @@ const styles = StyleSheet.create({
     title_text:{
         color: '#01CD01',
         fontFamily: 'Montserrat-Regular',
-        fontSize: 25,
+        fontSize: 20,
         marginTop: 20,
         marginLeft: 10
     },
     paragraph_white:{
         color: '#fff',
         fontFamily: 'Montserrat-Regular',
-        fontSize: 17,
-        marginTop: 7,
+        fontSize: 14,
+        marginTop: 2,
         marginLeft: 10,
         marginBottom: 18
     },
