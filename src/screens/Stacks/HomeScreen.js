@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { View, StyleSheet, StatusBar, ScrollView } from 'react-native';
-import { Portal, Text, Dialog } from 'react-native-paper';
+import { View, StyleSheet, StatusBar, ScrollView, Dimensions } from 'react-native';
+import { Portal, Text, Dialog, Card } from 'react-native-paper';
 import { Spinner } from 'native-base'
 import AwesomeAlert from 'react-native-awesome-alerts';
 import axios from 'axios';
@@ -8,12 +8,14 @@ import NetInfo from "@react-native-community/netinfo";
 import { useTheme } from '@react-navigation/native';
 import AsyncStorage from '@react-native-community/async-storage';
 import Noticias from '../../mixins/Noticias'
+import Videos from '../../mixins/N_Videos'
 
 const HomeScreen = ({navigation}) => {
 
   const [data, setData] = React.useState({
     client_token: '',
     data_news: null,
+    data_video: null,
     error_message: '',
     page: 1,
     date_today: ''
@@ -36,6 +38,7 @@ const HomeScreen = ({navigation}) => {
         client_token: e
     }); 
     getNews(e)
+    // getVideo(e)
   }
   const getDate = () => {
     var date = new Date().getDate();
@@ -52,95 +55,48 @@ const HomeScreen = ({navigation}) => {
 
     let dateToday = getDate()
 
-    NetInfo.fetch().then(state => {
-        console.log(state.isConnected);
-        if (state.isConnected === true){
-            if (token_user.length === 0) {
-                setVisible(false)
-                setAlert(true)
-                setData({
-                    ...data,
-                    error_message: `Error al obtener el token del usuario, intente nuevamente`
-                })
-            } else {
-                try {
-                    axios({
-                        method: 'get',
-                        url: 'https://app.pronosticodds.com/api/noticias',
-                        timeout: 9000,
-                        params: {
-                            limit: 16,
-                            page: data.page
-                        },
-                        data: {
-                          date: dateToday
-                        },
-                        headers: {
-                          'Authorization': `Bearer ${token_user}`,
-                            'Content-Type': 'application/json',
-                            'X-Requested-With': 'XMLHttpRequest'
-                        },
-                        validateStatus: (status) => {
-                            return true; 
-                        },
-                    })
-                    .catch(function(error) {
-                        console.log(error);
-                        setVisible(false)
-                        setAlert(true)
-                        setData({
-                            ...data,
-                            error_message: `Ha ocurrido un error, ${error}`
-                        })
-                    })
-                    .then(response => {
-                        console.log(response)
-                        if (response.status === 200 || response.status === 201) {
-                            console.log('correcto');
-                            setVisible(false)
-                            setData({
-                                ...data,
-                                data_news: response.data.data,
-                                client_token: token_user,
-                                date_today: dateToday,
-                                page: data.page += 1,
-                            })
-                        }else{
-                            let error = response.data.errors
-                            let parsed_error = JSON.stringify(error)
-                            console.log(parsed_error);
-                            setVisible(false)
-                            setAlert(true)
-                            setData({
-                                ...data,
-                                error_message: `Ha ocurrido un error, ${parsed_error}`
-                            })
-                        }
-                    })
-                } catch (err) {
-                        console.log('catch de errores: ', err);
-                        setVisible(false)
-                        setAlert(true)
-                        setData({
-                            ...data,
-                            error_message: `Ha ocurrido un error, ${err}`
-                        })
-                } 
-            }
-        }else{
-            setData({
-                ...data,
-                error_message: 'Por favor, revise su conexión a internet.',
-            });
-            setVisible(true)
-            setLoginState(false)
+    const requestOne = axios({
+        method: 'get',
+        url: 'https://app.pronosticodds.com/api/noticias',
+        timeout: 9000,
+        params: {
+            limit: 16,
+            page: data.page
+        },
+        data: {
+          date: dateToday
+        },
+        headers: {
+          'Authorization': `Bearer ${token_user}`,
+            'Content-Type': 'application/json',
+            'X-Requested-With': 'XMLHttpRequest'
+        },
+        validateStatus: (status) => {
+            return true; 
         }
-    }); 
-  }
-  const getNewsRef = (token_user) => {   
-    setVisible(true)
+    });
+    const requestTwo = axios({
+        method: 'get',
+        url: 'https://app.pronosticodds.com/api/videos',
+        timeout: 9000,
+        params: {
+            limit: 13,
+        },
+        data: {
+          date: dateToday
+        },
+        headers: {
+            'Authorization': `Bearer ${token_user}`,
+            'Content-Type': 'application/json',
+            'X-Requested-With': 'XMLHttpRequest'
+        },
+        validateStatus: (status) => {
+            return true; 
+        },
+    });
+
     NetInfo.fetch().then(state => {
-        console.log(state.isConnected);
+        // console.log(state.isConnected);
         if (state.isConnected === true){
             if (token_user.length === 0) {
                 setVisible(false)
@@ -150,67 +106,44 @@ const HomeScreen = ({navigation}) => {
                     error_message: `Error al obtener el token del usuario, intente nuevamente`
                 })
             } else {
-                try {
-                    axios({
-                        method: 'get',
-                        url: 'https://app.pronosticodds.com/api/noticias',
-                        timeout: 9000,
-                        params: {
-                            limit: 16,
-                            page: data.page
-                        },
-                        data: {
-                          date: data.date_today
-                        },
-                        headers: {
-                          'Authorization': `Bearer ${token_user}`,
-                            'Content-Type': 'application/json',
-                            'X-Requested-With': 'XMLHttpRequest'
-                        },
-                        validateStatus: (status) => {
-                            return true; 
-                        },
-                    })
-                    .catch(function(error) {
-                        console.log(error);
+                axios.all([requestOne, requestTwo]).then(axios.spread((...responses) => {
+                    const responseOne = responses[0].data.data;
+                    const responseTwo = responses[1].data.data;
+                    console.log("UNO",responseOne);
+                    console.log("DOS",responseTwo);
+                    
+                    if (responses[0].status === 200 || responses[0].status === 201 && responses[1].status === 200 || responses[1].status === 201) {
+                        setVisible(false)
+                        setData({
+                            ...data,
+                            data_news: responseOne,
+                            data_video: responseTwo
+                            // client_token: token_user,
+                            // date_today: dateToday,
+                            // page: data.page += 1,
+                        })
+                    }else{
+                        // let error = response.data.errors
+                        // let parsed_error = JSON.stringify(error)
+                        // console.log(parsed_error);
                         setVisible(false)
                         setAlert(true)
                         setData({
                             ...data,
-                            error_message: `Ha ocurrido un error, ${error}`
+                            error_message: `Ha ocurrido un error.`
                         })
+                    }
+                })).catch(errors => {
+                    // react on errors.
+                    console.log(errors);
+                    // console.log(error);
+                    setVisible(false)
+                    setAlert(true)
+                    setData({
+                    ...data,
+                    error_message: `Ha ocurrido un error, ${errors}`
                     })
-                    .then(response => {
-                        console.log("response", response);
-                        if (response.status === 200 || response.status === 201) {
-                            console.log('correcto');
-                            setVisible(false)
-                            setData({
-                                ...data,
-                                data_news: data.data_news.concat(response.data.data),
-                                page: data.page += 1
-                            })
-                        }else{
-                            let error = response.data.errors
-                            let parsed_error = JSON.stringify(error)
-                            console.log(parsed_error);
-                            setVisible(false)
-                            setAlert(true)
-                            setData({
-                                ...data,
-                                error_message: `Ha ocurrido un error, ${parsed_error}`
-                            })
-                        }
-                    })
-                } catch (err) {
-                        console.log('catch de errores: ', err);
-                        setVisible(false)
-                        setAlert(true)
-                        setData({
-                            ...data,
-                            error_message: `Ha ocurrido un error, ${err}`
-                        })
-                } 
+                })
             }
         }else{
             setData({
@@ -223,10 +156,10 @@ const HomeScreen = ({navigation}) => {
     }); 
   }
 
-  const scrollCall = ({layoutMeasurement, contentOffset, contentSize}) => {
-    const paddingToBottom = 1;
-    return layoutMeasurement.height + contentOffset.y >= contentSize.height - paddingToBottom;
-  }
+//   const scrollCall = ({layoutMeasurement, contentOffset, contentSize}) => {
+//     const paddingToBottom = 1;
+//     return layoutMeasurement.height + contentOffset.y >= contentSize.height - paddingToBottom;
+//   }
 
   //this hook calls the token function
   useEffect(() => {
@@ -239,19 +172,25 @@ const HomeScreen = ({navigation}) => {
   
     return (
       <>
-      {console.log('actuales',data.data_news)}
+      {/* {console.log('actuales',data.data_news)} */}
       <View style={styles.container}>
         <StatusBar barStyle= { theme.dark ? "light-content" : "dark-content" }/>
-          <ScrollView onScroll={({nativeEvent}) => {
-              if (scrollCall(nativeEvent)) {
-                getNewsRef(data.client_token);
-              }
-            }}
-            scrollEventThrottle={0}
+          <ScrollView 
+            // onScroll={({nativeEvent}) => {
+            //   if (scrollCall(nativeEvent)) {
+            //     getNewsRef(data.client_token);
+            //   }
+            // }}
+            // scrollEventThrottle={0}
           >
             <Noticias 
-              dataNews={data.data_news}
+                dataNews={data.data_news}
             />
+            <View style={{backgroundColor: '#131011', marginTop: 10, borderRadius: 5}}>
+                <Videos 
+                    dataVideo={data.data_video}
+                />
+            </View>
           </ScrollView>
       </View>
       <View>
@@ -305,7 +244,7 @@ const HomeScreen = ({navigation}) => {
 };
 
 export default HomeScreen;
-
+let widthScreen = Dimensions.get('window').width / 1.04
 const styles = StyleSheet.create({
   container: {
     flex: 1, 
@@ -313,6 +252,16 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-start',
     backgroundColor: '#303030',
   },
+  card:{
+        flex: 1, 
+        justifyContent: 'center', 
+        alignContent: 'center',
+        width: widthScreen,
+        marginTop: 10,
+        // marginBottom: 10,
+        backgroundColor: '#131011',
+        borderRadius: 5
+   },
 });
 
 

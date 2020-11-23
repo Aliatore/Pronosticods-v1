@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Text, Image, StyleSheet, Dimensions, Linking} from 'react-native';
 import { Avatar, Button, Card, Title, Paragraph } from 'react-native-paper';
 
-const Noticias = ({dataNews}) => {
+const Video_N = ({dataVideo}) => {
 
     const openLink = (url) => {
         console.log('abriendo link');
@@ -15,20 +15,26 @@ const Noticias = ({dataNews}) => {
         });
     }
 
-    // console.log(dataNews);
+    // console.log(dataVideo);
 
 
-    if (dataNews !== null && dataNews !== '') {
+    if (dataVideo !== null && dataVideo !== '') {
         return(
-            dataNews.map((e, i) => {
-                return <View key={i} style={styles.card}>
-                            <Card style={styles.card} onPress={() => openLink(e.url)}>
-                                <Card.Cover style={styles.card_cover} source={{ uri: e.imagen_preview }} />
-                                <Card.Content>
-                                    <Title numberOfLines={1} style={styles.title_text}>{e.titulo.toUpperCase()}</Title>
-                                    <Paragraph numberOfLines={1} style={styles.paragraph_white}>{e.subtitulo.toUpperCase()}</Paragraph>
-                                    {/* <Paragraph numberOfLines={1} style={styles.paragraph_grey}>{e.url}</Paragraph> */}
-                                </Card.Content>
+            dataVideo.map((e, i) => {
+                return <View key={i} style={styles.card1}>
+                            <Card style={styles.card} elevation={0} onPress={() => openLink(e.url_video ? e.url_video : '')}>
+                                <View style={{flex: 1, flexDirection: 'row'}}>
+                                    <View style={{flex: 1}}>
+                                        <Card.Cover style={styles.card_cover} source={{ uri: e.imagen_preview_url }} />
+                                    </View>
+                                    <View style={{flex: 2}}>
+                                        <Card.Content>
+                                            <Title numberOfLines={1} style={styles.text_all}>{e.titulo ? e.titulo.toUpperCase() : ''}</Title>
+                                            <Paragraph numberOfLines={1} style={styles.text_all}>{e.subtitulo ? e.subtitulo.toUpperCase() : ''}</Paragraph>
+                                            {/* <Paragraph numberOfLines={1} style={styles.paragraph_grey}>{e.url}</Paragraph> */}
+                                        </Card.Content>
+                                    </View>
+                                </View>
                             </Card>
                         </View>
             })
@@ -50,9 +56,19 @@ const Noticias = ({dataNews}) => {
 
 }
 
-export default Noticias;
+export default Video_N;
 let widthScreen = Dimensions.get('window').width / 1.04
 const styles = StyleSheet.create({
+    card1:{
+        flex: 1, 
+        justifyContent: 'center', 
+        alignContent: 'center',
+        width: widthScreen,
+        marginTop: 10,
+        marginBottom: 10,
+        backgroundColor: '#131011',
+        borderRadius: 5
+    },
     card:{
         flex: 1, 
         justifyContent: 'center', 
@@ -63,10 +79,17 @@ const styles = StyleSheet.create({
         borderRadius: 5
     },
     card_cover:{
-        marginLeft: 25, 
-        marginTop: 15, 
-        marginRight: 25, 
+        marginLeft: 15,   
+        borderRadius: 5,
+        height: 100,
+        width: 'auto',
         borderRadius: 5
+    },
+    text_all:{
+        color: '#fff',
+        // fontFamily: 'Montserrat-Regular',
+        fontSize: 15,
+        marginLeft: 5
     },
     title_text:{
         color: '#01CD01',

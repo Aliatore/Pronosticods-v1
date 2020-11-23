@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, Dimensions } from 'react-native';
 import {
     useTheme,
     Avatar,
@@ -18,6 +18,7 @@ import {
 
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Feather from 'react-native-vector-icons/Feather';
+import AsyncStorage from '@react-native-community/async-storage';
 
 import{ AuthContext } from '../../components/context';
 
@@ -27,127 +28,142 @@ export function DrawerContent(props) {
 
     const { signOut, toggleTheme } = React.useContext(AuthContext);
 
-    return(
-        <View style={{flex:1, backgroundColor: '#303030'}}>
-            <DrawerContentScrollView {...props}>
-                <View style={styles.drawerContent}>
-                    {/* <View style={styles.userInfoSection}>
-                        <View style={{flexDirection:'row',marginTop: 15}}>
-                            <View style={{marginLeft:15, flexDirection:'column'}}>
-                                <Title style={styles.title}>John Doe</Title>
-                            </View>
-                        </View>
-                        
-                    </View> */}
+    const [data, setData] = React.useState({
+        client_token: '',
+        data_user: null,
+        error_message: '',
+        date_today: ''
+      });
 
-                    <Drawer.Section style={styles.drawerSection}>
-                        <DrawerItem 
-                            icon={({color, size}) => (
-                                <Icon 
-                                name="menu" 
-                                color={'#01CD01'}
-                                size={size}
-                                />
-                            )}
-                            label="John Doe"
-                            activeTintColor="#fff"
-                            inactiveTintColor="#fff"
-                            onPress={() => {props.navigation.closeDrawer()}}
-                        />
-                        <DrawerItem 
-                            icon={({color, size}) => (
-                                <Icon 
-                                name="home-outline" 
-                                color={'#fff'}
-                                size={size}
-                                />
-                            )}
-                            label="Cambiar contraseña"
-                            activeTintColor="#fff"
-                            inactiveTintColor="#fff"
-                            onPress={() => {props.navigation.navigate('Home')}}
-                        />
-                        <DrawerItem 
-                            icon={({color, size}) => (
-                                <Icon 
-                                name="account-outline" 
-                                color={'#fff'}
-                                size={size}
-                                />
-                            )}
-                            label="Editar perfil"
-                            activeTintColor="#fff"
-                            inactiveTintColor="#fff"
-                            onPress={() => {props.navigation.navigate('Profile')}}
-                        />
-                        <DrawerItem 
-                            icon={({color, size}) => (
-                                <Icon 
-                                name="exit-to-app" 
-                                color={'#fff'}
-                                size={size}
-                                />
-                            )}
-                            label="Cerrar sesión"
-                            activeTintColor="#fff"
-                            inactiveTintColor="#fff"
-                            onPress={() => {signOut()}}
-                        />
-                        {/* <DrawerItem 
-                            icon={({color, size}) => (
-                                <Feather 
-                                name="settings" 
-                                color={color}
-                                size={size}
-                                />
-                            )}
-                            label="Settings"
-                            onPress={() => {props.navigation.navigate('SettingsScreen')}}
-                        />
-                        <DrawerItem 
-                            icon={({color, size}) => (
-                                <Icon 
-                                name="account-check-outline" 
-                                color={color}
-                                size={size}
-                                />
-                            )}
-                            label="Support"
-                            onPress={() => {props.navigation.navigate('SupportScreen')}}
-                        /> */}
-                    </Drawer.Section>
-                    {/* <Drawer.Section title="Preferences">
-                        <TouchableRipple onPress={() => {toggleTheme()}}>
-                            <View style={styles.preference}>
-                                <Text>Dark Theme</Text>
-                                <View pointerEvents="none">
-                                    <Switch value={paperTheme.dark}/>
-                                </View>
-                            </View>
-                        </TouchableRipple>
-                    </Drawer.Section> */}
+    
+      //obtain the token with asyncstorage and set in state data.
+    const obtainToken = async () => {
+      try {
+          const value = await AsyncStorage.getItem('dataUser');
+          const valueParsed = JSON.parse(value);
+          setClientData(valueParsed)
+      } catch(e) {
+          console.log(e);
+      }
+    }
+    
+    const setClientData = (e) => {
+      setData({
+          ...data,
+          data_user: e
+      }); 
+    }
+
+    React.useEffect(() => {
+        obtainToken()
+    }, []);
+
+    return(
+        <View style={{flex:1, backgroundColor: '#292828'}}>
+            <DrawerContentScrollView {...props}>
+                <View style={styles.globalDrawerContent}>
+                    <View style={styles.drawerContent1}>
+                        <Drawer.Section style={styles.drawerSection}>
+                            <DrawerItem 
+                                icon={({color, size}) => (
+                                    <Icon 
+                                    name="menu" 
+                                    color={'#01CD01'}
+                                    size={size}
+                                    />
+                                )}
+                                label=""
+                                activeTintColor="#fff"
+                                inactiveTintColor="#fff"
+                                onPress={() => {props.navigation.closeDrawer()}}
+                            />
+                            <DrawerItem 
+                                icon={({color, size}) => (
+                                    <Icon 
+                                    name="shield-half-full" 
+                                    color={'#fff'}
+                                    size={size}
+                                    />
+                                )}
+                                label=""
+                                activeTintColor="#fff"
+                                inactiveTintColor="#fff"
+                            />
+                            <DrawerItem 
+                                icon={({color, size}) => (
+                                    <Icon 
+                                    name="square-edit-outline" 
+                                    color={'#fff'}
+                                    size={size}
+                                    />
+                                )}
+                                label=""
+                                activeTintColor="#fff"
+                                inactiveTintColor="#fff"
+                            />
+                            <DrawerItem 
+                                icon={({color, size}) => (
+                                    <Icon 
+                                    name="logout-variant" 
+                                    color={'#fff'}
+                                    size={size}
+                                    />
+                                )}
+                                label=""
+                                activeTintColor="#fff"
+                                inactiveTintColor="#fff"
+                                
+                            />
+                        </Drawer.Section>
+                    </View>
+                    <View style={styles.drawerContent}>
+                        <Drawer.Section style={styles.drawerSection}>
+                            <DrawerItem 
+                                label={data.data_user !== null ? data.data_user.first_name : ""}
+                                activeTintColor="#fff"
+                                inactiveTintColor="#fff"
+                                onPress={() => {props.navigation.closeDrawer()}}
+                            />
+                            <DrawerItem 
+                                label="Cambiar contraseña"
+                                activeTintColor="#fff"
+                                inactiveTintColor="#fff"
+                                onPress={() => {props.navigation.navigate('Home')}}
+                            />
+                            <DrawerItem 
+                                label="Editar perfil"
+                                activeTintColor="#fff"
+                                inactiveTintColor="#fff"
+                                onPress={() => {props.navigation.navigate('Profile')}}
+                            />
+                            <DrawerItem 
+                                label="Cerrar sesión"
+                                activeTintColor="#fff"
+                                inactiveTintColor="#fff"
+                                onPress={() => {signOut()}}
+                            />
+                        </Drawer.Section>
+                    </View>        
                 </View>
             </DrawerContentScrollView>
-            {/* <Drawer.Section style={styles.bottomDrawerSection}>
-                <DrawerItem 
-                    icon={({color, size}) => (
-                        <Icon 
-                        name="exit-to-app" 
-                        color={color}
-                        size={size}
-                        />
-                    )}
-                    label="Sign Out"
-                    onPress={() => {signOut()}}
-                />
-            </Drawer.Section> */}
         </View>
     );
 }
-
+let heightScreen = Dimensions.get('window').height 
 const styles = StyleSheet.create({
+    globalDrawerContent: {
+      flex: 1,
+      flexDirection: 'row',
+      marginTop: -5,
+      height: heightScreen,
+    },
     drawerContent: {
       flex: 1,
+      backgroundColor: '#292828',
+    },
+    drawerContent1: {
+      flex: 0.28,
+      backgroundColor: '#171717',
     },
     userInfoSection: {
       paddingLeft: 20,
