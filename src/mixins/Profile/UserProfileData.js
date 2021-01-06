@@ -4,10 +4,10 @@ import { Avatar, Button, Card, Title, Paragraph } from 'react-native-paper';
 import * as Animatable from 'react-native-animatable';
 import LinearGradient from 'react-native-linear-gradient';
 
-const UserProfileData = ({dataUser}) => {
+const UserProfileData = ({dataUser, casa_apuestas}) => {
 
-    console.log("User Profile element", dataUser ? dataUser : null)
-    
+    // console.log("User Profile element", dataUser ? dataUser : null)
+    console.log(casa_apuestas);
 
     if (dataUser !== null && dataUser !== '') {
         return(
@@ -73,7 +73,7 @@ const UserProfileData = ({dataUser}) => {
                             <Text style={[styles.textSign, {
                                 color: '#fff',
                                 marginLeft: 18,
-                            }]}>{dataUser.email ? dataUser.email : null}</Text>
+                            }]}>CASA DE APUESTAS</Text>
                         </TouchableOpacity>
                     </View>
                     <View style={{justifyContent: 'center', alignItems: 'center'}}>
@@ -97,37 +97,8 @@ const UserProfileData = ({dataUser}) => {
                             style={[styles.signIn, {
                                 borderColor: '#fff',
                                 borderWidth: 1,
-                                marginTop: 25
-                            }]}
-                        >
-                            <Text style={[styles.textSign, {
-                                color: '#fff',
-                                marginLeft: 18,
-                            }]}>{dataUser.email ? dataUser.email : null}</Text>
-                        </TouchableOpacity>
-                    </View>
-                    <View style={{justifyContent: 'center', alignItems: 'center'}}>
-                        <TouchableOpacity
-                            disabled={true}
-                            style={[styles.signIn, {
-                                borderColor: '#fff',
-                                borderWidth: 1,
-                                marginTop: 25
-                            }]}
-                        >
-                            <Text style={[styles.textSign, {
-                                color: '#fff',
-                                marginLeft: 18,
-                            }]}>{dataUser.email ? dataUser.email : null}</Text>
-                        </TouchableOpacity>
-                    </View>
-                    <View style={{justifyContent: 'center', alignItems: 'center'}}>
-                        <TouchableOpacity
-                            disabled={true}
-                            style={[styles.signIn, {
-                                borderColor: '#fff',
-                                borderWidth: 1,
-                                marginTop: 25
+                                marginTop: 25,
+                                marginBottom: 25
                             }]}
                         >
                             <Text style={[styles.textSign, {
@@ -163,6 +134,7 @@ const styles = StyleSheet.create({
         width: widthScreen,
         // height: heightScreen,
         marginTop: 10,
+        marginBottom: 20,
         backgroundColor: '#131011',
         borderRadius: 5
     },

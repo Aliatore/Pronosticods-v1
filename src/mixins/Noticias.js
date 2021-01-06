@@ -5,7 +5,7 @@ import { Avatar, Button, Card, Title, Paragraph } from 'react-native-paper';
 const Noticias = ({dataNews}) => {
 
     const openLink = (url) => {
-        console.log('abriendo link');
+        // console.log('abriendo link');
         Linking.canOpenURL(url).then(supported => {
             if (supported) {
               Linking.openURL(url);

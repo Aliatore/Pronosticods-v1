@@ -66,15 +66,8 @@ const HomeScreen = ({navigation}) => {
                 try {
                     axios({
                         method: 'get',
-                        url: 'https://app.pronosticodds.com/api/noticias',
+                        url: 'https://app.pronosticodds.com/api/casa_apuesta',
                         timeout: 9000,
-                        params: {
-                            limit: 16,
-                            page: data.page
-                        },
-                        data: {
-                          date: dateToday
-                        },
                         headers: {
                           'Authorization': `Bearer ${token_user}`,
                             'Content-Type': 'application/json',
@@ -97,14 +90,20 @@ const HomeScreen = ({navigation}) => {
                         console.log(response)
                         if (response.status === 200 || response.status === 201) {
                             console.log('correcto');
+                            let filter_casa_apuestas = response.data.data.filter((order) => {
+                                if (order.id === allData.casa_apuestas_id) {
+                                    return order;
+                                }
+                            });
+                            console.log(filter_casa_apuestas);
                             setVisible(false)
-                            setData({
-                                ...data,
-                                data_news: response.data.data,
-                                client_token: token_user,
-                                date_today: dateToday,
-                                page: data.page += 1,
-                            })
+                            // setData({
+                            //     ...data,
+                            //     data_news: response.data.data,
+                            //     client_token: token_user,
+                            //     date_today: dateToday,
+                            //     page: data.page += 1,
+                            // })
                         }else{
                             let error = response.data.errors
                             let parsed_error = JSON.stringify(error)

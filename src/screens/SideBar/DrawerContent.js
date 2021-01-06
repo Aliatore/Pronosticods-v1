@@ -122,7 +122,7 @@ export function DrawerContent(props) {
                                 label={data.data_user !== null ? data.data_user.first_name : ""}
                                 activeTintColor="#fff"
                                 inactiveTintColor="#fff"
-                                onPress={() => {props.navigation.closeDrawer()}}
+                                // onPress={() => {props.navigation.closeDrawer()}}
                             />
                             <DrawerItem 
                                 label="Cambiar contraseña"

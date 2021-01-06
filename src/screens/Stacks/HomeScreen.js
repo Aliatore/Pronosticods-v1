@@ -109,8 +109,8 @@ const HomeScreen = ({navigation}) => {
                 axios.all([requestOne, requestTwo]).then(axios.spread((...responses) => {
                     const responseOne = responses[0].data.data;
                     const responseTwo = responses[1].data.data;
-                    console.log("UNO",responseOne);
-                    console.log("DOS",responseTwo);
+                    // console.log("UNO",responseOne);
+                    // console.log("DOS",responseTwo);
                     
                     if (responses[0].status === 200 || responses[0].status === 201 && responses[1].status === 200 || responses[1].status === 201) {
                         setVisible(false)
@@ -135,7 +135,7 @@ const HomeScreen = ({navigation}) => {
                     }
                 })).catch(errors => {
                     // react on errors.
-                    console.log(errors);
+                    // console.log(errors);
                     // console.log(error);
                     setVisible(false)
                     setAlert(true)
@@ -167,7 +167,7 @@ const HomeScreen = ({navigation}) => {
   }, []);
 
   //state hooks for popups
-  const [visible, setVisible] = React.useState(false);
+  const [visible, setVisible] = React.useState(true);
   const [alert, setAlert] = React.useState(false);
   
     return (
