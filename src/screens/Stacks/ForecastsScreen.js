@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, StyleSheet, StatusBar, ScrollView, Dimensions, TouchableOpacity } from 'react-native';
+import { View, StyleSheet, StatusBar, ScrollView, Dimensions, TouchableOpacity, Image } from 'react-native';
 import { Portal, Text, Dialog, Card, Title } from 'react-native-paper';
 import { Spinner } from 'native-base'
 import AwesomeAlert from 'react-native-awesome-alerts';
@@ -154,30 +154,36 @@ const ForecastsScreen = ({navigation}) => {
             // }}
             // scrollEventThrottle={0}
           >
-            <Text>Skere</Text>
+            <View style={styles.top_container}>
+              <Text  style={styles.top_text}>Pronóstico del día</Text>
+            </View>
             <View style={styles.bot}>
                 <Card style={styles.card}>
                     <Card.Content>
-                      <Title numberOfLines={1}  style={styles.bot_text}> - </Title>
-                        <View style={styles.button}>
-                            <TouchableOpacity
-                              style={styles.signIn}
-                              onPress={() => console.log('skere')}
-                              disabled={true}
-                            >
-                                <LinearGradient
-                                    colors={['#989898', '#989898']}
-                                    style={styles.signIn}
-                                >
-                                    <Text style={[styles.textSign, {
-                                        color:'#fff'
-                                    }]}>-</Text>
-                                </LinearGradient>
-                            </TouchableOpacity>
+                      <View style={styles.container_card}>
+                        <View style={styles.container1}>
+                          <Image style={{width: 70, height: 70, resizeMode: 'contain'}} source={require('../../assets/img/png/realm.png')} />
                         </View>
+                        <View style={styles.container2}>
+                          <Title style={styles.text_forecast1}>Hoy 2:30 pm</Title>
+                          <Title style={styles.text_forecast2}>04:68:00</Title>
+                          <Title numberOfLines={1} style={styles.text_forecast3}>Real madrid - Barcelona</Title>
+                          <Title numberOfLines={1} style={styles.text_forecast4}>UEFA CHAMPIONS LEAGUE</Title>
+                          <Title numberOfLines={1} style={styles.text_forecast5}>Cuartos de final</Title>
+                          <Title style={styles.text_forecast6}>Gana real madrid el primer tiempo</Title>
+                          <Title numberOfLines={1} style={styles.text_forecast7}>2.050</Title>
+                        </View>
+                        <View style={styles.container3}>
+                        <Image style={{width: 70, height: 70, resizeMode: 'contain'}} source={require('../../assets/img/png/barcelona.png')} />
+                        </View>
+                      </View>
                     </Card.Content>
                 </Card>
-              </View>
+            </View>
+            <View style={styles.bot_container}>
+              <Text style={styles.bot_text}>No ha obtenido ningún plan prémium para obtener mayores beneficios, dirígete a suscripciones y únete a uno de nuestros equipos.</Text>
+              <Text style={styles.bot_text1}>¡Unete al club de los ganadores!</Text>
+            </View>
           </ScrollView>
       </View>
       <View>
@@ -232,7 +238,9 @@ const ForecastsScreen = ({navigation}) => {
 
 export default ForecastsScreen;
 
-let widthScreen = Dimensions.get('window').width / 1.04
+let widthScreen = Dimensions.get('window').width / 1.04;
+let widthScreen1 = Dimensions.get('window').width / 1.3;
+let heightScreen = Dimensions.get('window').height / 2.8;
 const styles = StyleSheet.create({
   container: {
     flex: 1, 
@@ -241,15 +249,119 @@ const styles = StyleSheet.create({
     backgroundColor: '#303030',
   },
   card:{
-        flex: 1, 
-        justifyContent: 'center', 
-        alignContent: 'center',
-        width: widthScreen,
-        marginTop: 10,
-        // marginBottom: 10,
-        backgroundColor: '#131011',
-        borderRadius: 5
-   },
+    flex: 1, 
+    justifyContent: 'center', 
+    alignContent: 'center',
+    width: widthScreen,
+    marginTop: 10,
+    // marginBottom: 10,
+    backgroundColor: '#131011',
+    borderRadius: 5
+  },
+  bot:{
+    flex: 1, 
+    justifyContent: 'center', 
+    alignContent: 'center',
+    width: widthScreen,
+    height: heightScreen
+  },
+  top_container:{
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  top_text:{
+    color: '#fff',
+    fontFamily: 'Montserrat-Medium',
+    fontSize: 14,
+    marginTop: 10,
+    textAlign: 'left'
+  },
+  container_card: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'flex-start',
+    flexDirection: 'row'
+  },
+  container1: {
+    flex: 1,
+    justifyContent: 'flex-start',
+    alignItems: 'flex-start'
+  },
+  container2: {
+    flex: 4,
+    justifyContent: 'flex-start',
+    alignItems: 'center'
+  },
+  container3: {
+    flex: 1,
+    justifyContent: 'flex-start',
+    alignItems: 'flex-end'
+  },
+  text_forecast1:{
+    color: '#fff',
+    fontFamily: 'Montserrat-Medium',
+    fontSize: 11,
+    marginTop: 10,
+  },
+  text_forecast2:{
+    color: '#fff',
+    fontFamily: 'Montserrat-Medium',
+    fontSize: 14,
+    marginTop: -10,
+  },
+  text_forecast3:{
+    color: '#fff',
+    fontFamily: 'Montserrat-Medium',
+    fontSize: 11,
+    marginTop: 10,
+  },
+  text_forecast4:{
+    color: '#fff',
+    fontFamily: 'Montserrat-Medium',
+    fontSize: 11,
+    marginTop: -15,
+  },
+  text_forecast5:{
+    color: '#fff',
+    fontFamily: 'Montserrat-Medium',
+    fontSize: 11,
+    marginTop: -15,
+  },
+  text_forecast6:{
+    color: '#fff',
+    fontFamily: 'Montserrat-Medium',
+    fontSize: 11,
+    marginTop: -5,
+  },
+  text_forecast7:{
+    color: '#fff',
+    fontFamily: 'Montserrat-Medium',
+    fontSize: 11,
+    marginTop: -15,
+  },
+  bot_container:{
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 40
+  },
+  bot_text:{
+    color: '#fff',
+    fontFamily: 'Montserrat-Medium',
+    textAlign: 'center',
+    fontSize: 13,
+    lineHeight: 20,
+    width: widthScreen1,
+  },
+  bot_text1:{
+    color: '#fff',
+    fontFamily: 'Montserrat-Medium',
+    textAlign: 'center',
+    fontSize: 13,
+    lineHeight: 20,
+    width: widthScreen1,
+    marginTop: 20
+  },
 });
-
 
