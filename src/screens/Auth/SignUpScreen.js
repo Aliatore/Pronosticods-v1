@@ -16,7 +16,7 @@ import LinearGradient from 'react-native-linear-gradient';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Feather from 'react-native-vector-icons/Feather';
 import Layer from '../../assets/img/svg/Layer.svg';
-import {Picker} from '@react-native-community/picker';
+import { Picker as SelectPicker } from '@react-native-picker/picker';
 import DateTimePicker from '@react-native-community/datetimepicker';    
 import Countries from '../../model/countries'
 import { Portal, Text, Dialog } from 'react-native-paper';
@@ -176,7 +176,7 @@ const SignUpScreen = ({navigation}) => {
 
     const setCountries = () =>{
         return Countries.map((e, i) => {
-          return <Picker.Item key={i} label={e.name} value={e.id} />
+          return <SelectPicker.Item key={i} label={e.name} value={e.id} />
         }) 
     }
     
@@ -323,15 +323,15 @@ const SignUpScreen = ({navigation}) => {
                                 />
                             </View>
                             <View style={[styles.action_picker, {marginTop: 20}]}>
-                                <Picker
+                                <SelectPicker
                                     selectedValue={data.country}
                                     style={styles.picker}
                                     mode={'dialog'}
                                     onValueChange={(e) => setCountry(e)}
                                 >
-                                    <Picker.Item value="" label="SELECCIONA TU PAÍS" />
+                                    <SelectPicker.Item value="" label="SELECCIONA TU PAÍS" />
                                     {Countries !== null ? setCountries() : null}
-                                </Picker>
+                                </SelectPicker>
                             </View>
                             <View style={[styles.action_date, {marginTop: 20}]}>
                                 <View style={styles.container_date}>
