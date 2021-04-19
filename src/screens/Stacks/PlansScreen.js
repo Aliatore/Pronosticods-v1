@@ -88,7 +88,7 @@ const PlansScreen = ({navigation}) => {
                 try {
                     axios({
                         method: 'get',
-                        url: 'https://app.pronosticodds.com/api/user/plans_avaibles',
+                        url: 'https://admin.pronosticodds.com/api/user/plans_avaibles',
                         timeout: 9000,
                         headers: {
                           'Authorization': `Bearer ${token_user}`,

@@ -87,46 +87,47 @@ const SignInScreen = ({navigation}) => {
                 } else {
                     try {
                         axios({
-                                method: 'post',
-                                url: 'https://app.pronosticodds.com/api/login',
-                                timeout: 9000,
-                                data: {
-                                    email: email,
-                                    password: password
-                                },
-                                headers: {
-                                    'Content-Type': 'application/json',
-                                    'X-Requested-With': 'XMLHttpRequest'
-                                },
-                                validateStatus: (status) => {
-                                    return true; 
-                                },
-                            })
+                            method: 'post',
+                            url: 'https://admin.pronosticodds.com/api/login',
+                            timeout: 9000,
+                            data: {
+                                email: email,
+                                password: password
+                            },
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-Requested-With': 'XMLHttpRequest'
+                            },
+                            validateStatus: (status) => {
+                                return true; 
+                            },
+                        })
                         .catch(function(error) {
-                                console.log(error);
+                            console.log(error);
+                            setVisible(false)
+                            setAlert(true)
+                            setData({
+                                ...data,
+                                error_message: `Ha ocurrido un error, ${error}`
+                            })
+                        })
+                        .then(response => {
+                            console.log(response);
+                            console.log("status", response.status);
+                            console.log("data", response.data);
+                            if (response.status === 200) {
+                                const token_user = response.data.token
+                                executeValidation(email, password, token_user)
+                                setVisible(false)
+                            }else{
                                 setVisible(false)
                                 setAlert(true)
                                 setData({
                                     ...data,
-                                    error_message: `Ha ocurrido un error, ${error}`
+                                    error_message: `Ha ocurrido un error, ${response.data.errors.email}`
                                 })
-                            })
-                        .then(response => {
-                                console.log("status", response.status);
-                                console.log("data", response.data);
-                                if (response.status === 200) {
-                                    const token_user = response.data.token
-                                    executeValidation(email, password, token_user)
-                                    setVisible(false)
-                                }else{
-                                    setVisible(false)
-                                    setAlert(true)
-                                    setData({
-                                        ...data,
-                                        error_message: `Ha ocurrido un error, ${response.data.errors.email}`
-                                    })
-                                }
-                            })
+                            }
+                        })
                     } catch (err) {
                             console.log('catch de errores: ', err);
                             setVisible(false)
@@ -161,7 +162,7 @@ const SignInScreen = ({navigation}) => {
                 try {
                     axios({
                         method: 'get',
-                        url: 'https://app.pronosticodds.com/api/user',
+                        url: 'https://admin.pronosticodds.com/api/user',
                         headers: {
                             'Authorization': `Bearer ${token_user}`,
                             'Content-Type': 'application/json',

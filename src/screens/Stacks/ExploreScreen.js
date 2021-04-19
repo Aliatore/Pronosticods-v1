@@ -66,7 +66,7 @@ const ExploreScreen = ({navigation}) => {
             } else {
               axios({
                 method: 'get',
-                url: 'https://app.pronosticodds.com/api/forecast',
+                url: 'https://admin.pronosticodds.com/api/forecast',
                 timeout: 9000,
                 params: {
                     limit: 10,

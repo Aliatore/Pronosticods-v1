@@ -69,7 +69,7 @@ const ForgotPasswordScreen = ({navigation}) => {
                     try {
                         axios({
                             method: 'post',
-                            url: 'https://app.pronosticodds.com/api/password/reset',
+                            url: 'https://admin.pronosticodds.com/api/password/reset',
                             timeout: 9000,
                             data: {
                                 email: email,

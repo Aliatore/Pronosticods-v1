@@ -57,7 +57,7 @@ const HomeScreen = ({navigation}) => {
 
     const requestOne = axios({
         method: 'get',
-        url: 'https://app.pronosticodds.com/api/noticias',
+        url: 'https://admin.pronosticodds.com/api/noticias',
         timeout: 9000,
         params: {
             limit: 16,
@@ -77,7 +77,7 @@ const HomeScreen = ({navigation}) => {
     });
     const requestTwo = axios({
         method: 'get',
-        url: 'https://app.pronosticodds.com/api/videos',
+        url: 'https://admin.pronosticodds.com/api/videos',
         timeout: 9000,
         params: {
             limit: 13,

@@ -199,7 +199,7 @@ const SignUpScreen = ({navigation}) => {
                         try {
                             axios({
                                 method: 'post',
-                                url: 'https://app.pronosticodds.com/api/register',
+                                url: 'https://admin.pronosticodds.com/api/register',
                                 timeout: 9000,
                                 data: {
                                     first_name: name,

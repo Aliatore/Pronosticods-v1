@@ -51,7 +51,7 @@ const ResendEmailScreen = ({navigation, route}) => {
                     try {
                         axios({
                             method: 'post',
-                            url: 'https://app.pronosticodds.com/api/password/email',
+                            url: 'https://admin.pronosticodds.com/api/password/email',
                             timeout: 9000,
                             data: {
                                 email: email,

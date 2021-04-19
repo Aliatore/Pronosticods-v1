@@ -66,7 +66,7 @@ const HomeScreen = ({navigation}) => {
                 try {
                     axios({
                         method: 'get',
-                        url: 'https://app.pronosticodds.com/api/casa_apuesta',
+                        url: 'https://admin.pronosticodds.com/api/casa_apuesta',
                         timeout: 9000,
                         headers: {
                           'Authorization': `Bearer ${token_user}`,
