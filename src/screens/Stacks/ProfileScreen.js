@@ -16,7 +16,8 @@ const HomeScreen = ({navigation}) => {
     client_token: '',
     data_user: null,
     error_message: '',
-    date_today: ''
+    date_today: '',
+    home_gambler: ''
   });
 
   const theme = useTheme();
@@ -36,6 +37,7 @@ const HomeScreen = ({navigation}) => {
         ...data,
         data_user: e
     }); 
+    getHouse(e);
   }
   const getDate = () => {
     var date = new Date().getDate();
@@ -47,7 +49,7 @@ const HomeScreen = ({navigation}) => {
     return year + '-' + month + '-' + date;//format: dd-mm-yyyy;
 }
   //api call
-  const getNews = (token_user) => {   
+  const getHouse = (token_user) => {   
     setVisible(true)
 
     let dateToday = getDate()
@@ -69,7 +71,7 @@ const HomeScreen = ({navigation}) => {
                         url: 'https://admin.pronosticodds.com/api/casa_apuesta',
                         timeout: 9000,
                         headers: {
-                          'Authorization': `Bearer ${token_user}`,
+                          'Authorization': `Bearer ${token_user.api_token}`,
                             'Content-Type': 'application/json',
                             'X-Requested-With': 'XMLHttpRequest'
                         },
@@ -89,21 +91,26 @@ const HomeScreen = ({navigation}) => {
                     .then(response => {
                         console.log(response)
                         if (response.status === 200 || response.status === 201) {
-                            console.log('correcto');
+                            console.log('correcto', response);
                             let filter_casa_apuestas = response.data.data.filter((order) => {
-                                if (order.id === allData.casa_apuestas_id) {
+                                if (order.id === token_user.casa_apuestas_id) {
                                     return order;
                                 }
                             });
-                            console.log(filter_casa_apuestas);
+                            console.log(filter_casa_apuestas, "aqui llego el resultado de Ksa");
+                            console.log(typeof filter_casa_apuestas, "aqui llego el resultado de Ksa");
+                            let are_empty = Object.keys(filter_casa_apuestas).length === 0;
+                            let result_casa_apuesta = '';
+                            are_empty ? result_casa_apuesta = "No posee" : result_casa_apuesta = filter_casa_apuestas;
+
                             setVisible(false)
-                            // setData({
-                            //     ...data,
-                            //     data_news: response.data.data,
-                            //     client_token: token_user,
-                            //     date_today: dateToday,
-                            //     page: data.page += 1,
-                            // })
+                            setData({
+                                ...data,
+                                data_user: token_user,
+                                client_token: token_user.api_token,
+                                date_today: dateToday,
+                                home_gambler: result_casa_apuesta,
+                            })
                         }else{
                             let error = response.data.errors
                             let parsed_error = JSON.stringify(error)
@@ -153,9 +160,11 @@ const HomeScreen = ({navigation}) => {
           <ScrollView>
             <UserProfile 
               dataUser={data.data_user}
+              navigation={navigation}
             />
             <UserProfileData 
               dataUser={data.data_user}
+              have_bets={data.home_gambler}
             />
           </ScrollView>
       </View>

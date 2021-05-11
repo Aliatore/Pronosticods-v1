@@ -3,11 +3,12 @@ import { View, Text, Image, StyleSheet, Dimensions, TouchableOpacity} from 'reac
 import { Avatar, Button, Card, Title, Paragraph } from 'react-native-paper';
 import * as Animatable from 'react-native-animatable';
 import LinearGradient from 'react-native-linear-gradient';
+import { useNavigation } from '@react-navigation/native';
 
 const UserProfile = ({dataUser}) => {
 
     // console.log("User Profile element", dataUser ? dataUser : null)
-
+    const navigation = useNavigation();
     if (dataUser !== null && dataUser !== '') {
         return(
             <>
@@ -24,7 +25,8 @@ const UserProfile = ({dataUser}) => {
                             </View>
                             <View style={{justifyContent: 'center', alignItems: 'center'}}>
                                 <TouchableOpacity
-                                    disabled={true}
+                                    // disabled={true}
+                                    onPress={() => navigation.navigate('Notifications')}
                                     style={[styles.signIn, {
                                         borderColor: '#01CD01',
                                         borderWidth: 1,
@@ -33,7 +35,7 @@ const UserProfile = ({dataUser}) => {
                                 >
                                     <Text style={[styles.textSign, {
                                         color: '#01CD01'
-                                    }]}>SUSCRIPCIÓN ACTIVA</Text>
+                                    }]}>MOSTRAR PLANES</Text>
                                 </TouchableOpacity>
                             </View>
                         </Card.Content>
@@ -87,7 +89,7 @@ const styles = StyleSheet.create({
         color: '#fff',
         fontFamily: 'Montserrat-Regular',
         fontSize: 13,
-        marginBottom: -10
+        marginBottom: -10,
     },
     textSign: {
         color: 'red',

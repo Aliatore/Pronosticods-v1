@@ -60,7 +60,7 @@ const HomeScreen = ({navigation}) => {
         url: 'https://admin.pronosticodds.com/api/noticias',
         timeout: 9000,
         params: {
-            limit: 16,
+            limit: 3,
             page: data.page
         },
         data: {
@@ -80,7 +80,7 @@ const HomeScreen = ({navigation}) => {
         url: 'https://admin.pronosticodds.com/api/videos',
         timeout: 9000,
         params: {
-            limit: 13,
+            limit: 3,
         },
         data: {
           date: dateToday
@@ -96,7 +96,7 @@ const HomeScreen = ({navigation}) => {
     });
 
     NetInfo.fetch().then(state => {
-        // console.log(state.isConnected);
+        console.log(state.isConnected);
         if (state.isConnected === true){
             if (token_user.length === 0) {
                 setVisible(false)
@@ -109,8 +109,8 @@ const HomeScreen = ({navigation}) => {
                 axios.all([requestOne, requestTwo]).then(axios.spread((...responses) => {
                     const responseOne = responses[0].data.data;
                     const responseTwo = responses[1].data.data;
-                    // console.log("UNO",responseOne);
-                    // console.log("DOS",responseTwo);
+                    console.log("UNO",responseOne);
+                    console.log("DOS",responseTwo);
                     
                     if (responses[0].status === 200 || responses[0].status === 201 && responses[1].status === 200 || responses[1].status === 201) {
                         setVisible(false)

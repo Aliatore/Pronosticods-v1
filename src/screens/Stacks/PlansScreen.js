@@ -110,11 +110,11 @@ const PlansScreen = ({navigation}) => {
                     })
                     .then(response => {
                         if (response.status === 200 || response.status === 201) {
-                            console.log('correcto');
+                            console.log('correcto', response);
                             setVisible(false)
                             setData({
                                 ...data,
-                                data_plans: response.data,
+                                data_plans: response.data.data,
                                 client_token: token_user,
                                 client_data: userdata
                             })
@@ -265,6 +265,8 @@ const PlansScreen = ({navigation}) => {
   const _onDone = () => {
     console.log('easy');
   }
+
+  console.log(data.client_data, "data del cliente");
 
   if (data.client_data !== null) {
     if (data.client_data.subscribed === true) {

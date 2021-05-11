@@ -4,10 +4,10 @@ import { Avatar, Button, Card, Title, Paragraph } from 'react-native-paper';
 import * as Animatable from 'react-native-animatable';
 import LinearGradient from 'react-native-linear-gradient';
 
-const UserProfileData = ({dataUser, casa_apuestas}) => {
+const UserProfileData = ({dataUser, have_bets}) => {
 
     // console.log("User Profile element", dataUser ? dataUser : null)
-    console.log(casa_apuestas);
+    console.log(dataUser);
 
     if (dataUser !== null && dataUser !== '') {
         return(
@@ -73,7 +73,7 @@ const UserProfileData = ({dataUser, casa_apuestas}) => {
                             <Text style={[styles.textSign, {
                                 color: '#fff',
                                 marginLeft: 18,
-                            }]}>CASA DE APUESTAS</Text>
+                            }]}>{have_bets ? have_bets : null}</Text>
                         </TouchableOpacity>
                     </View>
                     <View style={{justifyContent: 'center', alignItems: 'center'}}>
@@ -104,7 +104,22 @@ const UserProfileData = ({dataUser, casa_apuestas}) => {
                             <Text style={[styles.textSign, {
                                 color: '#fff',
                                 marginLeft: 18,
-                            }]}>{dataUser.email ? dataUser.email : null}</Text>
+                            }]}>CONTRASEÑA</Text>
+                        </TouchableOpacity>
+                    </View>
+                    <View style={{justifyContent: 'center', alignItems: 'center'}}>
+                        <TouchableOpacity
+                            disabled={true}
+                            style={[styles.signIn, {
+                                borderColor: '#fff',
+                                borderWidth: 1,
+                                marginBottom: 25
+                            }]}
+                        >
+                            <Text style={[styles.textSign, {
+                                color: '#fff',
+                                marginLeft: 18,
+                            }]}>{dataUser.banner.name ? dataUser.banner.name : null}</Text>
                         </TouchableOpacity>
                     </View>
                 </View>
