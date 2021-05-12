@@ -8,9 +8,9 @@ import NetInfo from "@react-native-community/netinfo";
 import AsyncStorage from '@react-native-community/async-storage';
 import AppIntroSlider from 'react-native-app-intro-slider';
 import LinearGradient from 'react-native-linear-gradient';
-import Gold from '../../assets/img/svg/Gold.svg';
-import Silver from '../../assets/img/svg/Silver.svg';
-import Bronze from '../../assets/img/svg/Bronze.svg';
+import Gold from '../../assets/img/svg/oro.svg';
+import Silver from '../../assets/img/svg/plata.svg';
+import Bronze from '../../assets/img/svg/bronce.svg';
 import { ScrollView } from 'react-native-gesture-handler';
 import { log } from 'react-native-reanimated';
 
@@ -153,6 +153,7 @@ const PlansScreen = ({navigation}) => {
 
   //render of swipeable
   const _renderItem = ({ item }) => {
+    console.log("item que llega",item);
     return (
       <View style={styles.container}>
         <ScrollView>
@@ -164,33 +165,33 @@ const PlansScreen = ({navigation}) => {
           <View style={styles.bot}>
             <Card style={styles.card}>
                 <Card.Content>
-                  <View style={{backgroundColor: '#171717', height: 45, justifyContent: 'center', alignItems: 'center'}}>
-                    {item.nickname.toUpperCase() === "GOLD" ? 
+                  <View style={{backgroundColor: '#171717', height: 115, justifyContent: 'center', alignItems: 'center'}}>
+                    {item.nickname.toUpperCase() === "GOLD PACK" ? 
                       <Gold 
-                        width="60" 
+                        width="100" 
                         style={{marginLeft: 0}}
                       />
                       : null
                     }
-                    {item.nickname.toUpperCase() === "SILVER" ? 
+                    {item.nickname.toUpperCase() === "SILVER PACK" ? 
                       <Silver 
-                        width="60" 
+                        width="100" 
                         style={{marginLeft: 0}}
                       />
                       : null
                     }
-                    {item.nickname.toUpperCase() === "BRONZE" ? 
+                    {item.nickname.toUpperCase() === "BRONZE PACK" ? 
                       <Bronze 
-                        width="60" 
+                        width="100" 
                         style={{marginLeft: 0}}
                       />
                       : null
                     }
                   </View>
-                  <Title numberOfLines={1}  style={styles.bot_text}>{item.nickname.toUpperCase()} PACK</Title>
+                  <Title numberOfLines={1}  style={styles.bot_text}>{item.nickname.toUpperCase()}</Title>
                   <View style={styles.container_swapp}>
                     <View style={styles.container_swapp2}>
-                        {item.nickname.toUpperCase() === 'GOLD' ? 
+                        {item.nickname.toUpperCase() === 'GOLD PACK' ? 
                           <FlatList
                             data={[
                               {key: '4 Pronósticos diarios'},
@@ -202,7 +203,7 @@ const PlansScreen = ({navigation}) => {
                           />
                           : null
                         }
-                        {item.nickname.toUpperCase() === 'SILVER' ? 
+                        {item.nickname.toUpperCase() === 'SILVER PACK' ? 
                           <FlatList
                             data={[
                               {key: '3 Pronósticos diarios'},
@@ -214,7 +215,7 @@ const PlansScreen = ({navigation}) => {
                           />
                           : null
                         }
-                        {item.nickname.toUpperCase() === 'BRONZE' ? 
+                        {item.nickname.toUpperCase() === 'BRONZE PACK' ? 
                           <FlatList
                             data={[
                               {key: '2 Pronósticos diarios'},
@@ -372,6 +373,7 @@ const PlansScreen = ({navigation}) => {
         <>
           {console.log('data seteada', data.data_plans)}
           <View style={{backgroundColor:'#303030', flex: 1}}>
+          {console.log("PLANES",data.data_plans)}
             {data.data_plans !== null ?
               <AppIntroSlider 
                 renderItem={_renderItem} 

@@ -27,6 +27,8 @@ import MainTabScreen from './src/screens/Home/MainTabScreen';
 import SupportScreen from './src/screens/Stacks/SupportScreen';
 import SettingsScreen from './src/screens/Stacks/SettingsScreen';
 import BookmarkScreen from './src/screens/Stacks/BookmarkScreen';
+import EditProfile from './src/screens/Stacks/EditProfile/EditProfile';
+import RestorePassword from './src/screens/Stacks/ChangePassword/ChangePassword';
 
 import { AuthContext } from './src/components/context';
 
@@ -169,6 +171,8 @@ const App = () => {
           <Drawer.Screen name="SupportScreen" component={SupportScreen} />
           <Drawer.Screen name="SettingsScreen" component={SettingsScreen} />
           <Drawer.Screen name="BookmarkScreen" component={BookmarkScreen} />
+          <Drawer.Screen name="EditProfileScreen" component={EditProfile} />
+          <Drawer.Screen name="RestorePasswordScreen" component={RestorePassword} />
         </Drawer.Navigator>
       )
     :

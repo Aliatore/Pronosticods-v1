@@ -71,7 +71,7 @@ export function DrawerContent(props) {
                                     color={'#01CD01'}
                                     size={size}
                                     />
-                                )}
+                                )}  
                                 label=""
                                 activeTintColor="#fff"
                                 inactiveTintColor="#fff"
@@ -88,6 +88,7 @@ export function DrawerContent(props) {
                                 label=""
                                 activeTintColor="#fff"
                                 inactiveTintColor="#fff"
+                                onPress={() => {props.navigation.navigate('RestorePasswordScreen')}}
                             />
                             <DrawerItem 
                                 icon={({color, size}) => (
@@ -100,6 +101,7 @@ export function DrawerContent(props) {
                                 label=""
                                 activeTintColor="#fff"
                                 inactiveTintColor="#fff"
+                                onPress={() => {props.navigation.navigate('EditProfileScreen')}}
                             />
                             <DrawerItem 
                                 icon={({color, size}) => (
@@ -128,13 +130,13 @@ export function DrawerContent(props) {
                                 label="Cambiar contraseña"
                                 activeTintColor="#fff"
                                 inactiveTintColor="#fff"
-                                onPress={() => {props.navigation.navigate('Home')}}
+                                onPress={() => {props.navigation.navigate('RestorePasswordScreen')}}
                             />
                             <DrawerItem 
                                 label="Editar perfil"
                                 activeTintColor="#fff"
                                 inactiveTintColor="#fff"
-                                onPress={() => {props.navigation.navigate('Profile')}}
+                                onPress={() => {props.navigation.navigate('EditProfileScreen')}}
                             />
                             <DrawerItem 
                                 label="Cerrar sesión"

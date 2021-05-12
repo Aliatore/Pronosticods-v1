@@ -10,7 +10,7 @@ import AsyncStorage from '@react-native-community/async-storage';
 import UserProfile from '../../mixins/Profile/UserProfile'
 import UserProfileData from '../../mixins/Profile/UserProfileData'
 
-const HomeScreen = ({navigation}) => {
+const ProfileScreen = ({navigation}) => {
 
   const [data, setData] = React.useState({
     client_token: '',
@@ -218,7 +218,7 @@ const HomeScreen = ({navigation}) => {
     );
 };
 
-export default HomeScreen;
+export default ProfileScreen;
 
 const styles = StyleSheet.create({
   container: {
