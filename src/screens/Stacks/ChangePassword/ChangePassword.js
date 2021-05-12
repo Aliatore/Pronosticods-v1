@@ -55,6 +55,7 @@ const ChangePassword = ({navigation}) => {
             ...data,
             data_user: e
         }); 
+        setVisible(false)
         // getHouse(e);
     }
     const getDate = () => {
@@ -250,7 +251,7 @@ const ChangePassword = ({navigation}) => {
   }, []);
 
   //state hooks for popups
-  const [visible, setVisible] = React.useState(false);
+  const [visible, setVisible] = React.useState(true);
   const [alert, setAlert] = React.useState(false);
   
     return (
@@ -286,7 +287,10 @@ const ChangePassword = ({navigation}) => {
                 </View>
             </View>
             <View style={styles.container_title_img}>
-                <Layer/>
+                <Layer
+                    width="75" 
+                    style={{marginLeft: 0}}
+                />
             </View>
         {/* <Text style={[styles.text_header, {marginTop: 20}]}>RECUPERAR CONTRASEÑA</Text> */}
         </Animatable.View>
@@ -458,8 +462,7 @@ const styles = StyleSheet.create({
     top: {
         flex: 1, 
         alignItems: 'center',
-        width: '98%',
-        marginTop: 5
+        width: '100%',
     },
     bot: {
         flex: 2, 
@@ -468,18 +471,21 @@ const styles = StyleSheet.create({
         width: '80%',
     },
     container_title: {
-        flexDirection: 'row'
+        flexDirection: 'row',
+        backgroundColor: '#171717',
     },
     container_title_img: {
         flexDirection: 'row'
     },
      c1: {
         flex:2, 
-        alignItems: 'flex-start'
+        alignItems: 'flex-start',
+        padding: 10
     },
     c2: {
         flex:1, 
-        alignItems: 'flex-end'
+        alignItems: 'flex-end',
+        padding: 10
     },
     text_header: {
         color: '#fff',

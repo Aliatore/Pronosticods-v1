@@ -1,13 +1,118 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, Image, StyleSheet, Dimensions, TouchableOpacity} from 'react-native';
+import { View, Text, Image, StyleSheet, Dimensions, TouchableOpacity, TextInput} from 'react-native';
 import { Avatar, Button, Card, Title, Paragraph } from 'react-native-paper';
+import { Picker as SelectPicker } from '@react-native-picker/picker';
 import * as Animatable from 'react-native-animatable';
 import LinearGradient from 'react-native-linear-gradient';
+import Countries from '../../model/countries'
 
 const UserProfileData = ({dataUser, have_bets}) => {
 
+    const [data, setData] = React.useState({
+        name: '',
+        lastname: '',
+        service: '',
+        country: '',
+        date_selected: '',
+        bet_house: '',
+        email: '',
+        password: '',
+        confirm_password: '',
+        error_message: '',
+        viewSecure: true,
+        viewSecure2: true,
+    });
     // console.log("User Profile element", dataUser ? dataUser : null)
     console.log(dataUser);
+    const setName = (e) => {
+        if(e.trim().length >= 3 ) {
+            setData({
+                ...data,
+                name: e
+            });
+        } else {
+            setData({
+                ...data,
+                name: e
+            });
+        }
+        console.log(e);
+    }
+    const setLastname = (e) => {
+        if(e.trim().length >= 3 ) {
+            setData({
+                ...data,
+                lastname: e
+            });
+        } else {
+            setData({
+                ...data,
+                lastname: e
+            });
+        }
+        console.log(e);
+    }
+    const setCountry = (e) => {
+        if(e.length !== 0 ) {
+            setData({
+                ...data,
+                country: e
+            });
+        } else {
+            setData({
+                ...data,
+                country: e
+            });
+        }
+        console.log(e);
+    }
+    const setBetHouse = (e) => {
+        if(e.length !== 0 ) {
+            setData({
+                ...data,
+                setBetHouse: e
+            });
+        } else {
+            setData({
+                ...data,
+                setBetHouse: e
+            });
+        }
+        console.log(e);
+    }
+    const setCountries = () =>{
+        return Countries.map((e, i) => {
+          return <SelectPicker.Item key={i} label={e.name} value={e.id} />
+        }) 
+    }
+    const setEmail = (e) => {
+        if(e.length !== 0 ) {
+            setData({
+                ...data,
+                email: e
+            });
+        } else {
+            setData({
+                ...data,
+                email: e
+            });
+        }
+        console.log(e);
+    }
+    const setService = (e) => {
+        if(e.length !== 0 ) {
+            setData({
+                ...data,
+                service: e
+            });
+        } else {
+            setData({
+                ...data,
+                service: e
+            });
+        }
+        console.log(e);
+    }
 
     if (dataUser !== null && dataUser !== '') {
         return(
@@ -25,10 +130,13 @@ const UserProfileData = ({dataUser, have_bets}) => {
                                 marginTop: 18
                             }]}
                         >
-                            <Text style={[styles.textSign, {
-                                color: '#fff',
-                                marginLeft: 18,
-                            }]}>{dataUser.first_name ? dataUser.first_name : null}</Text>
+                             <TextInput 
+                                placeholder="NOMBRE"
+                                style={styles.textInput}
+                                autoCapitalize="none"
+                                placeholderTextColor='#fff'
+                                onChangeText={(e) => setName(e)}
+                            />
                         </TouchableOpacity>
                     </View>
                     <View style={{justifyContent: 'center', alignItems: 'center'}}>
@@ -40,10 +148,42 @@ const UserProfileData = ({dataUser, have_bets}) => {
                                 marginTop: 25
                             }]}
                         >
-                            <Text style={[styles.textSign, {
-                                color: '#fff',
-                                marginLeft: 18,
-                            }]}>{dataUser.last_name ? dataUser.last_name : null}</Text>
+                            <TextInput 
+                                placeholder="APELLIDO"
+                                style={styles.textInput}
+                                autoCapitalize="none"
+                                placeholderTextColor='#fff'
+                                onChangeText={(e) => setLastname(e)}
+                            />
+                        </TouchableOpacity>
+                    </View>
+                    <View style={[styles.action_picker, {marginTop: 25}]}>
+                        <SelectPicker
+                            selectedValue={data.country}
+                            style={styles.picker}
+                            mode={'dialog'}
+                            onValueChange={(e) => setCountry(e)}
+                        >
+                            <SelectPicker.Item value="" label="SELECCIONA TU PAÍS" />
+                            {Countries !== null ? setCountries() : null}
+                        </SelectPicker>
+                    </View>
+                    <View style={{justifyContent: 'center', alignItems: 'center'}}>
+                        <TouchableOpacity
+                            disabled={true}
+                            style={[styles.signIn, {
+                                borderColor: '#fff',
+                                borderWidth: 1,
+                                marginTop: 25
+                            }]}
+                        >
+                           <TextInput 
+                                placeholder="CASA DE APUESTAS"
+                                style={styles.textInput}
+                                autoCapitalize="none"
+                                placeholderTextColor='#fff'
+                                onChangeText={(e) => setBetHouse(e)}
+                            />
                         </TouchableOpacity>
                     </View>
                     <View style={{justifyContent: 'center', alignItems: 'center'}}>
@@ -55,72 +195,27 @@ const UserProfileData = ({dataUser, have_bets}) => {
                                 marginTop: 25
                             }]}
                         >
-                            <Text style={[styles.textSign, {
-                                color: '#fff',
-                                marginLeft: 18,
-                            }]}>{dataUser.country_name ? dataUser.country_name : null}</Text>
+                            <TextInput 
+                                placeholder="CORREO"
+                                style={styles.textInput}
+                                autoCapitalize="none"
+                                placeholderTextColor='#fff'
+                                onChangeText={(e) => setEmail(e)}
+                            />
                         </TouchableOpacity>
                     </View>
-                    <View style={{justifyContent: 'center', alignItems: 'center'}}>
-                        <TouchableOpacity
-                            disabled={true}
-                            style={[styles.signIn, {
-                                borderColor: '#fff',
-                                borderWidth: 1,
-                                marginTop: 25
-                            }]}
+                    <View style={[styles.action_picker, {marginTop: 25, marginBottom:25}]}>
+                        <SelectPicker
+                            selectedValue={data.service}
+                            style={styles.picker}
+                            mode={'dialog'}
+                            onValueChange={(e) => setService(e)}
                         >
-                            <Text style={[styles.textSign, {
-                                color: '#fff',
-                                marginLeft: 18,
-                            }]}>{have_bets ? have_bets : null}</Text>
-                        </TouchableOpacity>
-                    </View>
-                    <View style={{justifyContent: 'center', alignItems: 'center'}}>
-                        <TouchableOpacity
-                            disabled={true}
-                            style={[styles.signIn, {
-                                borderColor: '#fff',
-                                borderWidth: 1,
-                                marginTop: 25
-                            }]}
-                        >
-                            <Text style={[styles.textSign, {
-                                color: '#fff',
-                                marginLeft: 18,
-                            }]}>{dataUser.email ? dataUser.email : null}</Text>
-                        </TouchableOpacity>
-                    </View>
-                    <View style={{justifyContent: 'center', alignItems: 'center'}}>
-                        <TouchableOpacity
-                            disabled={true}
-                            style={[styles.signIn, {
-                                borderColor: '#fff',
-                                borderWidth: 1,
-                                marginTop: 25,
-                                marginBottom: 25
-                            }]}
-                        >
-                            <Text style={[styles.textSign, {
-                                color: '#fff',
-                                marginLeft: 18,
-                            }]}>CONTRASEÑA</Text>
-                        </TouchableOpacity>
-                    </View>
-                    <View style={{justifyContent: 'center', alignItems: 'center'}}>
-                        <TouchableOpacity
-                            disabled={true}
-                            style={[styles.signIn, {
-                                borderColor: '#fff',
-                                borderWidth: 1,
-                                marginBottom: 25
-                            }]}
-                        >
-                            <Text style={[styles.textSign, {
-                                color: '#fff',
-                                marginLeft: 18,
-                            }]}>{dataUser.banner.name ? dataUser.banner.name : null}</Text>
-                        </TouchableOpacity>
+                            <SelectPicker.Item value="" label="SELECCIONA TU PLAN" />
+                            <SelectPicker.Item label="PLAN GOLD" value="gold" />
+                            <SelectPicker.Item label="PLAN SILVER" value="silver" />
+                            <SelectPicker.Item label="PLAN BRONZE" value="bronze" />
+                        </SelectPicker>
                     </View>
                 </View>
             </>
@@ -179,9 +274,54 @@ const styles = StyleSheet.create({
     signIn: {
         width: widthButton,
         height: 40,
-        justifyContent: 'flex-start',
-        alignItems: 'center',
         borderRadius: 5,
         flexDirection: 'row',
+        marginTop: 10,
+        color: '#fff',
+        borderColor: '#fff',
+        borderWidth: 1.5,
+        borderRadius: 5,
+        paddingTop: 15,
+        paddingLeft: 10
     },
+    action_picker: {
+        flexDirection: 'row',
+        marginTop: 10,
+        color: '#fff',
+        backgroundColor: '#131011',
+        borderColor: '#fff',
+        borderWidth: 1.5,
+        borderRadius: 5,
+        paddingTop: 7,
+        paddingLeft: 10,
+        marginLeft: 23,
+
+        width: '85%',
+    },
+    picker: {
+        height: 30, 
+        width: '100%', 
+        paddingBottom: 5,
+        marginBottom: 7,
+        marginTop: -5,
+        color: '#fff',
+    },
+    textInput: {
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center',
+      marginTop: Platform.OS === 'ios' ? 0 : -15,
+      paddingLeft: 10,
+      color: '#fff'
+    },
+    action: {
+        flexDirection: 'row',
+        marginTop: 10,
+        color: '#fff',
+        borderColor: '#fff',
+        borderWidth: 1.5,
+        borderRadius: 5,
+        paddingTop: 15,
+        paddingLeft: 10
+      },
 })

@@ -10,6 +10,8 @@ import { Portal, Text, Dialog } from 'react-native-paper';
 import { Spinner } from 'native-base'
 import AwesomeAlert from 'react-native-awesome-alerts';
 import axios from 'axios';
+import Feather from 'react-native-vector-icons/AntDesign';
+import Feather2 from 'react-native-vector-icons/Feather';
 import * as Animatable from 'react-native-animatable';
 import NetInfo from "@react-native-community/netinfo";
 import { useTheme } from '@react-navigation/native';
@@ -192,8 +194,11 @@ const EditProfile = ({navigation}) => {
                     </TouchableOpacity>
                 </View>
             </View>
-        <Text style={[styles.text_header, {marginTop: 20}]}>RECUPERAR CONTRASEÑA</Text>
         </Animatable.View>
+        <Animatable.View
+            animation="fadeInUpBig"
+            style={styles.bot}
+        >
           <ScrollView>
             <UserProfile 
               dataUser={data.data_user}
@@ -204,6 +209,8 @@ const EditProfile = ({navigation}) => {
               have_bets={data.home_gambler}
             />
           </ScrollView>
+
+        </Animatable.View>
       </View>
       <View>
         <Portal>
@@ -258,18 +265,78 @@ const EditProfile = ({navigation}) => {
 export default EditProfile;
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1, 
-    alignItems: 'center', 
-    justifyContent: 'flex-start',
-    backgroundColor: '#303030',
-  },
-  text_white:{
-    color: '#fff',
-    fontFamily: 'Montserrat-Regular',
-    fontSize: 18,
-    marginBottom: -10
-},
+    container: {
+        flex: 1, 
+        alignItems: 'center', 
+        justifyContent: 'flex-start',
+        backgroundColor: '#303030',
+    },
+    text_white:{
+        color: '#fff',
+        fontFamily: 'Montserrat-Regular',
+        fontSize: 18,
+        marginBottom: -10
+    },
+    top: {
+        flex: 0.8, 
+        alignItems: 'center',
+        width: '100%',
+    },
+    bot: {
+        flex: 5, 
+        justifyContent: 'center',
+        alignItems: 'center',
+        width: '100%',
+    },
+    container_title: {
+        flexDirection: 'row',
+        backgroundColor: '#171717',
+    },
+    container_title_img: {
+        flexDirection: 'row'
+    },
+     c1: {
+        flex:2, 
+        alignItems: 'flex-start',
+        padding: 10
+    },
+    c2: {
+        flex:1, 
+        alignItems: 'flex-end',
+        padding: 10
+    },
+    text_header: {
+        color: '#fff',
+        fontSize: 14,
+        fontFamily: 'Montserrat-Bold'
+    },
+    scrollviewSize: {
+        width: '100%'
+    },
+    change_p: {
+        width: '100%'
+    },
+    text_footer: {
+        color: '#fff',
+        fontSize: 15,
+        fontFamily: 'Montserrat-SemiBold',
+    },
+    action: {
+        flexDirection: 'row',
+        marginTop: 10,
+        color: '#fff',
+        borderColor: '#01CD01',
+        borderWidth: 1.5,
+        borderRadius: 5,
+        paddingTop: 10,
+        paddingLeft: 10
+    },
+    textInput: {
+        flex: 1,
+        marginTop: Platform.OS === 'ios' ? 0 : -15,
+        padding: 10,
+        color: '#fff'
+    },
 });
 
 

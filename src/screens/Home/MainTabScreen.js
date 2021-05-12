@@ -101,7 +101,17 @@ const HomeStackScreen = ({navigation}) => (
     title:' ',
     headerLeft: () => (
       <Layer width="35" style={{marginLeft: 10}}/>
-    )
+    ),
+    headerRight: () => (
+      <Icon.Button 
+        name="ios-menu" 
+        size={25} 
+        color="#01CD01"
+        backgroundColor="#212121" 
+        onPress={() => navigation.openDrawer()} 
+
+      />
+    ),
   }} />
 </HomeStack.Navigator>
 );

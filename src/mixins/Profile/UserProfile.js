@@ -21,7 +21,7 @@ const UserProfile = ({dataUser}) => {
                             <View style={{justifyContent: 'center', alignItems: 'center'}}>
                                 <Title style={styles.card_white}>{dataUser.first_name ? dataUser.first_name : null } {dataUser.last_name ? dataUser.last_name : null }</Title>
                                 <Title style={styles.card_green}>{dataUser.email ? dataUser.email : null }</Title>                
-                                <Title style={styles.card_white_small}>{dataUser.country_name ? dataUser.country_name : null }</Title>                
+                                <Title style={styles.card_white_small}>{dataUser.country_name ? dataUser.country_name.trim() : null }</Title>                
                             </View>
                             <View style={{justifyContent: 'center', alignItems: 'center'}}>
                                 <TouchableOpacity
