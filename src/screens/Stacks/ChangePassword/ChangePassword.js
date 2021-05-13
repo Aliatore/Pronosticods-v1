@@ -21,6 +21,7 @@ import AsyncStorage from '@react-native-community/async-storage';
 import UserProfile from '../../../mixins/Profile/UserProfile'
 import UserProfileData from '../../../mixins/Profile/UserProfileData'
 import Layer from '../../../assets/img/svg/Layer.svg'
+import { useNavigation } from '@react-navigation/native';
 
 const ChangePassword = ({navigation}) => {
 
@@ -56,7 +57,7 @@ const ChangePassword = ({navigation}) => {
             data_user: e
         }); 
         setVisible(false)
-        // getHouse(e);
+        // getHouse(
     }
     const getDate = () => {
         var date = new Date().getDate();
@@ -124,126 +125,123 @@ const ChangePassword = ({navigation}) => {
             viewSecure2: !data.viewSecure2
         });
     }
-//   api call
-  const changePassword = (token_user) => {   
-    setVisible(true)
+    //   api call
+    const changePassword = () => {   
+        setVisible(true)
 
-    if (data.old_p.length === 0 && data.new_p.length === 0 && data.c_new_p.length === 0 ){
-        setVisible(false)
-        setAlert(true)
-        setData({
-            ...data,
-            error_message: `Los campos no deben estar vacios.`
-        })
-    } else {
-        if (data.new_p === data.c_new_p){
+        if (data.old_p.length === 0 && data.new_p.length === 0 && data.c_new_p.length === 0 ){
             setVisible(false)
             setAlert(true)
             setData({
                 ...data,
-                error_message: `En mantenimiento.`
+                error_message: `Los campos no deben estar vacios.`
             })
-        }else{
-            setVisible(false)
-            setAlert(true)
-            setData({
-                ...data,
-                error_message: `Las contraseñas introducidas no son identicas, verifique e intentelo nuevamente.`
-            })
+        } else {
+            if (data.new_p.length >= 8) {
+                if (data.new_p === data.c_new_p){
+                    // let dateToday = getDate()
+    
+                    NetInfo.fetch().then(state => {
+                        console.log(state.isConnected);
+    
+                        if (state.isConnected === true){
+                            if (data.data_user.api_token.length === 0) {
+                                setVisible(false)
+                                setAlert(true)
+                                setData({
+                                    ...data,
+                                    error_message: `Error al obtener el token del usuario, intente nuevamente`
+                                })
+                            } else {
+                                try {
+                                    axios({
+                                        method: 'put',
+                                        url: 'https://admin.pronosticodds.com/api/user/password/update/',
+                                        timeout: 9000,
+                                        headers: {
+                                        'Authorization': `Bearer ${data.data_user.api_token}`,
+                                            'Content-Type': 'application/json',
+                                            'X-Requested-With': 'XMLHttpRequest'
+                                        },
+                                        data: {
+                                            password: data.new_p.toString(),
+                                        },
+                                        validateStatus: (status) => {
+                                            return true; 
+                                        },
+                                    })
+                                    .catch(function(error) {
+                                        console.log("log de error",error);
+                                        setVisible(false)
+                                        setAlert(true)
+                                        setData({
+                                            ...data,
+                                            error_message: `Ha ocurrido un error, ${error.data.message}`
+                                        })
+                                    })
+                                    .then(response => {
+                                        console.log(response)
+                                        if (response.status === 200 || response.status === 201) {
+                                            console.log('correcto', response);
+    
+                                            setVisible(false)
+                                            setAlert(true)
+                                            setData({
+                                                ...data,
+                                                error_message: `Cambio correcto`,
+                                                old_p: '',
+                                                new_p: '',
+                                                c_new_p: '',
+                                            })
+                                            navigation.navigate('ResumePasswordScreen')
+                                        }else{
+                                            console.log(response.data.message);
+                                            setVisible(false)
+                                            setAlert(true)
+                                            setData({
+                                                ...data,
+                                                error_message: `Ha ocurrido un error, ${response.data.message}`
+                                            })
+                                        }
+                                    })
+                                } catch (err) {
+                                        console.log('catch de errores: ', err);
+                                        setVisible(false)
+                                        setAlert(true)
+                                        setData({
+                                            ...data,
+                                            error_message: `Ha ocurrido un error, ${err}`
+                                        })
+                                } 
+                            }
+                        }else{
+                            setData({
+                                ...data,
+                                error_message: 'Por favor, revise su conexión a internet.',
+                            });
+                            setVisible(true)
+                            setLoginState(false)
+                        }
+                    }); 
+                    
+                }else{
+                    setVisible(false)
+                    setAlert(true)
+                    setData({
+                        ...data,
+                        error_message: `Las contraseñas introducidas no son identicas, verifique e intentelo nuevamente.`
+                    })
+                }
+            }else{
+                setVisible(false)
+                setAlert(true)
+                setData({
+                    ...data,
+                    error_message: `La contraseña debe ser mayor a 8 Dígitos.`
+                })
+            }
         }
     }
-    // let dateToday = getDate()
-
-    // NetInfo.fetch().then(state => {
-    //     console.log(state.isConnected);
-
-    //     if (state.isConnected === true){
-    //         if (token_user.length === 0) {
-    //             setVisible(false)
-    //             setAlert(true)
-    //             setData({
-    //                 ...data,
-    //                 error_message: `Error al obtener el token del usuario, intente nuevamente`
-    //             })
-    //         } else {
-    //             try {
-    //                 axios({
-    //                     method: 'get',
-    //                     url: 'https://admin.pronosticodds.com/api/casa_apuesta',
-    //                     timeout: 9000,
-    //                     headers: {
-    //                       'Authorization': `Bearer ${token_user.api_token}`,
-    //                         'Content-Type': 'application/json',
-    //                         'X-Requested-With': 'XMLHttpRequest'
-    //                     },
-    //                     validateStatus: (status) => {
-    //                         return true; 
-    //                     },
-    //                 })
-    //                 .catch(function(error) {
-    //                     console.log(error);
-    //                     setVisible(false)
-    //                     setAlert(true)
-    //                     setData({
-    //                         ...data,
-    //                         error_message: `Ha ocurrido un error, ${error}`
-    //                     })
-    //                 })
-    //                 .then(response => {
-    //                     console.log(response)
-    //                     if (response.status === 200 || response.status === 201) {
-    //                         console.log('correcto', response);
-    //                         let filter_casa_apuestas = response.data.data.filter((order) => {
-    //                             if (order.id === token_user.casa_apuestas_id) {
-    //                                 return order;
-    //                             }
-    //                         });
-    //                         console.log(filter_casa_apuestas, "aqui llego el resultado de Ksa");
-    //                         console.log(typeof filter_casa_apuestas, "aqui llego el resultado de Ksa");
-    //                         let are_empty = Object.keys(filter_casa_apuestas).length === 0;
-    //                         let result_casa_apuesta = '';
-    //                         are_empty ? result_casa_apuesta = "No posee" : result_casa_apuesta = filter_casa_apuestas;
-
-    //                         setVisible(false)
-    //                         setData({
-    //                             ...data,
-    //                             data_user: token_user,
-    //                             client_token: token_user.api_token,
-    //                             date_today: dateToday,
-    //                             home_gambler: result_casa_apuesta,
-    //                         })
-    //                     }else{
-    //                         let error = response.data.errors
-    //                         let parsed_error = JSON.stringify(error)
-    //                         console.log(parsed_error);
-    //                         setVisible(false)
-    //                         setAlert(true)
-    //                         setData({
-    //                             ...data,
-    //                             error_message: `Ha ocurrido un error, ${parsed_error}`
-    //                         })
-    //                     }
-    //                 })
-    //             } catch (err) {
-    //                     console.log('catch de errores: ', err);
-    //                     setVisible(false)
-    //                     setAlert(true)
-    //                     setData({
-    //                         ...data,
-    //                         error_message: `Ha ocurrido un error, ${err}`
-    //                     })
-    //             } 
-    //         }
-    //     }else{
-    //         setData({
-    //             ...data,
-    //             error_message: 'Por favor, revise su conexión a internet.',
-    //         });
-    //         setVisible(true)
-    //         setLoginState(false)
-    //     }
-    // }); 
-  }
 
   //this hook calls the token function
   useEffect(() => {
@@ -277,6 +275,7 @@ const ChangePassword = ({navigation}) => {
                 <View style={styles.c2}>
                 <TouchableOpacity
                         onPress={() => changePassword()}
+                        // onPress={() =>  navigation.navigate('ResumePasswordScreen')}
                     >
                         <Feather 
                             name="check"
