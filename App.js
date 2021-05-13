@@ -126,6 +126,13 @@ const App = () => {
       try {
         await AsyncStorage.removeItem('userToken');
         await AsyncStorage.removeItem('dataUser');
+        await AsyncStorage.removeItem('toUpload_uri_img');
+        await AsyncStorage.removeItem('toUpload_username');
+        await AsyncStorage.removeItem('toUpload_lastname');
+        await AsyncStorage.removeItem('toUpload_country');
+        await AsyncStorage.removeItem('toUpload_bethouse');
+        await AsyncStorage.removeItem('toUpload_email');
+        await AsyncStorage.removeItem('toUpload_service');
       } catch(e) {
         console.log(e);
       }

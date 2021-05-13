@@ -4,13 +4,13 @@ import { Avatar, Button, Card, Title, Paragraph } from 'react-native-paper';
 import * as ImagePicker from 'react-native-image-picker';
 import * as Animatable from 'react-native-animatable';
 import LinearGradient from 'react-native-linear-gradient';
-import DefaultUser from '../../assets/img/png/default_user.png';
 import { useNavigation } from '@react-navigation/native';
+import AsyncStorage from '@react-native-community/async-storage';
 
-const UserProfile = ({dataUser}) => {
+const UserProfile = ({dataUser, uri_profile}) => {
 
     // console.log("User Profile element", dataUser ? dataUser : null)
-    const [avatar, setAvatar] = useState(DefaultUser);
+    const [avatar, setAvatar] = useState(uri_profile);
 
     const navigation = useNavigation();
 
@@ -22,19 +22,23 @@ const UserProfile = ({dataUser}) => {
                 skipBackup: true, waitUntilSave: true, path: 'images', cameraRoll: true
             }
         }
-        ImagePicker.launchImageLibrary(options, (response) => {
-        console.log('Response = ', response);
-        
-        if (response.didCancel) {
-            console.log('User cancelled image picker');
-        } else if (response.error) {
-            console.log('ImagePicker Error: ', response.error);
-        } else if (response.customButton) {
-            console.log('User tapped custom button: ', response.customButton);
-        } else {
-            setAvatar({uri: response.uri});
-            // here we can call a API to upload image on server
-        }
+        ImagePicker.launchImageLibrary(options, async(response) => {
+            console.log('Response = ', response);
+            
+            if (response.didCancel) {
+                console.log('User cancelled image picker');
+            } else if (response.error) {
+                console.log('ImagePicker Error: ', response.error);
+            } else if (response.customButton) {
+                console.log('User tapped custom button: ', response.customButton);
+            } else {
+                setAvatar({uri: response.uri});
+                try {
+                await AsyncStorage.setItem('toUpload_uri_img', response.uri)
+                } catch (e) {
+                    console.log(e);
+                }
+            }
         });
     };
 

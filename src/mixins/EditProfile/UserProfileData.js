@@ -5,31 +5,35 @@ import { Picker as SelectPicker } from '@react-native-picker/picker';
 import * as Animatable from 'react-native-animatable';
 import LinearGradient from 'react-native-linear-gradient';
 import Countries from '../../model/countries'
+import AsyncStorage from '@react-native-community/async-storage';
 
-const UserProfileData = ({dataUser, have_bets}) => {
+const UserProfileData = ({dataUser, have_bets, clientName, lastname, country, bethouse, email, service}) => {
 
     const [data, setData] = React.useState({
-        name: '',
-        lastname: '',
-        service: '',
-        country: '',
+        name: clientName ? clientName : null,
+        lastname: lastname ? lastname : null,
+        service: service ? service : null,
+        country: country ? country : null,
         date_selected: '',
-        bet_house: '',
-        email: '',
+        bet_house: bethouse ? bethouse : null,
+        email: email ? email : null,
         password: '',
         confirm_password: '',
         error_message: '',
         viewSecure: true,
         viewSecure2: true,
     });
-    // console.log("User Profile element", dataUser ? dataUser : null)
-    console.log(dataUser);
-    const setName = (e) => {
+    const setName = async(e) => {
         if(e.trim().length >= 3 ) {
             setData({
                 ...data,
                 name: e
             });
+            try {
+                await AsyncStorage.setItem('toUpload_username', e)
+            } catch (e) {
+                console.log(e);
+            }
         } else {
             setData({
                 ...data,
@@ -38,12 +42,17 @@ const UserProfileData = ({dataUser, have_bets}) => {
         }
         console.log(e);
     }
-    const setLastname = (e) => {
+    const setLastname = async(e) => {
         if(e.trim().length >= 3 ) {
             setData({
                 ...data,
                 lastname: e
             });
+            try {
+                await AsyncStorage.setItem('toUpload_lastname', e)
+            } catch (e) {
+                console.log(e);
+            }
         } else {
             setData({
                 ...data,
@@ -52,12 +61,17 @@ const UserProfileData = ({dataUser, have_bets}) => {
         }
         console.log(e);
     }
-    const setCountry = (e) => {
+    const setCountry = async(e) => {
         if(e.length !== 0 ) {
             setData({
                 ...data,
                 country: e
             });
+            try {
+                await AsyncStorage.setItem('toUpload_country', e.toString())
+            } catch (e) {
+                console.log(e);
+            }
         } else {
             setData({
                 ...data,
@@ -66,12 +80,17 @@ const UserProfileData = ({dataUser, have_bets}) => {
         }
         console.log(e);
     }
-    const setBetHouse = (e) => {
+    const setBetHouse = async(e) => {
         if(e.length !== 0 ) {
             setData({
                 ...data,
                 setBetHouse: e
             });
+            try {
+                await AsyncStorage.setItem('toUpload_bethouse', e)
+            } catch (e) {
+                console.log(e);
+            }
         } else {
             setData({
                 ...data,
@@ -85,12 +104,17 @@ const UserProfileData = ({dataUser, have_bets}) => {
           return <SelectPicker.Item key={i} label={e.name} value={e.id} />
         }) 
     }
-    const setEmail = (e) => {
+    const setEmail = async(e) => {
         if(e.length !== 0 ) {
             setData({
                 ...data,
                 email: e
             });
+            try {
+                await AsyncStorage.setItem('toUpload_email', e)
+            } catch (e) {
+                console.log(e);
+            }
         } else {
             setData({
                 ...data,
@@ -99,12 +123,17 @@ const UserProfileData = ({dataUser, have_bets}) => {
         }
         console.log(e);
     }
-    const setService = (e) => {
+    const setService = async(e) => {
         if(e.length !== 0 ) {
             setData({
                 ...data,
                 service: e
             });
+            try {
+                await AsyncStorage.setItem('toUpload_service', e)
+            } catch (e) {
+                console.log(e);
+            }
         } else {
             setData({
                 ...data,

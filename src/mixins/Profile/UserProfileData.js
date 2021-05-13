@@ -91,7 +91,7 @@ const UserProfileData = ({dataUser, have_bets}) => {
                             }]}>{dataUser.email ? dataUser.email : null}</Text>
                         </TouchableOpacity>
                     </View>
-                    <View style={{justifyContent: 'center', alignItems: 'center'}}>
+                    {/* <View style={{justifyContent: 'center', alignItems: 'center'}}>
                         <TouchableOpacity
                             disabled={true}
                             style={[styles.signIn, {
@@ -106,13 +106,14 @@ const UserProfileData = ({dataUser, have_bets}) => {
                                 marginLeft: 18,
                             }]}>CONTRASEÑA</Text>
                         </TouchableOpacity>
-                    </View>
+                    </View> */}
                     <View style={{justifyContent: 'center', alignItems: 'center'}}>
                         <TouchableOpacity
                             disabled={true}
                             style={[styles.signIn, {
                                 borderColor: '#fff',
                                 borderWidth: 1,
+                                marginTop: 25,
                                 marginBottom: 25
                             }]}
                         >

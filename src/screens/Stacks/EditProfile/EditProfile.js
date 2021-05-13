@@ -18,6 +18,7 @@ import { useTheme } from '@react-navigation/native';
 import AsyncStorage from '@react-native-community/async-storage';
 import UserProfile from '../../../mixins/EditProfile/UserProfile'
 import UserProfileData from '../../../mixins/EditProfile/UserProfileData'
+import DefaultUser from '../../../assets/img/png/default_user.png';
 
 const EditProfile = ({navigation}) => {
 
@@ -26,7 +27,15 @@ const EditProfile = ({navigation}) => {
     data_user: null,
     error_message: '',
     date_today: '',
-    home_gambler: ''
+    home_gambler: '',
+    uri_profile: DefaultUser,
+    clientName: '', 
+    lastname: '', 
+    country: '', 
+    bethouse: '', 
+    email: '', 
+    service: '',
+
   });
 
   const theme = useTheme();
@@ -46,7 +55,6 @@ const EditProfile = ({navigation}) => {
         ...data,
         data_user: e
     }); 
-    getHouse(e);
   }
   const getDate = () => {
     var date = new Date().getDate();
@@ -58,99 +66,141 @@ const EditProfile = ({navigation}) => {
     return year + '-' + month + '-' + date;//format: dd-mm-yyyy;
 }
   //api call
-  const getHouse = (token_user) => {   
+  const updateProfile = async() => {   
     setVisible(true)
-
-    let dateToday = getDate()
-
-    NetInfo.fetch().then(state => {
-        console.log(state.isConnected);
-        if (state.isConnected === true){
-            if (token_user.length === 0) {
-                setVisible(false)
-                setAlert(true)
-                setData({
-                    ...data,
-                    error_message: `Error al obtener el token del usuario, intente nuevamente`
-                })
-            } else {
-                try {
-                    axios({
-                        method: 'get',
-                        url: 'https://admin.pronosticodds.com/api/casa_apuesta',
-                        timeout: 9000,
-                        headers: {
-                          'Authorization': `Bearer ${token_user.api_token}`,
-                            'Content-Type': 'application/json',
-                            'X-Requested-With': 'XMLHttpRequest'
-                        },
-                        validateStatus: (status) => {
-                            return true; 
-                        },
-                    })
-                    .catch(function(error) {
-                        console.log(error);
+    console.log(data.data_user.api_token)
+    try {
+        const it1 = await AsyncStorage.getItem('toUpload_uri_img');
+        const it2 = await AsyncStorage.getItem('toUpload_username');
+        const it3 = await AsyncStorage.getItem('toUpload_lastname');
+        const it4 = await AsyncStorage.getItem('toUpload_country');
+        const it5 = await AsyncStorage.getItem('toUpload_bethouse');
+        const it6 = await AsyncStorage.getItem('toUpload_email');
+        const it7 = await AsyncStorage.getItem('toUpload_service');
+        if(it1 !== null &&  it2 !== null && it3 !== null && it4 !== null &&
+            it5 !== null && it6 !== null && it7 !== null) {
+            NetInfo.fetch().then(state => {
+                console.log(state.isConnected);
+                if (state.isConnected === true){
+                    if (data.data_user.api_token.length === 0) {
                         setVisible(false)
                         setAlert(true)
                         setData({
                             ...data,
-                            error_message: `Ha ocurrido un error, ${error}`
+                            error_message: `Error al obtener el token del usuario, intente nuevamente`
                         })
-                    })
-                    .then(response => {
-                        console.log(response)
-                        if (response.status === 200 || response.status === 201) {
-                            console.log('correcto', response);
-                            let filter_casa_apuestas = response.data.data.filter((order) => {
-                                if (order.id === token_user.casa_apuestas_id) {
-                                    return order;
-                                }
-                            });
-                            console.log(filter_casa_apuestas, "aqui llego el resultado de Ksa");
-                            console.log(typeof filter_casa_apuestas, "aqui llego el resultado de Ksa");
-                            let are_empty = Object.keys(filter_casa_apuestas).length === 0;
-                            let result_casa_apuesta = '';
-                            are_empty ? result_casa_apuesta = "No posee" : result_casa_apuesta = filter_casa_apuestas;
+                    } else {
 
-                            setVisible(false)
-                            setData({
-                                ...data,
-                                data_user: token_user,
-                                client_token: token_user.api_token,
-                                date_today: dateToday,
-                                home_gambler: result_casa_apuesta,
-                            })
-                        }else{
-                            let error = response.data.errors
-                            let parsed_error = JSON.stringify(error)
-                            console.log(parsed_error);
+                        const requestOne = axios({
+                            method: 'put',
+                            url: 'https://admin.pronosticodds.com/user',
+                            timeout: 9000,
+                            data: {
+                                first_name: it2,
+                                last_name: it3,
+                                country_id: it4,
+                                casa_apuestas_id: it5
+                            },
+                            headers: {
+                              'Authorization': `Bearer ${data.data_user.api_token}`,
+                                'Content-Type': 'application/json',
+                                'X-Requested-With': 'XMLHttpRequest'
+                            },
+                            validateStatus: (status) => {
+                                return true; 
+                            }
+                        });
+                        const requestTwo = axios({
+                            method: 'put',
+                            url: 'https://admin.pronosticodds.com/user/avatar',
+                            timeout: 9000,
+                            data: {
+                                first_name: it2,
+                                last_name: it3,
+                                country_id: it4,
+                                casa_apuestas_id: it5
+                            },
+                            headers: {
+                              'Authorization': `Bearer ${data.data_user.api_token}`,
+                                'Content-Type': 'application/json',
+                                'X-Requested-With': 'XMLHttpRequest'
+                            },
+                            validateStatus: (status) => {
+                                return true; 
+                            }
+                        });
+
+                        axios.all([requestOne, requestTwo]).then(axios.spread( async(...responses) => {
+                            const responseOne = responses[0];
+                            const responseTwo = responses[1];
+                            console.log("RESPUESTA DE 1",responseOne);
+                            console.log("RESPUESTA DE 2",responseTwo);
+                            
+                            if (responses[0].status === 200 || responses[0].status === 201 && responses[1].status === 200 || responses[1].status === 201) {
+                                setVisible(false)
+                                setData({
+                                    ...data,
+                                    uri_profile: DefaultUser,
+                                    clientName: '', 
+                                    lastname: '', 
+                                    country: '', 
+                                    bethouse: '', 
+                                    email: '', 
+                                    service: '',
+                                })
+                                await AsyncStorage.removeItem('toUpload_uri_img');
+                                await AsyncStorage.removeItem('toUpload_username');
+                                await AsyncStorage.removeItem('toUpload_lastname');
+                                await AsyncStorage.removeItem('toUpload_country');
+                                await AsyncStorage.removeItem('toUpload_bethouse');
+                                await AsyncStorage.removeItem('toUpload_email');
+                                await AsyncStorage.removeItem('toUpload_service');
+                            }else{
+                                // let error = response.data.errors
+                                // let parsed_error = JSON.stringify(error)
+                                // console.log(parsed_error);
+                                setVisible(false)
+                                setAlert(true)
+                                setData({
+                                    ...data,
+                                    error_message: `Ha ocurrido un error. ${responses[0].status}`
+                                })
+                            }
+                        })).catch(errors => {
+                            // react on errors.
+                            // console.log(errors);
+                            // console.log(error);
                             setVisible(false)
                             setAlert(true)
                             setData({
-                                ...data,
-                                error_message: `Ha ocurrido un error, ${parsed_error}`
-                            })
-                        }
-                    })
-                } catch (err) {
-                        console.log('catch de errores: ', err);
-                        setVisible(false)
-                        setAlert(true)
-                        setData({
                             ...data,
-                            error_message: `Ha ocurrido un error, ${err}`
+                            error_message: `Ha ocurrido un error, ${errors}`
+                            })
                         })
-                } 
-            }
+                    }
+                }else{
+                    setData({
+                        ...data,
+                        error_message: 'Por favor, revise su conexión a internet.',
+                    });
+                    setVisible(true)
+                }
+            }); 
         }else{
+            setVisible(false)
+            setAlert(true)
             setData({
                 ...data,
-                error_message: 'Por favor, revise su conexión a internet.',
-            });
-            setVisible(true)
-            setLoginState(false)
+                error_message: `Los datos a enviar no pueden estar vacios`
+            })
         }
-    }); 
+    } catch(e) {
+        console.log(e);
+    }
+
+    
+
+  
   }
 
   //this hook calls the token function
@@ -184,7 +234,7 @@ const EditProfile = ({navigation}) => {
                 </View>
                 <View style={styles.c2}>
                 <TouchableOpacity
-                        onPress={() => sendEmail(data.email)}
+                        onPress={() => updateProfile()}
                     >
                         <Feather 
                             name="check"
@@ -202,11 +252,17 @@ const EditProfile = ({navigation}) => {
           <ScrollView>
             <UserProfile 
               dataUser={data.data_user}
-              navigation={navigation}
+              uri_profile={data.uri_profile}
             />
             <UserProfileData 
-              dataUser={data.data_user}
-              have_bets={data.home_gambler}
+                dataUser={data.data_user}
+                have_bets={data.home_gambler}
+                clientName={data.clientName}
+                lastname={data.lastname}
+                country={data.country}
+                bethouse={data.bethouse}
+                email={data.email}
+                service={data.service}
             />
           </ScrollView>
 
