@@ -155,8 +155,8 @@ const ChangePassword = ({navigation}) => {
                             } else {
                                 try {
                                     axios({
-                                        method: 'put',
-                                        url: 'https://admin.pronosticodds.com/api/user/password/update/',
+                                        method: 'post',
+                                        url: 'https://admin.pronosticodds.com/api/user/password/update',
                                         timeout: 9000,
                                         headers: {
                                         'Authorization': `Bearer ${data.data_user.api_token}`,
@@ -285,12 +285,7 @@ const ChangePassword = ({navigation}) => {
                     </TouchableOpacity>
                 </View>
             </View>
-            <View style={styles.container_title_img}>
-                <Layer
-                    width="75" 
-                    style={{marginLeft: 0}}
-                />
-            </View>
+          
         {/* <Text style={[styles.text_header, {marginTop: 20}]}>RECUPERAR CONTRASEÑA</Text> */}
         </Animatable.View>
         <Animatable.View
@@ -298,6 +293,12 @@ const ChangePassword = ({navigation}) => {
             style={styles.bot}
         >
             <ScrollView style={styles.scrollviewSize} showsVerticalScrollIndicator={false}>
+                <View style={styles.container_title_img}>
+                    <Layer
+                        width="75" 
+                        style={{marginLeft: 0}}
+                    />
+                </View>
                 <View style={styles.change_p}>
                     <Text style={styles.text_footer}>Antigua Contraseña</Text>
                     <View style={styles.action}>
@@ -464,7 +465,7 @@ const styles = StyleSheet.create({
         width: '100%',
     },
     bot: {
-        flex: 2, 
+        flex: 5, 
         justifyContent: 'flex-start',
         alignItems: 'flex-start',
         width: '80%',
@@ -474,7 +475,10 @@ const styles = StyleSheet.create({
         backgroundColor: '#171717',
     },
     container_title_img: {
-        flexDirection: 'row'
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginBottom: 20,
     },
      c1: {
         flex:2, 
