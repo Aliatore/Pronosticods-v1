@@ -6,6 +6,7 @@ import * as Animatable from 'react-native-animatable';
 import LinearGradient from 'react-native-linear-gradient';
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-community/async-storage';
+import ImgToBase64 from 'react-native-image-base64';
 
 const UserProfile = ({dataUser, uri_profile}) => {
 
@@ -34,13 +35,29 @@ const UserProfile = ({dataUser, uri_profile}) => {
             } else {
                 setAvatar({uri: response.uri});
                 try {
-                await AsyncStorage.setItem('toUpload_uri_img', response.uri)
+                    ImgToBase64.getBase64String(response.uri)
+                    .then(base64String => {
+                        AsyncStorage.removeItem('toUpload_uri_img');
+                        AsyncStorage.setItem('toUpload_uri_img', base64String)
+                        logger()
+                    })
+                    .catch(err => doSomethingWith(err));
+           
                 } catch (e) {
                     console.log(e);
                 }
             }
         });
     };
+
+    const logger = async () => {
+        try {
+            const it1 = await AsyncStorage.getItem('toUpload_uri_img');
+            console.log("string de la foto", it1);
+        } catch (e) {
+            console.log(e);
+        }   
+    } 
 
 
 

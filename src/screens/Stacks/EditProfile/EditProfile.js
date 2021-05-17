@@ -92,7 +92,7 @@ const EditProfile = ({navigation}) => {
                     } else {
 
                         const requestOne = axios({
-                            method: 'put',
+                            method: 'post',
                             url: 'https://admin.pronosticodds.com/user',
                             timeout: 9000,
                             data: {
@@ -103,8 +103,10 @@ const EditProfile = ({navigation}) => {
                             },
                             headers: {
                               'Authorization': `Bearer ${data.data_user.api_token}`,
-                                'Content-Type': 'application/json',
-                                'X-Requested-With': 'XMLHttpRequest'
+                              'Content-Type': 'application/json; charset=utf-8',
+                              'X-Requested-With': 'XMLHttpRequest',
+                              'Access-Control-Allow-Origin': '*',
+                              'Access-Control-Allow-Credentials': 'true'
                             },
                             validateStatus: (status) => {
                                 return true; 
@@ -115,15 +117,14 @@ const EditProfile = ({navigation}) => {
                             url: 'https://admin.pronosticodds.com/user/avatar',
                             timeout: 9000,
                             data: {
-                                first_name: it2,
-                                last_name: it3,
-                                country_id: it4,
-                                casa_apuestas_id: it5
+                                avatar: it1,
                             },
                             headers: {
-                              'Authorization': `Bearer ${data.data_user.api_token}`,
-                                'Content-Type': 'application/json',
-                                'X-Requested-With': 'XMLHttpRequest'
+                                'Authorization': `Bearer ${data.data_user.api_token}`,
+                                "Content-Type": "application/json; charset=utf-8",
+                                "X-Requested-With": "XMLHttpRequest",
+                                "Access-Control-Allow-Origin": "*",
+                                "Access-Control-Allow-Credentials": "true",
                             },
                             validateStatus: (status) => {
                                 return true; 

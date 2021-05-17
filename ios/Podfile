@@ -10,6 +10,8 @@ target 'pronosticods' do
 
   pod 'RNSVG', :path => '../node_modules/react-native-svg'
 
+  pod 'react-native-image-base64', :path => '../node_modules/react-native-image-base64'
+
   target 'pronosticodsTests' do
     inherit! :complete
     # Pods for testing
