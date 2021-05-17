@@ -55,7 +55,7 @@ const styles = StyleSheet.create({
         borderRadius: 5,
         position: 'absolute',
         zIndex: 1,
-        height: 335,
+        height: 336,
         width: widthScreen,
         top: 55,
     },
