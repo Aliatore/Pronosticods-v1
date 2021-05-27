@@ -17,7 +17,8 @@ const ForecastsScreen = ({navigation}) => {
     data_video: null,
     error_message: '',
     page: 1,
-    date_today: ''
+    date_today: '',
+    is_registred: ''
   });
 
   const theme = useTheme();
@@ -66,7 +67,7 @@ const ForecastsScreen = ({navigation}) => {
             } else {
               axios({
                 method: 'get',
-                url: 'https://admin.pronosticodds.com/api/forecast',
+                url: 'https://admin.pronosticodds.com/api/forecasts/general',
                 timeout: 9000,
                 params: {
                     limit: 10,
@@ -95,8 +96,19 @@ const ForecastsScreen = ({navigation}) => {
               .then(response => {
                   if (response.status === 200 || response.status === 201) {
                       console.log('correcto');
-                      console.log(response.data, "aqui");
+                      console.log(response.data, "pronosticos");
                       setVisible(false)
+
+                      if (response.data.result === false) {
+                        setAlert(true)
+                        setData({
+                            ...data,
+                            error_message: `Ha ocurrido un error, ${response.data.message}`,
+                            is_registred: response.data.result,
+                        })
+                      }else{
+                        null;
+                      }
                       // setData({
                       //     ...data,
                       //     data_plans: response.data,
@@ -157,33 +169,40 @@ const ForecastsScreen = ({navigation}) => {
             <View style={styles.top_container}>
               <Text  style={styles.top_text}>Pronóstico del día</Text>
             </View>
-            <View style={styles.bot}>
-                <Card style={styles.card}>
-                    <Card.Content>
-                      <View style={styles.container_card}>
-                        <View style={styles.container1}>
-                          <Image style={{width: 70, height: 70, resizeMode: 'contain'}} source={require('../../assets/img/png/realm.png')} />
-                        </View>
-                        <View style={styles.container2}>
-                          <Title style={styles.text_forecast1}>Hoy 2:30 pm</Title>
-                          <Title style={styles.text_forecast2}>04:68:00</Title>
-                          <Title numberOfLines={1} style={styles.text_forecast3}>Real madrid - Barcelona</Title>
-                          <Title numberOfLines={1} style={styles.text_forecast4}>UEFA CHAMPIONS LEAGUE</Title>
-                          <Title numberOfLines={1} style={styles.text_forecast5}>Cuartos de final</Title>
-                          <Title style={styles.text_forecast6}>Gana real madrid el primer tiempo</Title>
-                          <Title numberOfLines={1} style={styles.text_forecast7}>2.050</Title>
-                        </View>
-                        <View style={styles.container3}>
-                        <Image style={{width: 70, height: 70, resizeMode: 'contain'}} source={require('../../assets/img/png/barcelona.png')} />
-                        </View>
-                      </View>
-                    </Card.Content>
-                </Card>
-            </View>
-            <View style={styles.bot_container}>
-              <Text style={styles.bot_text}>No ha obtenido ningún plan prémium para obtener mayores beneficios, dirígete a suscripciones y únete a uno de nuestros equipos.</Text>
-              <Text style={styles.bot_text1}>¡Unete al club de los ganadores!</Text>
-            </View>
+            {data.is_registred === false ?
+              (
+                <View style={styles.bot_container}>
+                  <Text style={styles.bot_text}>No ha obtenido ningún plan prémium para obtener mayores beneficios, dirígete a suscripciones y únete a uno de nuestros equipos.</Text>
+                  <Text style={styles.bot_text1}>¡Unete al club de los ganadores!</Text>
+                </View>
+              ) 
+              :
+              (
+                <View style={styles.bot}>
+                    <Card style={styles.card}>
+                        <Card.Content>
+                          <View style={styles.container_card}>
+                            <View style={styles.container1}>
+                              <Image style={{width: 70, height: 70, resizeMode: 'contain'}} source={require('../../assets/img/png/realm.png')} />
+                            </View>
+                            <View style={styles.container2}>
+                              <Title style={styles.text_forecast1}>Hoy 2:30 pm</Title>
+                              <Title style={styles.text_forecast2}>04:68:00</Title>
+                              <Title numberOfLines={1} style={styles.text_forecast3}>Real madrid - Barcelona</Title>
+                              <Title numberOfLines={1} style={styles.text_forecast4}>UEFA CHAMPIONS LEAGUE</Title>
+                              <Title numberOfLines={1} style={styles.text_forecast5}>Cuartos de final</Title>
+                              <Title style={styles.text_forecast6}>Gana real madrid el primer tiempo</Title>
+                              <Title numberOfLines={1} style={styles.text_forecast7}>2.050</Title>
+                            </View>
+                            <View style={styles.container3}>
+                            <Image style={{width: 70, height: 70, resizeMode: 'contain'}} source={require('../../assets/img/png/barcelona.png')} />
+                            </View>
+                          </View>
+                        </Card.Content>
+                    </Card>
+                </View>
+              )
+            }
           </ScrollView>
       </View>
       <View>

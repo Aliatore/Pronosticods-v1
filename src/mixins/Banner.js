@@ -10,7 +10,7 @@ const Banner = () => {
         <View style={styles.card}>
             <View style={styles.banner}>
                 <View style={styles.banner_background} />
-                <Image style={styles.card_img} source={{ uri: 'https://admin.pronosticodds.com/storage/banners/April2021/cE8vVDhObKghis95NKSD.png' }} />
+                <Image style={styles.card_img} source={require('../assets/img/png/LeBron.png')} />
                 <View style={styles.banner_content}>
                     <Text style={styles.banner_text}>Unete a nuestros planes especiales</Text>
                 </View>
