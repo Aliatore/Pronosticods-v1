@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { View, StyleSheet, StatusBar, ScrollView } from 'react-native';
-import { Portal, Text, Dialog } from 'react-native-paper';
+import { Portal, Dialog } from 'react-native-paper';
 import { Spinner } from 'native-base'
 import AwesomeAlert from 'react-native-awesome-alerts';
 import axios from 'axios';
@@ -9,6 +9,7 @@ import { useTheme } from '@react-navigation/native';
 import AsyncStorage from '@react-native-community/async-storage';
 import UserProfile from '../../mixins/Profile/UserProfile'
 import UserProfileData from '../../mixins/Profile/UserProfileData'
+import UrlServices from '../../mixins/Services/UrlServices';
 
 const ProfileScreen = ({navigation}) => {
 
@@ -50,6 +51,7 @@ const ProfileScreen = ({navigation}) => {
 }
   //api call
   const getHouse = (token_user) => {   
+    let urlApi = UrlServices(1);
     setVisible(true)
 
     let dateToday = getDate()
@@ -68,7 +70,7 @@ const ProfileScreen = ({navigation}) => {
                 try {
                     axios({
                         method: 'get',
-                        url: 'https://admin.pronosticodds.com/api/casa_apuesta',
+                        url: `${urlApi}/casa_apuesta`,
                         timeout: 9000,
                         headers: {
                           'Authorization': `Bearer ${token_user.api_token}`,

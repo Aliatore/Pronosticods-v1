@@ -1,15 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import { View, StyleSheet, StatusBar, ScrollView, Dimensions } from 'react-native';
-import { Portal, Text, Dialog, Card } from 'react-native-paper';
-import { Spinner } from 'native-base'
+import { Portal, Dialog } from 'react-native-paper';
+import { Spinner } from 'native-base';
 import AwesomeAlert from 'react-native-awesome-alerts';
 import axios from 'axios';
 import NetInfo from "@react-native-community/netinfo";
 import { useTheme } from '@react-navigation/native';
 import AsyncStorage from '@react-native-community/async-storage';
-import Noticias from '../../mixins/Noticias'
-import Videos from '../../mixins/N_Videos'
-import Banner from '../../mixins/Banner'
+import Noticias from '../../mixins/Noticias';
+import Videos from '../../mixins/N_Videos';
+import Banner from '../../mixins/Banner';
+import UrlServices from '../../mixins/Services/UrlServices';
 
 const HomeScreen = ({navigation}) => {
 
@@ -53,13 +54,13 @@ const HomeScreen = ({navigation}) => {
 }
   //api call news
   const getNews = (token_user) => {   
+    let urlApi = UrlServices(1);
     setVisible(true)
-
     let dateToday = getDate()
 
     const requestOne = axios({
         method: 'get',
-        url: 'https://admin.pronosticodds.com/api/noticias',
+        url: `${urlApi}/noticias`,
         timeout: 9000,
         params: {
             limit: 3,
@@ -79,7 +80,7 @@ const HomeScreen = ({navigation}) => {
     });
     const requestTwo = axios({
         method: 'get',
-        url: 'https://admin.pronosticodds.com/api/videos',
+        url: `${urlApi}/videos`,
         timeout: 9000,
         params: {
             limit: 3,
@@ -98,7 +99,7 @@ const HomeScreen = ({navigation}) => {
     });
     // const requestThree = axios({
     //     method: 'get',
-    //     url: 'https://admin.pronosticodds.com/site/banner',
+    //     url: `${urlApi}/site/banner`,
     //     timeout: 9000,
     //     headers: {
     //         'Authorization': `Bearer ${token_user}`,

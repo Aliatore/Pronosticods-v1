@@ -4,7 +4,6 @@ import { View,
     StatusBar, 
     ScrollView, 
     TouchableOpacity, 
-    Image, 
     Platform, 
     TextInput, 
 } from 'react-native';
@@ -18,10 +17,8 @@ import * as Animatable from 'react-native-animatable';
 import NetInfo from "@react-native-community/netinfo";
 import { useTheme } from '@react-navigation/native';
 import AsyncStorage from '@react-native-community/async-storage';
-import UserProfile from '../../../mixins/Profile/UserProfile'
-import UserProfileData from '../../../mixins/Profile/UserProfileData'
 import Layer from '../../../assets/img/svg/Layer.svg'
-import { useNavigation } from '@react-navigation/native';
+import UrlServices from '../../../mixins/Services/UrlServices';
 
 const ChangePassword = ({navigation}) => {
 
@@ -126,7 +123,8 @@ const ChangePassword = ({navigation}) => {
         });
     }
     //   api call
-    const changePassword = () => {   
+    const changePassword = () => {  
+        let urlApi = UrlServices(1); 
         setVisible(true)
 
         if (data.old_p.length === 0 && data.new_p.length === 0 && data.c_new_p.length === 0 ){
@@ -156,7 +154,7 @@ const ChangePassword = ({navigation}) => {
                                 try {
                                     axios({
                                         method: 'post',
-                                        url: 'https://admin.pronosticodds.com/api/user/password/update',
+                                        url: `${urlApi}/user/password/update`,
                                         timeout: 9000,
                                         headers: {
                                         'Authorization': `Bearer ${data.data_user.api_token}`,

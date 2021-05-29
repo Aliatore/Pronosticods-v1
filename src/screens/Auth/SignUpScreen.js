@@ -24,6 +24,7 @@ import { Spinner } from 'native-base'
 import AwesomeAlert from 'react-native-awesome-alerts';
 import axios from 'axios';
 import NetInfo from "@react-native-community/netinfo";
+import UrlServices from '../../mixins/Services/UrlServices';
 
 const SignUpScreen = ({navigation}) => {
 
@@ -181,6 +182,7 @@ const SignUpScreen = ({navigation}) => {
     }
     
     const sendRegister = (name, lastname, email, password, birthday, countryid) => {   
+        let urlApi = UrlServices(1);
         setVisible(true)
         NetInfo.fetch().then(state => {
             console.log(state.isConnected);
@@ -199,7 +201,7 @@ const SignUpScreen = ({navigation}) => {
                         try {
                             axios({
                                 method: 'post',
-                                url: 'https://admin.pronosticodds.com/api/register',
+                                url: `${urlApi}/register`,
                                 timeout: 9000,
                                 data: {
                                     first_name: name,

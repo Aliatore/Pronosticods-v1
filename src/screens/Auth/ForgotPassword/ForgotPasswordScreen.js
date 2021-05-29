@@ -12,8 +12,6 @@ import {
     Dimensions
 } from 'react-native';
 import * as Animatable from 'react-native-animatable';
-import LinearGradient from 'react-native-linear-gradient';
-import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Feather from 'react-native-vector-icons/AntDesign';
 import Layer from '../../../assets/img/svg/Layer.svg';
 import { Portal, Text, Dialog } from 'react-native-paper';
@@ -21,12 +19,8 @@ import { Spinner } from 'native-base'
 import AwesomeAlert from 'react-native-awesome-alerts';
 import axios from 'axios';
 import NetInfo from "@react-native-community/netinfo";
+import UrlServices from '../../../mixins/Services/UrlServices';
 
-import { useTheme } from 'react-native-paper';
-
-import { AuthContext } from '../../../components/context';
-
-import Users from '../../../model/users';
 
 const ForgotPasswordScreen = ({navigation}) => {
 
@@ -54,6 +48,7 @@ const ForgotPasswordScreen = ({navigation}) => {
     }
 
     const sendEmail = (email) => {   
+        let urlApi = UrlServices(1);
         setVisible(true)
         NetInfo.fetch().then(state => {
             console.log(state.isConnected);
@@ -69,7 +64,7 @@ const ForgotPasswordScreen = ({navigation}) => {
                     try {
                         axios({
                             method: 'post',
-                            url: 'https://admin.pronosticodds.com/api/password/reset',
+                            url: `${urlApi}/password/reset`,
                             timeout: 9000,
                             data: {
                                 email: email,

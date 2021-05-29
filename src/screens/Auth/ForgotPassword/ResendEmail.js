@@ -2,18 +2,15 @@ import React from 'react';
 import { 
     View, 
     TouchableOpacity, 
-    TextInput,
     Platform,
     StyleSheet ,
     StatusBar,
-    Alert,
     ImageBackground,
     ScrollView,
     Dimensions
 } from 'react-native';
 import * as Animatable from 'react-native-animatable';
 import LinearGradient from 'react-native-linear-gradient';
-import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Feather from 'react-native-vector-icons/AntDesign';
 import Layer from '../../../assets/img/svg/Layer.svg';
 import { Portal, Text, Dialog } from 'react-native-paper';
@@ -22,7 +19,7 @@ import AwesomeAlert from 'react-native-awesome-alerts';
 import axios from 'axios';
 import NetInfo from "@react-native-community/netinfo";
 
-import { useTheme } from 'react-native-paper';
+import UrlServices from '../../../mixins/Services/UrlServices';
 
 const ResendEmailScreen = ({navigation, route}) => {
     const { email } = route.params;
@@ -35,7 +32,8 @@ const ResendEmailScreen = ({navigation, route}) => {
     const [visible, setVisible] = React.useState(false);
     const [alert, setAlert] = React.useState(false);
 
-    const sendEmail = (email) => {   
+    const sendEmail = (email) => { 
+        let urlApi = UrlServices(1);  
         setVisible(true)
         NetInfo.fetch().then(state => {
             console.log(state.isConnected);
@@ -51,7 +49,7 @@ const ResendEmailScreen = ({navigation, route}) => {
                     try {
                         axios({
                             method: 'post',
-                            url: 'https://admin.pronosticodds.com/api/password/email',
+                            url: `${urlApi}/password/email`,
                             timeout: 9000,
                             data: {
                                 email: email,

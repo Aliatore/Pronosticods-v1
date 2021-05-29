@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import { View, Text, StyleSheet, Dimensions, FlatList, StatusBar, TouchableOpacity} from 'react-native';
-import { Avatar, Button, Card, Title, Paragraph, Dialog, Portal } from 'react-native-paper';
+import { Card, Title, Dialog, Portal } from 'react-native-paper';
 import { Spinner } from 'native-base'
 import AwesomeAlert from 'react-native-awesome-alerts';
 import axios from 'axios';
@@ -12,7 +12,7 @@ import Gold from '../../assets/img/svg/oro.svg';
 import Silver from '../../assets/img/svg/plata.svg';
 import Bronze from '../../assets/img/svg/bronce.svg';
 import { ScrollView } from 'react-native-gesture-handler';
-import { log } from 'react-native-reanimated';
+import UrlServices from '../../mixins/Services/UrlServices';
 
 
 const PlansScreen = ({navigation}) => {
@@ -73,6 +73,7 @@ const PlansScreen = ({navigation}) => {
 
   //api call
   const getPlans = (token_user, userdata) => {   
+    let urlApi = UrlServices(1);
     setVisible(true)
     NetInfo.fetch().then(state => {
         console.log(state.isConnected);
@@ -88,7 +89,7 @@ const PlansScreen = ({navigation}) => {
                 try {
                     axios({
                         method: 'get',
-                        url: 'https://admin.pronosticodds.com/api/user/plans_avaibles',
+                        url: `${urlApi}/user/plans_avaibles`,
                         timeout: 9000,
                         headers: {
                           'Authorization': `Bearer ${token_user}`,

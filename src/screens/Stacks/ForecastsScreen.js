@@ -7,7 +7,7 @@ import axios from 'axios';
 import NetInfo from "@react-native-community/netinfo";
 import { useTheme } from '@react-navigation/native';
 import AsyncStorage from '@react-native-community/async-storage';
-import LinearGradient from 'react-native-linear-gradient';
+import UrlServices from '../../mixins/Services/UrlServices';
 
 const ForecastsScreen = ({navigation}) => {
 
@@ -50,6 +50,7 @@ const ForecastsScreen = ({navigation}) => {
   }
   //api call news
   const getForecasts = (token_user) => {   
+    let urlApi = UrlServices(1);
     setVisible(true)
 
     let dateToday = getDate()
@@ -67,7 +68,7 @@ const ForecastsScreen = ({navigation}) => {
             } else {
               axios({
                 method: 'get',
-                url: 'https://admin.pronosticodds.com/api/forecasts/general',
+                url: `${urlApi}/forecasts/general`,
                 timeout: 9000,
                 params: {
                     limit: 10,

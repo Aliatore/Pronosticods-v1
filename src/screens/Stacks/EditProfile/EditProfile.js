@@ -6,12 +6,11 @@ import {
     ScrollView,
     TouchableOpacity
 } from 'react-native';
-import { Portal, Text, Dialog } from 'react-native-paper';
+import { Portal, Dialog } from 'react-native-paper';
 import { Spinner } from 'native-base'
 import AwesomeAlert from 'react-native-awesome-alerts';
 import axios from 'axios';
 import Feather from 'react-native-vector-icons/AntDesign';
-import Feather2 from 'react-native-vector-icons/Feather';
 import * as Animatable from 'react-native-animatable';
 import NetInfo from "@react-native-community/netinfo";
 import { useTheme } from '@react-navigation/native';
@@ -19,6 +18,7 @@ import AsyncStorage from '@react-native-community/async-storage';
 import UserProfile from '../../../mixins/EditProfile/UserProfile'
 import UserProfileData from '../../../mixins/EditProfile/UserProfileData'
 import DefaultUser from '../../../assets/img/png/default_user.png';
+import UrlServices from '../../../mixins/Services/UrlServices';
 
 const EditProfile = ({navigation}) => {
 
@@ -67,6 +67,7 @@ const EditProfile = ({navigation}) => {
 }
   //api call
   const updateProfile = async() => {   
+    let urlApi = UrlServices(4); 
     setVisible(true)
     console.log(data.data_user.api_token)
     try {
@@ -93,7 +94,7 @@ const EditProfile = ({navigation}) => {
 
                         const requestOne = axios({
                             method: 'post',
-                            url: 'https://admin.pronosticodds.com/user',
+                            url: `${urlApi}/user`,
                             timeout: 9000,
                             data: {
                                 first_name: it2,
@@ -114,7 +115,7 @@ const EditProfile = ({navigation}) => {
                         });
                         const requestTwo = axios({
                             method: 'put',
-                            url: 'https://admin.pronosticodds.com/user/avatar',
+                            url: `${urlApi}/user/avatar`,
                             timeout: 9000,
                             data: {
                                 avatar: it1,

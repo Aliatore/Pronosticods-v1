@@ -6,7 +6,6 @@ import {
     Platform,
     StyleSheet ,
     StatusBar,
-    Alert,
     ImageBackground,
     ScrollView,
     Dimensions
@@ -21,6 +20,7 @@ import Layer from '../../assets/img/svg/Layer.svg';
 import axios from 'axios';
 import NetInfo from "@react-native-community/netinfo";
 
+import UrlServices from '../../mixins/Services/UrlServices';
 import { useTheme } from 'react-native-paper';
 
 import { AuthContext } from '../../components/context';
@@ -73,6 +73,7 @@ const SignInScreen = ({navigation}) => {
         });
     }
     const loginHandle = (email, password) => {
+        let urlApi = UrlServices(1);
         setVisible(true)
         NetInfo.fetch().then(state => {
             console.log(state.isConnected);
@@ -88,7 +89,7 @@ const SignInScreen = ({navigation}) => {
                     try {
                         axios({
                             method: 'post',
-                            url: 'https://admin.pronosticodds.com/api/login',
+                            url: `${urlApi}/login`,
                             timeout: 9000,
                             data: {
                                 email: email,
@@ -149,6 +150,7 @@ const SignInScreen = ({navigation}) => {
         }); 
     }
     const executeValidation = async (email, password, token) => {
+        let urlApi = UrlServices(1);
         const email_user = await email;
         const password_user = await password;
         const token_user = await token;
@@ -162,7 +164,7 @@ const SignInScreen = ({navigation}) => {
                 try {
                     axios({
                         method: 'get',
-                        url: 'https://admin.pronosticodds.com/api/user',
+                        url: `${urlApi}/user`,
                         headers: {
                             'Authorization': `Bearer ${token_user}`,
                             'Content-Type': 'application/json',
