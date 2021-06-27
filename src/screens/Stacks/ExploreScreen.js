@@ -7,8 +7,8 @@ import axios from 'axios';
 import NetInfo from "@react-native-community/netinfo";
 import { useTheme } from '@react-navigation/native';
 import AsyncStorage from '@react-native-community/async-storage';
-import LinearGradient from 'react-native-linear-gradient';
-import UrlServices from '../../mixins/Services/UrlServices';
+import { Picker as SelectPicker } from '@react-native-picker/picker';
+import UrlServicesSports from '../../mixins/Services/UrlServicesSports';
 
 const ExploreScreen = ({navigation}) => {
 
@@ -18,8 +18,14 @@ const ExploreScreen = ({navigation}) => {
     data_video: null,
     error_message: '',
     page: 1,
-    date_today: ''
+    date_today: '',
+    sport: '',
+    sport_selected: '',
+    country: null,
+    data_pronosticos: null
   });
+
+  const [country, setCountrys] = useState();
 
   const theme = useTheme();
 
@@ -37,7 +43,6 @@ const ExploreScreen = ({navigation}) => {
         ...data,
         client_token: e
     }); 
-    getForecasts(e)
   }
   const getDate = () => {
     var date = new Date().getDate();
@@ -48,16 +53,23 @@ const ExploreScreen = ({navigation}) => {
 
     return year + '-' + month + '-' + date;//format: dd-mm-yyyy;
   }
+  const setCountry = (e) => {
+    console.log(e);
+    setCountrys(e)
+    getForecasts(e)
+      
+  }
   //api call news
-  const getForecasts = (token_user) => {   
-    let urlApi = UrlServices(1);
+  const getForecasts = (sport) => {   
+    console.log(sport);
+    let urlApi = UrlServicesSports(sport);
     setVisible(true)
     let dateToday = getDate()
 
     NetInfo.fetch().then(state => {
         // console.log(state.isConnected);
         if (state.isConnected === true){
-            if (token_user.length === 0) {
+            if (data.client_token.length === 0) {
                 setVisible(false)
                 setAlert(true)
                 setData({
@@ -67,7 +79,7 @@ const ExploreScreen = ({navigation}) => {
             } else {
               axios({
                 method: 'get',
-                url: `${urlApi}/forecast`,
+                url: `${urlApi}`,
                 timeout: 9000,
                 params: {
                     limit: 10,
@@ -76,7 +88,7 @@ const ExploreScreen = ({navigation}) => {
                   date: dateToday
                 },
                 headers: {
-                  'Authorization': `Bearer ${token_user}`,
+                  // 'Authorization': `Bearer ${data.client_token}`,
                     'Content-Type': 'application/json',
                     'X-Requested-With': 'XMLHttpRequest'
                 },
@@ -94,16 +106,15 @@ const ExploreScreen = ({navigation}) => {
                 })
               })
               .then(response => {
+                console.log(response);
                   if (response.status === 200 || response.status === 201) {
-                      console.log('correcto');
-                      console.log(response.data, "aqui");
+                      // console.log('correcto');
+                      // console.log(response.data, "aqui");
                       setVisible(false)
-                      // setData({
-                      //     ...data,
-                      //     data_plans: response.data,
-                      //     client_token: token_user,
-                      //     client_data: userdata
-                      // })
+                      setData({
+                          ...data,
+                          data_pronosticos: response.data,
+                      })
                   }else{
                       let error = response.data.errors
                       let parsed_error = JSON.stringify(error)
@@ -155,30 +166,30 @@ const ExploreScreen = ({navigation}) => {
             // }}
             // scrollEventThrottle={0}
           >
-            <Text>Skere</Text>
-            <View style={styles.bot}>
+            <View style={styles.top}>
                 <Card style={styles.card}>
-                    <Card.Content>
-                      <Title numberOfLines={1}  style={styles.bot_text}> - </Title>
-                        <View style={styles.button}>
-                            <TouchableOpacity
-                              style={styles.signIn}
-                              onPress={() => console.log('skere')}
-                              disabled={true}
-                            >
-                                <LinearGradient
-                                    colors={['#989898', '#989898']}
-                                    style={styles.signIn}
-                                >
-                                    <Text style={[styles.textSign, {
-                                        color:'#fff'
-                                    }]}>-</Text>
-                                </LinearGradient>
-                            </TouchableOpacity>
-                        </View>
-                    </Card.Content>
+                  <View style={styles.action_picker}>
+                    <SelectPicker
+                        selectedValue={country}
+                        style={styles.picker}
+                        mode={'dialog'}
+                        onValueChange={(e) => setCountry(e)}
+                    >
+                        <SelectPicker.Item disabled value="" label="Deporte" />
+                        <SelectPicker.Item value="1" label="Fútbol" />
+                        <SelectPicker.Item value="2" label="Básquet" />
+                        <SelectPicker.Item value="3" label="Fútbol Americano" />
+                        <SelectPicker.Item value="4" label="Hockey" />
+                        <SelectPicker.Item value="5" label="Béisbol" />
+                    </SelectPicker>
+                  </View>
                 </Card>
               </View>
+            <View style={styles.bot}>
+            <View style={{justifyContent: 'center', alignItems: 'center'}}>
+                    <Text style={styles.text_title}>Seleccione para continuar</Text>
+                </View>    
+            </View>
           </ScrollView>
       </View>
       <View>
@@ -242,15 +253,47 @@ const styles = StyleSheet.create({
     backgroundColor: '#303030',
   },
   card:{
-        flex: 1, 
-        justifyContent: 'center', 
-        alignContent: 'center',
-        width: widthScreen,
-        marginTop: 10,
-        // marginBottom: 10,
-        backgroundColor: '#131011',
-        borderRadius: 5
+    flex: 1, 
+    justifyContent: 'center', 
+    alignContent: 'center',
+    width: widthScreen,
+    marginTop: 10,
+    // marginBottom: 10,
+    backgroundColor: '#262222',
+    borderRadius: 5
    },
+   action_picker: {
+    flexDirection: 'row',
+    color: '#fff',
+    backgroundColor: '#262222',
+    borderColor: '#262222',
+    borderWidth: 1.5,
+    borderRadius: 5,
+    paddingTop: 10,
+    paddingLeft: 10
+  },
+  picker: {
+    height: 30, 
+    width: '100%', 
+    paddingBottom: 5,
+    marginBottom: 7,
+    marginTop: -5,
+    color: '#fff',
+  },
+  top: {
+    flex: 1, 
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  bot: {
+    flex: 2, 
+    marginTop: 50
+  },
+  text_title: {
+    color: '#fff',
+    fontSize: 18,
+    fontFamily: 'Montserrat-Bold',
+  },
 });
 
 

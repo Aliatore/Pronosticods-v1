@@ -151,6 +151,92 @@ const PlansScreen = ({navigation}) => {
         }
     }); 
   }
+  const payPlan = (token_user, userdata) => {   
+    let urlApi = UrlServices(1);
+    setVisible(true)
+    NetInfo.fetch().then(state => {
+        console.log(state.isConnected);
+        if (state.isConnected === true){
+            if (token_user.length === 0) {
+                setVisible(false)
+                setAlert(true)
+                setData({
+                    ...data,
+                    error_message: `Error al obtener el token del usuario, intente nuevamente`
+                })
+            } else {
+                try {
+                    axios({
+                        method: 'get',
+                        url: `${urlApi}/user/subscription`,
+                        timeout: 9000,
+                        body:{
+                            card_number: '',
+                            card_cvc: '',
+                            exp_month: '',
+                            exp_year: '',
+                            plans: ''                      
+                        },
+                        headers: {
+                          'Authorization': `Bearer ${token_user}`,
+                          'Content-Type': 'application/json',
+                          'X-Requested-With': 'XMLHttpRequest'
+                        },
+                        validateStatus: (status) => {
+                            return true; 
+                        },
+                    })
+                    .catch(function(error) {
+                        console.log(error);
+                        setVisible(false)
+                        setAlert(true)
+                        setData({
+                            ...data,
+                            error_message: `Ha ocurrido un error, ${error}`
+                        })
+                    })
+                    .then(response => {
+                        if (response.status === 200 || response.status === 201) {
+                            console.log('correcto', response);
+                            setVisible(false)
+                            setData({
+                                ...data,
+                                data_plans: response.data.data,
+                                client_token: token_user,
+                                client_data: userdata
+                            })
+                        }else{
+                            let error = response.data.errors
+                            let parsed_error = JSON.stringify(error)
+                            console.log(parsed_error);
+                            setVisible(false)
+                            setAlert(true)
+                            setData({
+                                ...data,
+                                error_message: `Ha ocurrido un error, ${parsed_error}`
+                            })
+                        }
+                    })
+                } catch (err) {
+                        console.log('catch de errores: ', err);
+                        setVisible(false)
+                        setAlert(true)
+                        setData({
+                            ...data,
+                            error_message: `Ha ocurrido un error, ${err}`
+                        })
+                } 
+            }
+        }else{
+            setData({
+                ...data,
+                error_message: 'Por favor, revise su conexión a internet.',
+            });
+            setVisible(true)
+            setLoginState(false)
+        }
+    }); 
+  }
 
   //render of swipeable
   const _renderItem = ({ item }) => {
