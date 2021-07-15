@@ -97,24 +97,8 @@ const HomeScreen = ({navigation}) => {
             return true; 
         },
     });
-    // const requestThree = axios({
-    //     method: 'get',
-    //     url: `${urlApi}/site/banner`,
-    //     timeout: 9000,
-    //     headers: {
-    //         'Authorization': `Bearer ${token_user}`,
-    //         'Content-Type': 'application/json; charset=utf-8',
-    //         'X-Requested-With': 'XMLHttpRequest',
-    //         'Access-Control-Allow-Origin': '*',
-    //         'Access-Control-Allow-Credentials': 'true',
-    //     },
-    //     validateStatus: (status) => {
-    //         return true; 
-    //     },
-    // });
 
     NetInfo.fetch().then(state => {
-        console.log(state.isConnected);
         if (state.isConnected === true){
             if (token_user.length === 0) {
                 setVisible(false)
@@ -127,10 +111,6 @@ const HomeScreen = ({navigation}) => {
                 axios.all([requestOne, requestTwo]).then(axios.spread((...responses) => {
                     const responseOne = responses[0].data.data;
                     const responseTwo = responses[1].data.data;
-                    const responseThree = responses[2];
-                    console.log("UNO",responseOne);
-                    console.log("DOS",responseTwo);
-                    // console.log("TRES",responseThree);
                     
                     if (responses[0].status === 200 || responses[0].status === 201 && responses[1].status === 200 || responses[1].status === 201) {
                         setVisible(false)
@@ -138,15 +118,8 @@ const HomeScreen = ({navigation}) => {
                             ...data,
                             data_news: responseOne,
                             data_video: responseTwo,
-                            // data_banner: responseThree,
-                            // client_token: token_user,
-                            // date_today: dateToday,
-                            // page: data.page += 1,
                         })
                     }else{
-                        // let error = response.data.errors
-                        // let parsed_error = JSON.stringify(error)
-                        // console.log(parsed_error);
                         setVisible(false)
                         setAlert(true)
                         setData({
@@ -155,9 +128,6 @@ const HomeScreen = ({navigation}) => {
                         })
                     }
                 })).catch(errors => {
-                    // react on errors.
-                    // console.log(errors);
-                    // console.log(error);
                     setVisible(false)
                     setAlert(true)
                     setData({
@@ -193,7 +163,6 @@ const HomeScreen = ({navigation}) => {
   
     return (
       <>
-      {/* {console.log('actuales',data.data_news)} */}
       <View style={styles.container}>
         <StatusBar barStyle= { theme.dark ? "light-content" : "dark-content" }/>
           <ScrollView 

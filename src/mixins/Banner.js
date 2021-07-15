@@ -1,21 +1,22 @@
 import React from 'react';
-import { View, Text, Image, StyleSheet, Dimensions, Linking} from 'react-native';
-import { Avatar, Button, Card, Title, Paragraph} from 'react-native-paper';
+import { View, Text, Image, StyleSheet, Dimensions, TouchableOpacity} from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 
 const Banner = () => {
-
-    // console.log(dataNews);
+    const navigation = useNavigation();
 
     return(
-        <View style={styles.card}>
-            <View style={styles.banner}>
-                <View style={styles.banner_background} />
-                <Image style={styles.card_img} source={require('../assets/img/png/LeBron.png')} />
-                <View style={styles.banner_content}>
-                    <Text style={styles.banner_text}>Unete a nuestros planes especiales</Text>
+        <TouchableOpacity  onPress={() => navigation.navigate('Notifications')}>
+            <View style={styles.card}>
+                <View style={styles.banner}>
+                    <View style={styles.banner_background} />
+                    <Image style={styles.card_img} source={require('../assets/img/png/LeBron.png')} />
+                    <View style={styles.banner_content}>
+                        <Text style={styles.banner_text}>Unete a nuestros planes especiales</Text>
+                    </View>
                 </View>
             </View>
-        </View>
+        </TouchableOpacity>
     )
 }
 

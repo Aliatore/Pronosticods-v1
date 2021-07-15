@@ -6,46 +6,23 @@ import AwesomeAlert from 'react-native-awesome-alerts';
 import axios from 'axios';
 import NetInfo from "@react-native-community/netinfo";
 import AsyncStorage from '@react-native-community/async-storage';
-import AppIntroSlider from 'react-native-app-intro-slider';
 import LinearGradient from 'react-native-linear-gradient';
+import Hipismo from '../../assets/img/svg/hipismoLogo.svg';
 import Gold from '../../assets/img/svg/oro.svg';
-import Silver from '../../assets/img/svg/plata.svg';
-import Bronze from '../../assets/img/svg/bronce.svg';
 import { ScrollView } from 'react-native-gesture-handler';
 import UrlServices from '../../mixins/Services/UrlServices';
+import Carousel, { PaginationLight } from 'react-native-x2-carousel';
+import { useNavigation } from '@react-navigation/native';
 
-
-const PlansScreen = ({navigation}) => {
+const PlansScreen = () => {
   const [data, setData] = React.useState({
     client_token: '',
     client_data: null,
     data_plans: null,
     error_message: '',
-    slides: [
-      {
-        key: 'one',
-        title: 'GOLD PACK',
-        text: 'Description.\nSay something cool',
-        // image: require('./assets/1.jpg'),
-        backgroundColor: '#59b2ab',
-      },
-      {
-        key: 'two',
-        title: 'SILVER PACK',
-        text: 'Other cool stuff',
-        // image: require('./assets/2.jpg'),
-        backgroundColor: '#febe29',
-      },
-      {
-        key: 'three',
-        title: 'BRONZE PACK',
-        text: 'I\'m already out of descriptions\n\nLorem ipsum bla bla bla',
-        // image: require('./assets/3.jpg'),
-        backgroundColor: '#22bcb5',
-      }
-    ]
   });
 
+  const navigation = useNavigation();
   //this hook calls the token function
   useEffect(() => {
     obtainToken()
@@ -56,7 +33,6 @@ const PlansScreen = ({navigation}) => {
         const value = await AsyncStorage.getItem('userToken');
         const data_value = await AsyncStorage.getItem('dataUser');
         let data_value_parsed = JSON.parse(data_value)
-        console.log(data_value_parsed);
         setData({
           ...data,
           client_token: value,
@@ -151,180 +127,59 @@ const PlansScreen = ({navigation}) => {
         }
     }); 
   }
-  const payPlan = (token_user, userdata) => {   
-    let urlApi = UrlServices(1);
-    setVisible(true)
-    NetInfo.fetch().then(state => {
-        console.log(state.isConnected);
-        if (state.isConnected === true){
-            if (token_user.length === 0) {
-                setVisible(false)
-                setAlert(true)
-                setData({
-                    ...data,
-                    error_message: `Error al obtener el token del usuario, intente nuevamente`
-                })
-            } else {
-                try {
-                    axios({
-                        method: 'get',
-                        url: `${urlApi}/user/subscription`,
-                        timeout: 9000,
-                        body:{
-                            card_number: '',
-                            card_cvc: '',
-                            exp_month: '',
-                            exp_year: '',
-                            plans: ''                      
-                        },
-                        headers: {
-                          'Authorization': `Bearer ${token_user}`,
-                          'Content-Type': 'application/json',
-                          'X-Requested-With': 'XMLHttpRequest'
-                        },
-                        validateStatus: (status) => {
-                            return true; 
-                        },
-                    })
-                    .catch(function(error) {
-                        console.log(error);
-                        setVisible(false)
-                        setAlert(true)
-                        setData({
-                            ...data,
-                            error_message: `Ha ocurrido un error, ${error}`
-                        })
-                    })
-                    .then(response => {
-                        if (response.status === 200 || response.status === 201) {
-                            console.log('correcto', response);
-                            setVisible(false)
-                            setData({
-                                ...data,
-                                data_plans: response.data.data,
-                                client_token: token_user,
-                                client_data: userdata
-                            })
-                        }else{
-                            let error = response.data.errors
-                            let parsed_error = JSON.stringify(error)
-                            console.log(parsed_error);
-                            setVisible(false)
-                            setAlert(true)
-                            setData({
-                                ...data,
-                                error_message: `Ha ocurrido un error, ${parsed_error}`
-                            })
-                        }
-                    })
-                } catch (err) {
-                        console.log('catch de errores: ', err);
-                        setVisible(false)
-                        setAlert(true)
-                        setData({
-                            ...data,
-                            error_message: `Ha ocurrido un error, ${err}`
-                        })
-                } 
-            }
-        }else{
-            setData({
-                ...data,
-                error_message: 'Por favor, revise su conexión a internet.',
-            });
-            setVisible(true)
-            setLoginState(false)
-        }
-    }); 
-  }
 
   //render of swipeable
-  const _renderItem = ({ item }) => {
-    console.log("item que llega",item);
+  const _renderItem = (item) => {
+    console.log("item que llega",data);
     return (
       <View style={styles.container}>
         <ScrollView>
-          <View style={styles.top}>
-            <Text style={styles.title_text}>Planes de suscripción</Text>
-            <Text style={styles.title_text2}>NINGUNO</Text>
-            <Text style={styles.title_text3}>SUGERENCIAS</Text>
-          </View>
+          
           <View style={styles.bot}>
-            <Card style={styles.card}>
+            <Card style={styles.card_2}>
                 <Card.Content>
-                  <View style={{backgroundColor: '#171717', height: 115, justifyContent: 'center', alignItems: 'center'}}>
-                    {item.nickname.toUpperCase() === "GOLD PACK" ? 
+                  <View style={{backgroundColor: '#171717', height: 50, justifyContent: 'center', alignItems: 'center'}}>
+                    {item.name.toUpperCase() === "HIPISMO" ? 
+                      <Hipismo 
+                        width="50" 
+                        style={{marginLeft: 0}}
+                      />
+                      : null
+                    }
+                    {item.nickname.toUpperCase() === "DEPORTES GENERALES" ? 
                       <Gold 
-                        width="100" 
-                        style={{marginLeft: 0}}
-                      />
-                      : null
-                    }
-                    {item.nickname.toUpperCase() === "SILVER PACK" ? 
-                      <Silver 
-                        width="100" 
-                        style={{marginLeft: 0}}
-                      />
-                      : null
-                    }
-                    {item.nickname.toUpperCase() === "BRONZE PACK" ? 
-                      <Bronze 
-                        width="100" 
+                        width="50" 
                         style={{marginLeft: 0}}
                       />
                       : null
                     }
                   </View>
-                  <Title numberOfLines={1}  style={styles.bot_text}>{item.nickname.toUpperCase()}</Title>
+                  <Title numberOfLines={1}  style={styles.bot_text_alt}>{item.nickname.toUpperCase()}</Title>
                   <View style={styles.container_swapp}>
                     <View style={styles.container_swapp2}>
-                        {item.nickname.toUpperCase() === 'GOLD PACK' ? 
-                          <FlatList
-                            data={[
-                              {key: '4 Pronósticos diarios'},
-                              {key: 'Disponible bajo registro'},
-                              {key: 'Duración de un mes'},
-                              {key: 'Disponible amplio numero de clientes'},
-                            ]}
-                            renderItem={({item}) => <Text style={styles.bot_text2}><Text style={{color: '#01CD01'}}>&bull;</Text> &nbsp;&nbsp;{item.key}</Text>}
-                          />
-                          : null
-                        }
-                        {item.nickname.toUpperCase() === 'SILVER PACK' ? 
-                          <FlatList
-                            data={[
-                              {key: '3 Pronósticos diarios'},
-                              {key: 'Disponible bajo registro'},
-                              {key: 'Duración de un mes'},
-                              {key: 'Disponible amplio numero de clientes'},
-                            ]}
-                            renderItem={({item}) => <Text style={styles.bot_text2}><Text style={{color: '#01CD01'}}>&bull;</Text> &nbsp;&nbsp;{item.key}</Text>}
-                          />
-                          : null
-                        }
-                        {item.nickname.toUpperCase() === 'BRONZE PACK' ? 
-                          <FlatList
-                            data={[
-                              {key: '2 Pronósticos diarios'},
-                              {key: 'Disponible bajo registro'},
-                              {key: 'Duración de un mes'},
-                              {key: 'Disponible amplio numero de clientes'},
-                            ]}
-                            renderItem={({item}) => <Text style={styles.bot_text2}><Text style={{color: '#01CD01'}}>&bull;</Text> &nbsp;&nbsp;{item.key}</Text>}
-                          />
-                          : null
-                        }
-                        {item.nickname.toUpperCase() === 'TRIAL' ? 
-                          <FlatList
-                            data={[
-                              {key: 'Trial text'},
-                            ]}
-                            renderItem={({item}) => <Text style={styles.bot_text2}><Text style={{color: '#01CD01'}}>&bull;</Text> &nbsp;&nbsp;{item.key}</Text>}
-                          />
-                          : null
-                        }
+                      {item.name != null && item.name == "Hipismo" ? 
+                        (<FlatList
+                          data={[
+                            {key: 'Mas de 200 datos mensuales'},
+                            {key: 'Solo hipodromos clase A en USA'},
+                            {key: 'De miercoles a domingo'},
+                            {key: 'Disponibilidad inmediata'},
+                          ]}
+                          renderItem={({item}) => <Text style={styles.bot_text2}><Text style={{color: '#01CD01'}}>&bull;</Text> &nbsp;&nbsp;{item.key}</Text>}
+                        />) 
+                      : 
+                      (<FlatList
+                          data={[
+                            {key: '3 pronosticos diarios'},
+                            {key: 'La jugada del dia'},
+                            {key: 'Duracion de un mes'},
+                            {key: 'Disponibilidad inmediata'},
+                          ]}
+                          renderItem={({item}) => <Text style={styles.bot_text2}><Text style={{color: '#01CD01'}}>&bull;</Text> &nbsp;&nbsp;{item.key}</Text>}
+                        />) 
+                      }
                     </View>
-                    <Text style={styles.text_amount}>{item.amount/100}{item.currency === 'usd' ? "$" : null }</Text>
+                    <Text style={styles.text_amount}>{item.amount}{item.currency === 'usd' ? "$" : null }</Text>
                     <View style={styles.button}>
                         <TouchableOpacity
                           style={styles.signIn}
@@ -350,63 +205,91 @@ const PlansScreen = ({navigation}) => {
       </View>
     );
   }
-  const _onDone = () => {
-    console.log('easy');
+  const render = (data) => {
+    console.log("item que llega",data);
+    return (
+      <Card style={styles.card}>
+      <Card.Content>
+        <Title numberOfLines={1}  style={styles.bot_text}>{data.name != null ? data.name : null}</Title>
+        <View style={styles.container_swapp}>
+          <View style={styles.container_swapp2}>
+          {data.name != null && data.name == "Hipismo" ? 
+            (<FlatList
+              data={[
+                {key: 'Mas de 200 datos mensuales'},
+                {key: 'Solo hipodromos clase A en USA'},
+                {key: 'De miercoles a domingo'},
+                {key: 'Disponibilidad inmediata'},
+              ]}
+              renderItem={({item}) => <Text style={styles.bot_text2}><Text style={{color: '#01CD01'}}>&bull;</Text> &nbsp;&nbsp;{item.key}</Text>}
+            />) 
+          : 
+          (<FlatList
+              data={[
+                {key: '3 pronosticos diarios'},
+                {key: 'La jugada del dia'},
+                {key: 'Duracion de un mes'},
+                {key: 'Disponibilidad inmediata'},
+              ]}
+              renderItem={({item}) => <Text style={styles.bot_text2}><Text style={{color: '#01CD01'}}>&bull;</Text> &nbsp;&nbsp;{item.key}</Text>}
+            />) 
+          }
+          </View>
+          <View style={styles.button}>
+              <TouchableOpacity
+                style={styles.signIn}
+                onPress={() => navigation.navigate('home')}
+              >
+                  <LinearGradient
+                      colors={['#01CD01', '#01CD01']}
+                      style={styles.signIn}
+                  >
+                      <Text style={[styles.textSign, {
+                          color:'#fff'
+                      }]}>ADQUIRIR</Text>
+                  </LinearGradient>
+              </TouchableOpacity>
+          </View>
+        </View>
+      </Card.Content>
+    </Card>    
+
+    );
   }
 
   console.log(data.client_data, "data del cliente");
 
-  if (data.client_data !== null) {
-    if (data.client_data.subscribed === true) {
+  if (data.client_data !== null || data.client_data !== undefined || data.client_data !== '') {
+    if (data.client_data !== null && data.client_data.subscribed == true) {
       return (
         <>
-          <View style={styles.container}>
-            <ScrollView>
-              <View style={styles.top}>
-                <Text style={styles.title_text}>Planes de suscripción</Text>
-                <Text style={styles.title_text2}>PLAN ACTIVO</Text>
-                <View style={styles.banner_suscription}>
-                    <Text style={styles.text_suscription}>GOLD</Text>
+          <View style={{backgroundColor:'#303030', flex: 1}}>
+            <View style={styles.top}>
+              <Text style={styles.title_text}>Planes de suscripción</Text>
+              <Text style={styles.title_text2}>PLAN ACTIVO</Text>
+              <View style={styles.banner_suscription}>
+                  <Text style={[styles.text_suscription, {textTransform: 'uppercase'}]}>dummy</Text>
+              </View>
+              <Text style={[styles.title_text, {marginTop: 25, marginBottom: 10}]}>SUGERENCIAS</Text>
+            </View>
+            <View style={styles.bot}>
+            {data.data_plans != null ? 
+              (
+                <Carousel
+                  pagination={PaginationLight}
+                  renderItem={render}
+                  data={data.data_plans}
+                />
+              ) : 
+              (
+                <View style={styles.container}>
+                    <Text style={styles.title_text}>Cargando</Text>
                 </View>
-                <Text style={[styles.title_text, {marginTop: 25, marginBottom: 10}]}>Planes de suscripción</Text>
-              </View>
-              <View style={styles.bot}>
-                <Card style={styles.card}>
-                    <Card.Content>
-                      <Title numberOfLines={1}  style={styles.bot_text}>SERVICIO PREMIUM</Title>
-                      <View style={styles.container_swapp}>
-                        <View style={styles.container_swapp2}>
-                          <FlatList
-                            data={[
-                              {key: '1 Pronóstico especial'},
-                              {key: 'Numero limitado de usuarios'},
-                              {key: 'Alta rentabilidad'},
-                              {key: 'Frecuencia indefinida'},
-                            ]}
-                            renderItem={({item}) => <Text style={styles.bot_text2}><Text style={{color: '#01CD01'}}>&bull;</Text> &nbsp;&nbsp;{item.key}</Text>}
-                          />
-                        </View>
-                        <View style={styles.button}>
-                            <TouchableOpacity
-                              style={styles.signIn}
-                              onPress={() => console.log('skere')}
-                              disabled={true}
-                            >
-                                <LinearGradient
-                                    colors={['#989898', '#989898']}
-                                    style={styles.signIn}
-                                >
-                                    <Text style={[styles.textSign, {
-                                        color:'#fff'
-                                    }]}>ADQUIRIR</Text>
-                                </LinearGradient>
-                            </TouchableOpacity>
-                        </View>
-                      </View>
-                    </Card.Content>
-                </Card>
-              </View>
-            </ScrollView>
+              )
+            }
+              
+               
+            </View>
           </View>
           <View>
             <Portal>
@@ -458,22 +341,28 @@ const PlansScreen = ({navigation}) => {
     } else {
       return (
         <>
-          {console.log('data seteada', data.data_plans)}
           <View style={{backgroundColor:'#303030', flex: 1}}>
-          {console.log("PLANES",data.data_plans)}
-            {data.data_plans !== null ?
-              <AppIntroSlider 
-                renderItem={_renderItem} 
-                data={data.data_plans === null ? data.slides : data.data_plans} 
-                onDone={_onDone}
-                showNextButton={false}
-                showDoneButton={false}
-              />
-              :
-              <View style={{justifyContent: 'center', alignItems: 'center', flex: 1}}>
-                <Text style={styles.title_text}>Cargando planes</Text>
-              </View>
-            }
+            <View style={styles.top}>
+              <Text style={styles.title_text}>Planes de suscripción</Text>
+              <Text style={styles.title_text2}>NINGUNO</Text>
+              <Text style={styles.title_text3}>SUGERENCIAS</Text>
+            </View>
+            <View style={styles.bot_2}>
+              {data.data_plans != null ? 
+                (
+                  <Carousel
+                    pagination={PaginationLight}
+                    renderItem={_renderItem}
+                    data={data.data_plans}
+                  />
+                ) : 
+                (
+                  <View style={styles.container}>
+                      <Text style={styles.title_text}>Cargando</Text>
+                  </View>
+                )
+              }
+            </View>
           </View>
           <View>
             <Portal>
@@ -525,11 +414,9 @@ const PlansScreen = ({navigation}) => {
     }
   } else {
     return(
-      <>
         <View style={styles.container}>
             <Text style={styles.title_text}>Lo sentimos, no se obtuvo contenido</Text>
         </View>
-      </>
     )
   }
   
@@ -539,7 +426,7 @@ export default PlansScreen
 
 
 
-let widthScreen = Dimensions.get('window').width / 1.04
+let widthScreen = Dimensions.get('window').width / 1.3
 const styles = StyleSheet.create({ 
   container: { 
     flex: 1, 
@@ -558,14 +445,21 @@ const styles = StyleSheet.create({
     width: 250, 
   },
   top: {
-    flex: 1,   
+    flex: 1, 
     alignItems: 'center', 
-    justifyContent: 'flex-start' 
+    justifyContent: 'flex-start', 
   },
   bot: {
-    flex: 3,  
+    flex: 2.5, 
     alignItems: 'center', 
-    justifyContent: 'flex-start' 
+    justifyContent: 'flex-start',
+    width: '100%', 
+  },
+  bot_2: {
+    flex: 4.5, 
+    alignItems: 'center', 
+    justifyContent: 'flex-start',
+    width: '100%', 
   },
   text_amount:{
     color: '#fff',
@@ -597,6 +491,13 @@ const styles = StyleSheet.create({
     fontSize: 18,
     textAlign: 'center'
   },
+  bot_text_alt:{
+    color: '#fff',
+    fontFamily: 'Montserrat-Medium',
+    fontSize: 18,
+    textAlign: 'center',
+    marginTop: 40
+  },
   bot_text2:{
     color: '#fff',
     fontFamily: 'Montserrat-Medium',
@@ -605,19 +506,26 @@ const styles = StyleSheet.create({
     textAlign: 'left'
   },
   card:{
-    flex: 1, 
-    justifyContent: 'center', 
-    alignContent: 'center',
+    // width: '100%',
+    height: 220,
     width: widthScreen,
-    marginTop: 10,
-    backgroundColor: '#212121',
-    borderRadius: 5
+    // marginTop: 10,
+    backgroundColor: '#282424',
+    // borderRadius: 5
+  },
+  card_2:{
+    // width: '100%',
+    height: 370,
+    width: widthScreen,
+    // marginTop: 10,
+    backgroundColor: '#282424',
+    // borderRadius: 5
   },
   card_cover:{
-      marginLeft: 9, 
-      marginTop: 5, 
-      marginRight: 9, 
-      borderRadius: 5
+      // marginLeft: 9, 
+      // marginTop: 5, 
+      // marginRight: 9, 
+      // borderRadius: 5
   },
   button: {
     alignItems: 'flex-end',
@@ -636,8 +544,8 @@ const styles = StyleSheet.create({
     fontSize: 15,
   },
   banner_suscription: {
-    backgroundColor: '#d1c70e', 
-    height: 45, 
+    backgroundColor: '#D4AF37', 
+    height: 60, 
     justifyContent: 'center', 
     alignItems: 'center',
     width: '100%', 
@@ -645,7 +553,7 @@ const styles = StyleSheet.create({
   },
   text_suscription: {
     fontFamily: 'Montserrat-SemiBold',
-    fontSize: 15,
+    fontSize: 22,
     color: '#fff'
   },
 });
