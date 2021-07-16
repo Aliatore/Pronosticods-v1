@@ -138,7 +138,7 @@ const PlansScreen = () => {
           <View style={styles.bot}>
             <Card style={styles.card_2}>
                 <Card.Content>
-                  <View style={{backgroundColor: '#171717', height: 50, justifyContent: 'center', alignItems: 'center'}}>
+                  <View style={{backgroundColor: '#171717', height: 50, justifyContent: 'center', alignItems: 'center', position: 'relative'}}>
                     {item.name.toUpperCase() === "HIPISMO" ? 
                       <Hipismo 
                         width="50" 
@@ -160,22 +160,22 @@ const PlansScreen = () => {
                       {item.name != null && item.name == "Hipismo" ? 
                         (<FlatList
                           data={[
-                            {key: 'Mas de 200 datos mensuales'},
-                            {key: 'Solo hipodromos clase A en USA'},
-                            {key: 'De miercoles a domingo'},
-                            {key: 'Disponibilidad inmediata'},
+                            {id: 1, key: 'Mas de 200 datos mensuales'},
+                            {id: 2, key: 'Solo hipodromos clase A en USA'},
+                            {id: 3, key: 'De miercoles a domingo'},
+                            {id: 4, key: 'Disponibilidad inmediata'},
                           ]}
-                          renderItem={({item}) => <Text style={styles.bot_text2}><Text style={{color: '#01CD01'}}>&bull;</Text> &nbsp;&nbsp;{item.key}</Text>}
+                          renderItem={({item}) => <Text key={item.id} style={styles.bot_text2}><Text style={{color: '#01CD01'}}>&bull;</Text> &nbsp;&nbsp;{item.key}</Text>}
                         />) 
                       : 
                       (<FlatList
                           data={[
-                            {key: '3 pronosticos diarios'},
-                            {key: 'La jugada del dia'},
-                            {key: 'Duracion de un mes'},
-                            {key: 'Disponibilidad inmediata'},
+                            {id: 1, key: '3 pronosticos diarios'},
+                            {id: 2, key: 'La jugada del dia'},
+                            {id: 3, key: 'Duracion de un mes'},
+                            {id: 4, key: 'Disponibilidad inmediata'},
                           ]}
-                          renderItem={({item}) => <Text style={styles.bot_text2}><Text style={{color: '#01CD01'}}>&bull;</Text> &nbsp;&nbsp;{item.key}</Text>}
+                          renderItem={({item}) => <Text key={item.id} style={styles.bot_text2}><Text style={{color: '#01CD01'}}>&bull;</Text> &nbsp;&nbsp;{item.key}</Text>}
                         />) 
                       }
                     </View>
@@ -183,7 +183,11 @@ const PlansScreen = () => {
                     <View style={styles.button}>
                         <TouchableOpacity
                           style={styles.signIn}
-                          onPress={() => console.log('skere')}
+                          onPress={() => navigation.navigate('PaymentScreen', {
+                            ammount: item.amount ? item.amount : '',
+                            currency: item.currency ? item.currency : '',
+                            name_plan: item.name ? item.name : '',
+                          })}
                         >
                             <LinearGradient
                                 colors={['#01CD01', '#01CD01']}
@@ -205,7 +209,7 @@ const PlansScreen = () => {
       </View>
     );
   }
-  const render = (data) => {
+  const render = (data, i) => {
     console.log("item que llega",data);
     return (
       <Card style={styles.card}>
@@ -216,29 +220,33 @@ const PlansScreen = () => {
           {data.name != null && data.name == "Hipismo" ? 
             (<FlatList
               data={[
-                {key: 'Mas de 200 datos mensuales'},
-                {key: 'Solo hipodromos clase A en USA'},
-                {key: 'De miercoles a domingo'},
-                {key: 'Disponibilidad inmediata'},
+                {id: 1, key: 'Mas de 200 datos mensuales'},
+                {id: 2, key: 'Solo hipodromos clase A en USA'},
+                {id: 3, key: 'De miercoles a domingo'},
+                {id: 4, key: 'Disponibilidad inmediata'},
               ]}
-              renderItem={({item}) => <Text style={styles.bot_text2}><Text style={{color: '#01CD01'}}>&bull;</Text> &nbsp;&nbsp;{item.key}</Text>}
+              renderItem={({item}) => <Text key={item.id} style={styles.bot_text2}><Text style={{color: '#01CD01'}}>&bull;</Text> &nbsp;&nbsp;{item.key}</Text>}
             />) 
           : 
           (<FlatList
               data={[
-                {key: '3 pronosticos diarios'},
-                {key: 'La jugada del dia'},
-                {key: 'Duracion de un mes'},
-                {key: 'Disponibilidad inmediata'},
+                {id: 1, key: '3 pronosticos diarios'},
+                {id: 2, key: 'La jugada del dia'},
+                {id: 3, key: 'Duracion de un mes'},
+                {id: 4, key: 'Disponibilidad inmediata'},
               ]}
-              renderItem={({item}) => <Text style={styles.bot_text2}><Text style={{color: '#01CD01'}}>&bull;</Text> &nbsp;&nbsp;{item.key}</Text>}
+              renderItem={({item}) => <Text key={item.id} style={styles.bot_text2}><Text style={{color: '#01CD01'}}>&bull;</Text> &nbsp;&nbsp;{item.key}</Text>}
             />) 
           }
           </View>
           <View style={styles.button}>
               <TouchableOpacity
                 style={styles.signIn}
-                onPress={() => navigation.navigate('home')}
+                onPress={() => navigation.navigate('PaymentScreen', {
+                  ammount: item.amount ? item.amount : '',
+                  currency: item.currency ? item.currency : '',
+                  name_plan: item.name ? item.name : '',
+                })}
               >
                   <LinearGradient
                       colors={['#01CD01', '#01CD01']}
