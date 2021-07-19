@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import { View, Text, StyleSheet, Dimensions, FlatList, StatusBar, TouchableOpacity} from 'react-native';
+import { View, Text, StyleSheet, Dimensions, FlatList, StatusBar, TouchableOpacity, SafeAreaView} from 'react-native';
 import { Card, Title, Dialog, Portal } from 'react-native-paper';
 import { Spinner } from 'native-base'
 import AwesomeAlert from 'react-native-awesome-alerts';
@@ -20,6 +20,18 @@ const PlansScreen = () => {
     client_data: null,
     data_plans: null,
     error_message: '',
+    hipismo: [
+      {id: 1, key: 'Mas de 200 datos mensuales'},
+      {id: 2, key: 'Solo hipodromos clase A en USA'},
+      {id: 3, key: 'De miercoles a domingo'},
+      {id: 4, key: 'Disponibilidad inmediata'},
+    ],
+    general_sports: [
+      {id: 1, key: '3 pronosticos diarios'},
+      {id: 2, key: 'La jugada del dia'},
+      {id: 3, key: 'Duracion de un mes'},
+      {id: 4, key: 'Disponibilidad inmediata'},
+    ],
   });
 
   const navigation = useNavigation();
@@ -49,7 +61,7 @@ const PlansScreen = () => {
 
   //api call
   const getPlans = (token_user, userdata) => {   
-    let urlApi = UrlServices(1);
+    let urlApi = UrlServices(3);
     setVisible(true)
     NetInfo.fetch().then(state => {
         console.log(state.isConnected);
@@ -130,23 +142,27 @@ const PlansScreen = () => {
 
   //render of swipeable
   const _renderItem = (item) => {
-    console.log("item que llega",data);
+    console.log("item que llega en params", item);
+    console.log("item que llega, 1",data.client_data);
+    console.log("item que llega, 2",data.data_plans);
+    console.log("item que llega, 3",data.general_sports);
+    console.log("item que llega, 4",data.hipismo);
     return (
-      <View style={styles.container}>
+      <View key={item.id}>
         <ScrollView>
           
           <View style={styles.bot}>
             <Card style={styles.card_2}>
                 <Card.Content>
                   <View style={{backgroundColor: '#171717', height: 50, justifyContent: 'center', alignItems: 'center', position: 'relative'}}>
-                    {item.name.toUpperCase() === "HIPISMO" ? 
+                    {item.name != null && item.name.toUpperCase() === "HIPISMO" ? 
                       <Hipismo 
-                        width="50" 
+                        width="50"
                         style={{marginLeft: 0}}
                       />
                       : null
                     }
-                    {item.nickname.toUpperCase() === "DEPORTES GENERALES" ? 
+                    {item.name != null && item.name.toUpperCase() === "DEPORTES GENERALES" ? 
                       <Gold 
                         width="50" 
                         style={{marginLeft: 0}}
@@ -155,53 +171,48 @@ const PlansScreen = () => {
                     }
                   </View>
                   <Title numberOfLines={1}  style={styles.bot_text_alt}>{item.nickname.toUpperCase()}</Title>
-                  <View style={styles.container_swapp}>
-                    <View style={styles.container_swapp2}>
-                      {item.name != null && item.name == "Hipismo" ? 
-                        (<FlatList
-                          data={[
-                            {id: 1, key: 'Mas de 200 datos mensuales'},
-                            {id: 2, key: 'Solo hipodromos clase A en USA'},
-                            {id: 3, key: 'De miercoles a domingo'},
-                            {id: 4, key: 'Disponibilidad inmediata'},
-                          ]}
-                          renderItem={({item}) => <Text key={item.id} style={styles.bot_text2}><Text style={{color: '#01CD01'}}>&bull;</Text> &nbsp;&nbsp;{item.key}</Text>}
-                        />) 
-                      : 
-                      (<FlatList
-                          data={[
-                            {id: 1, key: '3 pronosticos diarios'},
-                            {id: 2, key: 'La jugada del dia'},
-                            {id: 3, key: 'Duracion de un mes'},
-                            {id: 4, key: 'Disponibilidad inmediata'},
-                          ]}
-                          renderItem={({item}) => <Text key={item.id} style={styles.bot_text2}><Text style={{color: '#01CD01'}}>&bull;</Text> &nbsp;&nbsp;{item.key}</Text>}
-                        />) 
-                      }
+                  <SafeAreaView>
+                    <View style={styles.container_swapp}>
+                      <View style={styles.container_swapp2}>
+                        
+                          {item.name != null && item.name == "Hipismo" ? 
+                            (<FlatList
+                              data={data.hipismo}
+                              renderItem={({item}) => <Text key={item.id} style={styles.bot_text2}><Text style={{color: '#01CD01'}}>&bull;</Text> &nbsp;&nbsp;{item.key}</Text>}
+                            />) 
+                          : 
+                          (<FlatList
+                              data={data.general_sports}
+                              renderItem={({item}) => <Text key={item.id} style={styles.bot_text2}><Text style={{color: '#01CD01'}}>&bull;</Text> &nbsp;&nbsp;{item.key}</Text>}
+                            />) 
+                          }
+                      </View>
+                      <Text style={styles.text_amount}>{item.amount}{item.currency === 'usd' ? "$" : null }</Text>
+                      <View style={styles.button}>
+                          <TouchableOpacity
+                            style={styles.signIn}
+                            onPress={() => navigation.navigate('PaymentScreen', {
+                              ammount: item.amount ? item.amount : '',
+                              currency: item.currency ? item.currency : '',
+                              name_plan: item.name ? item.name : '',
+                              plan_id: item.id ? item.id : '',
+                              client_user_token: data.client_token != undefined ? data.client_token : '',
+                            })}
+                          >
+                              <LinearGradient
+                                  colors={['#01CD01', '#01CD01']}
+                                  style={styles.signIn}
+                              >
+                                  <Text style={[styles.textSign, {
+                                      color:'#fff'
+                                  }]}>ADQUIRIR</Text>
+                              </LinearGradient>
+                          </TouchableOpacity>
+                      </View>
                     </View>
-                    <Text style={styles.text_amount}>{item.amount}{item.currency === 'usd' ? "$" : null }</Text>
-                    <View style={styles.button}>
-                        <TouchableOpacity
-                          style={styles.signIn}
-                          onPress={() => navigation.navigate('PaymentScreen', {
-                            ammount: item.amount ? item.amount : '',
-                            currency: item.currency ? item.currency : '',
-                            name_plan: item.name ? item.name : '',
-                          })}
-                        >
-                            <LinearGradient
-                                colors={['#01CD01', '#01CD01']}
-                                style={styles.signIn}
-                            >
-                                <Text style={[styles.textSign, {
-                                    color:'#fff'
-                                }]}>ADQUIRIR</Text>
-                            </LinearGradient>
-                        </TouchableOpacity>
-                    </View>
-                  </View>
-                  {/* <Paragraph numberOfLines={1} style={styles.paragraph_white}>{item.text}</Paragraph>
-                  <Paragraph numberOfLines={1} style={styles.paragraph_grey}>{item.text}</Paragraph> */}
+                    {/* <Paragraph numberOfLines={1} style={styles.paragraph_white}>{item.text}</Paragraph>
+                    <Paragraph numberOfLines={1} style={styles.paragraph_grey}>{item.text}</Paragraph> */}
+                  </SafeAreaView>
                 </Card.Content>
             </Card>
           </View>
@@ -209,10 +220,10 @@ const PlansScreen = () => {
       </View>
     );
   }
-  const render = (data, i) => {
-    console.log("item que llega",data);
+  const render = (data) => {
+    console.log("item que llega, en render item",data);
     return (
-      <Card style={styles.card}>
+      <Card key={data.id} style={styles.card}>
       <Card.Content>
         <Title numberOfLines={1}  style={styles.bot_text}>{data.name != null ? data.name : null}</Title>
         <View style={styles.container_swapp}>
@@ -243,9 +254,10 @@ const PlansScreen = () => {
               <TouchableOpacity
                 style={styles.signIn}
                 onPress={() => navigation.navigate('PaymentScreen', {
-                  ammount: item.amount ? item.amount : '',
-                  currency: item.currency ? item.currency : '',
-                  name_plan: item.name ? item.name : '',
+                  ammount: data.amount ? data.amount : '',
+                  currency: data.currency ? data.currency : '',
+                  name_plan: data.name ? data.name : '',
+                  plan_id: data.data_plans.id ? data.data_plans.id : '',
                 })}
               >
                   <LinearGradient
@@ -266,6 +278,12 @@ const PlansScreen = () => {
   }
 
   console.log(data.client_data, "data del cliente");
+
+  // return(
+  //   <View style={styles.container}>
+  //       <Text style={styles.title_text}>Lo sentimos, no se obtuvo contenido</Text>
+  //   </View>
+  // )
 
   if (data.client_data !== null || data.client_data !== undefined || data.client_data !== '') {
     if (data.client_data !== null && data.client_data.subscribed == true) {

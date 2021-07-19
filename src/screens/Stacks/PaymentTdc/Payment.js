@@ -29,12 +29,12 @@ const PaymentScreen = ({navigation, route}) => {
         name: '',
         card_number: '',
         caducidad: '',
-        caducidad_year: '',
-        caducidad_month: '',
         cvv: '',
         ammount: route.params.ammount ? route.params.ammount : '',
         currency: route.params.currency ? route.params.currency : '',
         name_plan: route.params.name_plan ? route.params.name_plan : '',
+        plan_id: route.params.plan_id ? route.params.plan_id : '',
+        u_token: route.params.client_user_token ? route.params.client_user_token : '',
     });
 
     const [visible, setVisible] = React.useState(false);
@@ -67,16 +67,16 @@ const PaymentScreen = ({navigation, route}) => {
             });
         }
     }
-    const setCaducidad = (e) => {
+    const setCaducidad = (e) => {  
         if(e.trim().length > 0 ) {
             setData({
                 ...data,
-                caducidad: e
+                caducidad: e,
             });
         } else {
             setData({
                 ...data,
-                caducidad: e
+                caducidad: m,
             });
         }
     }
@@ -95,9 +95,9 @@ const PaymentScreen = ({navigation, route}) => {
     }
 
     const sendPayment = () => {   
-        let urlApi = UrlServices(1);
+        let urlApi = UrlServices(3);
         setVisible(true)
-        if (data.email.length === 0 || data.card_number.length === 0 || data.caducidad.length === 0 || data.caducidad_year.length === 0 || data.caducidad_month.length === 0 || data.cvv.length === 0 ) {
+        if (data.caducidad.length === 0 ||  data.cvv.length === 0 ) {
             setVisible(false)
             setAlert(true)
             setData({
@@ -107,6 +107,7 @@ const PaymentScreen = ({navigation, route}) => {
             return;
         } else {
             try {
+                let [m,y] = data.caducidad.split('/');
                 axios({
                     method: 'post',
                     url: `${urlApi}/user/subscription`,
@@ -114,12 +115,12 @@ const PaymentScreen = ({navigation, route}) => {
                     data: {
                         card_number: data.card_number,
                         card_cvc: data.cvv,
-                        exp_month: data.caducidad_month,
-                        exp_year: data.caducidad_year,
-                        plan: data.name_plan
+                        exp_month: m,
+                        exp_year: y,
+                        plan: data.plan_id
                     },
                     headers: {
-                        Authorization: "Bearer" + " " + this.tokenArray[0],
+                        Authorization: "Bearer" + " " + data.u_token,
                         "Content-Type": "application/json; charset=utf-8",
                         "X-Requested-With": "XMLHttpRequest",
                         "Access-Control-Allow-Origin": "*",
@@ -139,10 +140,10 @@ const PaymentScreen = ({navigation, route}) => {
                         })
                     })
                 .then(response => {
-                        console.log("status", response.status);
-                        console.log("data", response.data);
+                        // console.log("status", response.status);
+                        // console.log("data", response.data);
                         if (response.status === 200) {
-                            console.log('correcto');
+                            // console.log('correcto');
                             setVisible(false)
                             setAlert(true)
                             setData({
@@ -157,12 +158,12 @@ const PaymentScreen = ({navigation, route}) => {
                             setAlert(true)
                             setData({
                                 ...data,
-                                error_message: `Ha ocurrido un error, ${response.data.errors.email}`
+                                error_message: `Ha ocurrido un error, ${response.data.message}`
                             })
                         }
                     })
             } catch (err) {
-                    console.log('catch de errores: ', err);
+                    // console.log('catch de errores: ', err);
                     setVisible(false)
                     setAlert(true)
                     setData({
@@ -173,170 +174,181 @@ const PaymentScreen = ({navigation, route}) => {
         }
         
     }
-    
-    return (
-        <>
+
+
+    if (route.params == null || route.params == undefined || route.params == "") {
+        return(
             <View style={styles.container}>
-                <StatusBar backgroundColor='#131011' barStyle="light-content"/>
-                <Animatable.View
-                        animation="fadeInUpBig"
-                        style={styles.top}
-                    >   
-                        <View style={styles.container_title}>
-                            <View style={styles.c1}>
-                                <TouchableOpacity
-                                    onPress={() => navigation.goBack()}
-                                >
-                                    <Feather 
-                                        name="close"
-                                        color="#fff"
-                                        size={30}
-                                    />
-                                </TouchableOpacity>
+                <Text style={styles.title_text}>Lo sentimos, no se obtuvo contenido</Text>
+            </View>
+        )
+    } else {
+        return (
+            <>
+                <View style={styles.container}>
+                    <StatusBar backgroundColor='#131011' barStyle="light-content"/>
+                    <Animatable.View
+                            animation="fadeInUpBig"
+                            style={styles.top}
+                        >   
+                            <View style={styles.container_title}>
+                                <View style={styles.c1}>
+                                    <TouchableOpacity
+                                        onPress={() => navigation.goBack()}
+                                    >
+                                        <Feather 
+                                            name="close"
+                                            color="#fff"
+                                            size={30}
+                                        />
+                                    </TouchableOpacity>
+                                </View>
+                                <View style={styles.c2}>
+                                {/* <TouchableOpacity
+                                        onPress={() => sendEmail(data.email)}
+                                    >
+                                        <Feather 
+                                            name="check"
+                                            color="green"
+                                            size={30}
+                                        />
+                                    </TouchableOpacity> */}
+                                </View>
                             </View>
-                            <View style={styles.c2}>
-                            {/* <TouchableOpacity
-                                    onPress={() => sendEmail(data.email)}
-                                >
-                                    <Feather 
-                                        name="check"
-                                        color="green"
-                                        size={30}
-                                    />
-                                </TouchableOpacity> */}
-                            </View>
-                        </View>
-                    <Text style={[styles.text_header, {marginTop: 20}]}>PAGO CON TDC</Text>
-                    </Animatable.View>
-                <Animatable.View
-                        animation="fadeInUpBig"
-                        style={styles.bot}
-                    >
-                    <ScrollView style={styles.scrollviewSize} showsVerticalScrollIndicator={false}>
-                    <View style={styles.black_square}>
-                        <View style={styles.price_square}>
-                            <Text style={styles.title_text}>Total de suscripción:</Text>
-                            <Text style={styles.title_text2}>{`${data.name_plan} ${data.currency === 'usd' ? "$" : null }${data.ammount}`}</Text>
-                        </View>
-                    </View>
-                    <View style={[styles.black_square, {marginTop: 20}]}>
-                        <View style={styles.login}>
-                            {/* <Text style={styles.text_footer}>NOMBRE</Text> */}
-                            <View style={styles.action}>
-                                <TextInput 
-                                    placeholder="NOMBRE"
-                                    style={styles.textInput}
-                                    autoCapitalize="none"
-                                    placeholderTextColor='#c4c4c4'
-                                    onChangeText={(e) => setName(e)}
-                                />
-                            </View>
-                        </View>
-                        <View style={[styles.login, {marginTop: 20}]}>
-                            {/* <Text style={styles.text_footer}>NÚMERO DE TARJETA</Text> */}
-                            <View style={styles.action}>
-                                <TextInput 
-                                    placeholder="NÚMERO DE TARJETA"
-                                    style={styles.textInput}
-                                    autoCapitalize="none"
-                                    placeholderTextColor='#c4c4c4'
-                                    onChangeText={(e) => setCardNumber(e)}
-                                />
-                            </View>
-                        </View>
-                        <View style={[styles.login, {marginTop: 20}]}>
-                            {/* <Text style={styles.text_footer}>CADUCIDAD (MM/YY)</Text> */}
-                            <View style={styles.action}>
-                                <TextInput 
-                                    placeholder="CADUCIDAD (MM/YY)"
-                                    style={styles.textInput}
-                                    autoCapitalize="none"
-                                    placeholderTextColor='#c4c4c4'
-                                    onChangeText={(e) => setCaducidad(e)}
-                                />
-                            </View>
-                        </View>
-                        <View style={[styles.login, {marginTop: 20}]}>
-                            {/* <Text style={styles.text_footer}>CÓDIGO DE TARJETA</Text> */}
-                            <View style={styles.action}>
-                                <TextInput 
-                                    placeholder="CÓDIGO DE TARJETA"
-                                    style={styles.textInput}
-                                    autoCapitalize="none"
-                                    placeholderTextColor='#c4c4c4'
-                                    onChangeText={(e) => setCvv(e)}
-                                />
-                            </View>
-                        </View>
-                    </View>
-                    <View style={[styles.button, {marginTop: 20, justifyContent: 'center', alignItems: 'center'}]}>
-                        <TouchableOpacity
-                            style={styles.signIn}
-                            disabled={disabled_pagar}
-                            onPress={() => sendPayment()}
+                        <Text style={[styles.text_header, {marginTop: 20}]}>PAGO CON TDC</Text>
+                        </Animatable.View>
+                    <Animatable.View
+                            animation="fadeInUpBig"
+                            style={styles.bot}
                         >
-                            <LinearGradient
-                                colors={['#01CD01', '#01CD01']}
+                        <ScrollView style={styles.scrollviewSize} showsVerticalScrollIndicator={false}>
+                        <View style={styles.black_square}>
+                            <View style={styles.price_square}>
+                                <Text style={styles.title_text}>Total de suscripción:</Text>
+                                <Text style={styles.title_text2}>{`${data.name_plan} ${data.currency === 'usd' ? "$" : null }${data.ammount}`}</Text>
+                            </View>
+                        </View>
+                        <View style={[styles.black_square, {marginTop: 20}]}>
+                            <View style={styles.login}>
+                                {/* <Text style={styles.text_footer}>NOMBRE</Text> */}
+                                <View style={styles.action}>
+                                    <TextInput 
+                                        placeholder="NOMBRE"
+                                        style={styles.textInput}
+                                        autoCapitalize="none"
+                                        placeholderTextColor='#c4c4c4'
+                                        onChangeText={(e) => setName(e)}
+                                    />
+                                </View>
+                            </View>
+                            <View style={[styles.login, {marginTop: 20}]}>
+                                {/* <Text style={styles.text_footer}>NÚMERO DE TARJETA</Text> */}
+                                <View style={styles.action}>
+                                    <TextInput 
+                                        placeholder="NÚMERO DE TARJETA"
+                                        style={styles.textInput}
+                                        autoCapitalize="none"
+                                        placeholderTextColor='#c4c4c4'
+                                        onChangeText={(e) => setCardNumber(e)}
+                                    />
+                                </View>
+                            </View>
+                            <View style={[styles.login, {marginTop: 20}]}>
+                                {/* <Text style={styles.text_footer}>CADUCIDAD (MM/YY)</Text> */}
+                                <View style={styles.action}>
+                                    <TextInput 
+                                        placeholder="CADUCIDAD (MM/YY)"
+                                        style={styles.textInput}
+                                        autoCapitalize="none"
+                                        placeholderTextColor='#c4c4c4'
+                                        onChangeText={(e) => setCaducidad(e)}
+                                    />
+                                </View>
+                            </View>
+                            <View style={[styles.login, {marginTop: 20}]}>
+                                {/* <Text style={styles.text_footer}>CÓDIGO DE TARJETA</Text> */}
+                                <View style={styles.action}>
+                                    <TextInput 
+                                        placeholder="CÓDIGO DE TARJETA"
+                                        style={styles.textInput}
+                                        autoCapitalize="none"
+                                        placeholderTextColor='#c4c4c4'
+                                        onChangeText={(e) => setCvv(e)}
+                                    />
+                                </View>
+                            </View>
+                        </View>
+                        <View style={[styles.button, {marginTop: 20, justifyContent: 'center', alignItems: 'center'}]}>
+                            <TouchableOpacity
                                 style={styles.signIn}
+                                disabled={disabled_pagar}
+                                onPress={() => sendPayment()}
                             >
-                                <Text style={[styles.textSign, {
-                                    color:'#fff'
-                                }]}>COMPRAR</Text>
-                            </LinearGradient>
-                        </TouchableOpacity>
-                    </View>
-                    </ScrollView>
-                </Animatable.View>
-            </View>
-            <View>
-                <Portal>
-                    <StatusBar
-                        barStyle={Platform.OS === true && theme.dark ? 'light-content' : 'light-content'}
-                        backgroundColor='#000000'
-                    />
-                    <Dialog 
-                        visible={visible} 
-                        // onDismiss={() => setVisible(false)}
-                        dismissable={false}
-                        style={{borderRadius: 20, backgroundColor: 'transparent'}}
-                    >
-                        <Dialog.ScrollArea>
-                        <ScrollView contentContainerStyle={{paddingHorizontal: 24, marginTop: 50, marginBottom: 30, alignItems: 'center'}}>
-                            <Spinner 
-                                color={"#fff"}
-                            />             
-                                            
+                                <LinearGradient
+                                    colors={['#01CD01', '#01CD01']}
+                                    style={styles.signIn}
+                                >
+                                    <Text style={[styles.textSign, {
+                                        color:'#fff'
+                                    }]}>COMPRAR</Text>
+                                </LinearGradient>
+                            </TouchableOpacity>
+                        </View>
                         </ScrollView>
-                        </Dialog.ScrollArea>
-                    </Dialog>
-                </Portal>
-            </View>
-            <View>
-                <AwesomeAlert
-                    show={alert}
-                    showProgress={false}
-                    title="INFORMACIÓN"
-                    message={data.error_message}
-                    closeOnTouchOutside={true}
-                    closeOnHardwareBackPress={false}
-                    showCancelButton={false}
-                    showConfirmButton={true}
-                    // cancelText="CANCELAR"
-                    confirmText="ACEPTAR"
-                    confirmButtonColor="#01CD01"
-                    contentContainerStyle={{backgroundColor: '#262222'}}
-                    titleStyle={{color: '#fff'}}
-                    messageStyle={{color: '#fff', textAlign: 'center'}}
-                    // onCancelPressed={() => {
-                    //     this.hideAlert();
-                    // }}
-                    onConfirmPressed={() => {
-                        setAlert(false);
-                    }}
-                />
-            </View>
-        </>
-    );
+                    </Animatable.View>
+                </View>
+                <View>
+                    <Portal>
+                        <StatusBar
+                            barStyle={Platform.OS === true && theme.dark ? 'light-content' : 'light-content'}
+                            backgroundColor='#000000'
+                        />
+                        <Dialog 
+                            visible={visible} 
+                            // onDismiss={() => setVisible(false)}
+                            dismissable={false}
+                            style={{borderRadius: 20, backgroundColor: 'transparent'}}
+                        >
+                            <Dialog.ScrollArea>
+                            <ScrollView contentContainerStyle={{paddingHorizontal: 24, marginTop: 50, marginBottom: 30, alignItems: 'center'}}>
+                                <Spinner 
+                                    color={"#fff"}
+                                />             
+                                                
+                            </ScrollView>
+                            </Dialog.ScrollArea>
+                        </Dialog>
+                    </Portal>
+                </View>
+                <View>
+                    <AwesomeAlert
+                        show={alert}
+                        showProgress={false}
+                        title="INFORMACIÓN"
+                        message={data.error_message}
+                        closeOnTouchOutside={true}
+                        closeOnHardwareBackPress={false}
+                        showCancelButton={false}
+                        showConfirmButton={true}
+                        // cancelText="CANCELAR"
+                        confirmText="ACEPTAR"
+                        confirmButtonColor="#01CD01"
+                        contentContainerStyle={{backgroundColor: '#262222'}}
+                        titleStyle={{color: '#fff'}}
+                        messageStyle={{color: '#fff', textAlign: 'center'}}
+                        // onCancelPressed={() => {
+                        //     this.hideAlert();
+                        // }}
+                        onConfirmPressed={() => {
+                            setAlert(false);
+                        }}
+                    />
+                </View>
+            </>
+        );
+    }
+
+    
 };
 
 // var v = this.value;

@@ -120,7 +120,7 @@ const UserProfileData = ({dataUser, have_bets}) => {
                             <Text style={[styles.textSign, {
                                 color: '#fff',
                                 marginLeft: 18,
-                            }]}>{dataUser.banner.name ? dataUser.banner.name : null}</Text>
+                            }]}>{dataUser.first_name ? dataUser.first_name : null}</Text>
                         </TouchableOpacity>
                     </View>
                 </View>

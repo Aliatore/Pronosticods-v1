@@ -73,7 +73,7 @@ const SignInScreen = ({navigation}) => {
         });
     }
     const loginHandle = (email, password) => {
-        let urlApi = UrlServices(1);
+        let urlApi = UrlServices(3);
         setVisible(true)
         NetInfo.fetch().then(state => {
             console.log(state.isConnected);
@@ -150,7 +150,7 @@ const SignInScreen = ({navigation}) => {
         }); 
     }
     const executeValidation = async (email, password, token) => {
-        let urlApi = UrlServices(1);
+        let urlApi = UrlServices(3);
         const email_user = await email;
         const password_user = await password;
         const token_user = await token;
@@ -200,7 +200,7 @@ const SignInScreen = ({navigation}) => {
                                     })
                                 }
                                 setVisible(false)
-                                signIn(foundUser, data_user)
+                                signIn(foundUser, data_user);
                         }
                     })
                 } catch (err) {

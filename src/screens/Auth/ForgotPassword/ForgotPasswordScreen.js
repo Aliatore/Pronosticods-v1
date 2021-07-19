@@ -48,10 +48,10 @@ const ForgotPasswordScreen = ({navigation}) => {
     }
 
     const sendEmail = (email) => {   
-        let urlApi = UrlServices(1);
+        let urlApi = UrlServices(3);
         setVisible(true)
         NetInfo.fetch().then(state => {
-            console.log(state.isConnected);
+            // console.log(state.isConnected);
             if (state.isConnected === true){
                 if (data.email.length === 0) {
                     setVisible(false)
@@ -87,8 +87,8 @@ const ForgotPasswordScreen = ({navigation}) => {
                                 })
                             })
                         .then(response => {
-                                console.log("status", response.status);
-                                console.log("data", response.data);
+                                // console.log("status", response.status);
+                                // console.log("data", response.data);
                                 if (response.status === 200) {
                                     console.log('correcto');
                                     navigation.navigate('ResendEmailScreen', {
@@ -100,7 +100,7 @@ const ForgotPasswordScreen = ({navigation}) => {
                                     setAlert(true)
                                     setData({
                                         ...data,
-                                        error_message: `Ha ocurrido un error, ${response.data.errors.email}`
+                                        error_message: `Ha ocurrido un error, ${response.data.message}`
                                     })
                                 }
                             })

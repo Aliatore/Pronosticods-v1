@@ -18,7 +18,11 @@ const ForecastsScreen = ({navigation}) => {
     error_message: '',
     page: 1,
     date_today: '',
-    is_registred: ''
+    is_registred: '',
+    d_1: '',
+    d_2: '',
+    d_3: '',
+    d_4: '',
   });
 
   const theme = useTheme();
@@ -48,15 +52,65 @@ const ForecastsScreen = ({navigation}) => {
 
     return year + '-' + month + '-' + date;//format: dd-mm-yyyy;
   }
-  //api call news
-  const getForecasts = (token_user) => {   
-    let urlApi = UrlServices(1);
-    setVisible(true)
 
+  const getForecasts = (token_user) => {   
+    let urlApi = UrlServices(3);
+    setVisible(true)
     let dateToday = getDate()
+    const requestOne = axios({
+        method: 'get',
+        url: `${urlApi}/forecasts/general`,
+        timeout: 9000,
+        headers: {
+          'Authorization': `Bearer ${token_user}`,
+            'Content-Type': 'application/json',
+            'X-Requested-With': 'XMLHttpRequest'
+        },
+        validateStatus: (status) => {
+            return true; 
+        }
+    });
+    const requestTwo = axios({
+        method: 'get',
+        url: `${urlApi}/forecasts/hipismo`,
+        timeout: 9000,
+        headers: {
+          'Authorization': `Bearer ${token_user}`,
+            'Content-Type': 'application/json',
+            'X-Requested-With': 'XMLHttpRequest'
+        },
+        validateStatus: (status) => {
+            return true; 
+        }
+    });
+    const requestThree = axios({
+        method: 'get',
+        url: `${urlApi}/forecasts/special`,
+        timeout: 9000,
+        headers: {
+          'Authorization': `Bearer ${token_user}`,
+            'Content-Type': 'application/json',
+            'X-Requested-With': 'XMLHttpRequest'
+        },
+        validateStatus: (status) => {
+            return true; 
+        }
+    });
+    const requestFour = axios({
+        method: 'get',
+        url: `${urlApi}/forecasts/trial`,
+        timeout: 9000,
+        headers: {
+          'Authorization': `Bearer ${token_user}`,
+            'Content-Type': 'application/json',
+            'X-Requested-With': 'XMLHttpRequest'
+        },
+        validateStatus: (status) => {
+            return true; 
+        }
+    });
 
     NetInfo.fetch().then(state => {
-        // console.log(state.isConnected);
         if (state.isConnected === true){
             if (token_user.length === 0) {
                 setVisible(false)
@@ -66,68 +120,42 @@ const ForecastsScreen = ({navigation}) => {
                     error_message: `Error al obtener el token del usuario, intente nuevamente`
                 })
             } else {
-              axios({
-                method: 'get',
-                url: `${urlApi}/forecasts/general`,
-                timeout: 9000,
-                params: {
-                    limit: 10,
-                },
-                data: {
-                  date: dateToday
-                },
-                headers: {
-                  'Authorization': `Bearer ${token_user}`,
-                    'Content-Type': 'application/json',
-                    'X-Requested-With': 'XMLHttpRequest'
-                },
-                validateStatus: (status) => {
-                    return true; 
-                }
-              })
-              .catch(function(error) {
-                console.log(error);
-                setVisible(false)
-                setAlert(true)
-                setData({
-                    ...data,
-                    error_message: `Ha ocurrido un error, ${error}`
-                })
-              })
-              .then(response => {
-                  if (response.status === 200 || response.status === 201) {
-                      console.log('correcto');
-                      console.log(response.data, "pronosticos");
-                      setVisible(false)
+                axios.all([requestOne, requestTwo, requestThree, requestFour]).then(axios.spread((...responses) => {
+                    const responseOne = responses[0].data.data;
+                    const responseTwo = responses[1].data.data;
+                    const responseThree = responses[2].data.data;
+                    const responseFour = responses[3].data.data;
 
-                      if (response.data.result === false) {
+                    console.log(responseOne);
+                    console.log(responseTwo);
+                    console.log(responseThree);
+                    console.log(responseFour);
+                    
+                    if (responses[0].status === 200 || responses[0].status === 201 && responses[1].status === 200 || responses[1].status === 201) {
+                        setVisible(false)
+                        setData({
+                            ...data,
+                            d_1: responseOne,
+                            d_2: responseTwo,
+                            d_3: responseThree,
+                            d_4: responseFour,
+                        })
+                    }else{
+                        setVisible(false)
                         setAlert(true)
                         setData({
                             ...data,
-                            error_message: `Ha ocurrido un error, ${response.data.message}`,
-                            is_registred: response.data.result,
+                            error_message: `Ha ocurrido un error.`
                         })
-                      }else{
-                        null;
-                      }
-                      // setData({
-                      //     ...data,
-                      //     data_plans: response.data,
-                      //     client_token: token_user,
-                      //     client_data: userdata
-                      // })
-                  }else{
-                      let error = response.data.errors
-                      let parsed_error = JSON.stringify(error)
-                      console.log(parsed_error);
-                      setVisible(false)
-                      setAlert(true)
-                      setData({
-                          ...data,
-                          error_message: `Ha ocurrido un error, ${parsed_error}`
-                      })
-                  }
-              })
+                    }
+                })).catch(errors => {
+                    setVisible(false)
+                    setAlert(true)
+                    setData({
+                    ...data,
+                    error_message: `Ha ocurrido un error, ${errors}`
+                    })
+                })
             }
         }else{
             setData({
@@ -170,16 +198,43 @@ const ForecastsScreen = ({navigation}) => {
             <View style={styles.top_container}>
               <Text  style={styles.top_text}>Pronóstico del día</Text>
             </View>
-            {data.is_registred === false ?
-              (
-                <View style={styles.bot_container}>
+            <View style={styles.bot}>
+                    <Card style={styles.card}>
+                        <Card.Content>
+                        <View style={styles.colapsed_body}>
+                          <View style={styles.container_body}>
+                            {/* <View style={{width:'15%',alignItems:'flex-start', justifyContent: 'center'}}>
+                              <Image style={{width: 70, height: 70, resizeMode: 'contain'}} source={require('../../assets/img/png/realm.png')} />
+                            </View> */}
+                            <View style={{width:'100%'}}>
+                              <View style={{paddingLeft: 20, flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+                                <Title style={styles.text_forecast1}>Hoy 2:30 pm</Title>
+                                <Title style={styles.text_forecast2}>04:68:00</Title>
+                                <Title numberOfLines={1} style={styles.text_forecast3}>Real madrid - Barcelona</Title>
+                                <Title numberOfLines={1} style={styles.text_forecast4}>UEFA CHAMPIONS LEAGUE</Title>
+                                <Title numberOfLines={1} style={styles.text_forecast5}>Cuartos de final</Title>
+                                <Title style={styles.text_forecast6}>Gana real madrid el primer tiempo</Title>
+                                <Title numberOfLines={1} style={styles.text_forecast7}>2.050</Title>
+                              </View>
+                            </View>
+                            {/* <View style={{width:'15%',alignItems:'flex-start', justifyContent: 'center'}}>
+                              <Image style={{width: 70, height: 70, resizeMode: 'contain'}} source={require('../../assets/img/png/barcelona.png')} />
+                            </View> */}
+                          </View>
+                        </View>
+                        </Card.Content>
+                    </Card>
+                </View>
+            {/* {data.is_registred !== false ? */}
+              {/* ( */}
+                {/* <View style={styles.bot_container}>
                   <Text style={styles.bot_text}>No ha obtenido ningún plan prémium para obtener mayores beneficios, dirígete a suscripciones y únete a uno de nuestros equipos.</Text>
                   <Text style={styles.bot_text1}>¡Unete al club de los ganadores!</Text>
-                </View>
-              ) 
+                </View> */}
+              {/* ) 
               :
-              (
-                <View style={styles.bot}>
+              ( */}
+                {/* <View style={styles.bot}>
                     <Card style={styles.card}>
                         <Card.Content>
                           <View style={styles.container_card}>
@@ -201,9 +256,9 @@ const ForecastsScreen = ({navigation}) => {
                           </View>
                         </Card.Content>
                     </Card>
-                </View>
-              )
-            }
+                </View> */}
+              {/* )
+            } */}
           </ScrollView>
       </View>
       <View>
@@ -269,21 +324,12 @@ const styles = StyleSheet.create({
     backgroundColor: '#303030',
   },
   card:{
-    flex: 1, 
-    justifyContent: 'center', 
-    alignContent: 'center',
-    width: widthScreen,
-    marginTop: 10,
-    // marginBottom: 10,
-    backgroundColor: '#131011',
-    borderRadius: 5
+    backgroundColor: '#262222',
+    width: '100%',
   },
-  bot:{
-    flex: 1, 
-    justifyContent: 'center', 
-    alignContent: 'center',
-    width: widthScreen,
-    height: heightScreen
+  bot: {
+    flex: 2, 
+    marginTop: 20
   },
   top_container:{
     flex: 1,
@@ -309,7 +355,7 @@ const styles = StyleSheet.create({
     alignItems: 'flex-start'
   },
   container2: {
-    flex: 4,
+    flex: 1,
     justifyContent: 'flex-start',
     alignItems: 'center'
   },
@@ -351,8 +397,7 @@ const styles = StyleSheet.create({
   text_forecast6:{
     color: '#fff',
     fontFamily: 'Montserrat-Medium',
-    fontSize: 11,
-    marginTop: -5,
+    fontSize: 11
   },
   text_forecast7:{
     color: '#fff',
@@ -382,6 +427,22 @@ const styles = StyleSheet.create({
     lineHeight: 20,
     width: widthScreen1,
     marginTop: 20
+  },
+  mini_container: {
+    flex: 1,
+    flexDirection: 'column'
+  },
+  colapsed_body: {
+    alignItems:'center',
+    justifyContent:'center',
+    flexDirection:'column',
+    backgroundColor:'#262222', 
+  },
+  container_body:{
+    padding: 5,
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'center',
   },
 });
 

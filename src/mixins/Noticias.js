@@ -23,7 +23,7 @@ const Noticias = ({dataNews}) => {
             dataNews.map((e, i) => {
                 return <View key={i} style={styles.card}>
                             <Card style={styles.card} onPress={() => openLink(e.url)}>
-                                <Card.Cover style={styles.card_cover} source={{ uri: e.imagen_preview }} />
+                                <Card.Cover style={styles.card_cover} source={{ uri: e.imagen }} />
                                 <Card.Content>
                                     <Title numberOfLines={1} style={styles.title_text}>{e.titulo.toUpperCase()}</Title>
                                     <Paragraph numberOfLines={1} style={styles.paragraph_white}>{e.subtitulo.toUpperCase()}</Paragraph>
@@ -37,7 +37,7 @@ const Noticias = ({dataNews}) => {
         return(
             <View style={styles.card}>
                 <Card style={styles.card}>
-                    <Card.Cover style={styles.card_cover} source={{ uri: 'https://picsum.photos/700' }} />
+                    <Card.Cover style={styles.card_cover} source={require('../assets/img/png/special.png')} />
                     <Card.Content>
                         <Title style={styles.title_text}>Sin resultados</Title>
                         <Paragraph style={styles.paragraph_white}>Sin resultados</Paragraph>

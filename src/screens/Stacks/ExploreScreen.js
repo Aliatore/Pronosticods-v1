@@ -1,14 +1,17 @@
 import React, { useEffect, useState } from 'react';
-import { View, StyleSheet, StatusBar, ScrollView, Dimensions, TouchableOpacity } from 'react-native';
-import { Portal, Text, Dialog, Card, Title } from 'react-native-paper';
+import { View, StyleSheet, StatusBar, ScrollView, Dimensions, TouchableOpacity, Image } from 'react-native';
+import { Portal, Text, Dialog, Card } from 'react-native-paper';
 import { Spinner } from 'native-base'
 import AwesomeAlert from 'react-native-awesome-alerts';
 import axios from 'axios';
+import Feather2 from 'react-native-vector-icons/Feather';
 import NetInfo from "@react-native-community/netinfo";
 import { useTheme } from '@react-navigation/native';
 import AsyncStorage from '@react-native-community/async-storage';
 import { Picker as SelectPicker } from '@react-native-picker/picker';
 import UrlServicesSports from '../../mixins/Services/UrlServicesSports';
+import { Collapse, CollapseHeader, CollapseBody } from "accordion-collapse-react-native";
+import { Thumbnail, List, ListItem, Separator } from 'native-base';
 
 const ExploreScreen = ({navigation}) => {
 
@@ -22,12 +25,15 @@ const ExploreScreen = ({navigation}) => {
     sport: '',
     sport_selected: '',
     country: null,
-    data_pronosticos: null
+    data_pronosticos: null,
+    view_arrow: null,
   });
 
   const [country, setCountrys] = useState();
 
   const theme = useTheme();
+  const [expanded, setExpanded] = React.useState(true);
+  const handlePress = () => setExpanded(!expanded);
 
   //obtain the token with asyncstorage and set in state data.
   const obtainToken = async () => {
@@ -43,6 +49,12 @@ const ExploreScreen = ({navigation}) => {
         ...data,
         client_token: e
     }); 
+  }
+  const setButton = (e) => {
+    setData({
+      ...data,
+      view_arrow: e
+  }); 
   }
   const getDate = () => {
     var date = new Date().getDate();
@@ -83,12 +95,12 @@ const ExploreScreen = ({navigation}) => {
                 timeout: 9000,
                 params: {
                     limit: 10,
+                    date: dateToday
                 },
-                data: {
-                  date: dateToday
-                },
+                // data: {
+                // },
                 headers: {
-                  // 'Authorization': `Bearer ${data.client_token}`,
+                  'Authorization': `Bearer ${data.client_token}`,
                     'Content-Type': 'application/json',
                     'X-Requested-With': 'XMLHttpRequest'
                 },
@@ -155,6 +167,7 @@ const ExploreScreen = ({navigation}) => {
   
     return (
       <>
+      
       {/* {console.log('actuales',data.data_news)} */}
       <View style={styles.container}>
         <StatusBar barStyle= { theme.dark ? "light-content" : "dark-content" }/>
@@ -186,9 +199,125 @@ const ExploreScreen = ({navigation}) => {
                 </Card>
               </View>
             <View style={styles.bot}>
-            <View style={{justifyContent: 'center', alignItems: 'center'}}>
-                    <Text style={styles.text_title}>Seleccione para continuar</Text>
-                </View>    
+              <View style={{marginTop: 20}}>
+                <Collapse onToggle={(e) => setButton(e)}>
+                  <CollapseHeader  style={styles.colapse_header}>
+                    <View style={{width:'25%',alignItems:'center'}}>
+                      <Thumbnail source={require('../../assets/img/png/spain.png')} />
+                    </View>
+                    <View style={{width:'60%'}}>
+                      <Text style={{color:'#fff'}}>La Liga Santander</Text>
+                    </View>
+                    <View style={styles.custom_icons}>
+                      <Text style={styles.counter_green}>(10)</Text>
+                      {data.view_arrow == true ?
+                          <Feather2 
+                              name="chevron-up"
+                              size={20}
+                              style={{color: "#fff", marginLeft: 10}}
+                          />
+                      :
+                          <Feather2 
+                              name="chevron-down"
+                              size={20}
+                              style={{color: "#fff", marginLeft: 10}}
+                          />
+                      } 
+                    </View>
+                  </CollapseHeader>
+                  <CollapseBody style={styles.colapsed_body}>
+                    <View style={styles.container_body}>
+                      <View style={{width:'25%',alignItems:'flex-start', justifyContent: 'center', borderRightColor: '#fff', borderRightWidth: 1,}}>
+                        <Text style={{color:'#fff'}}>10:30 am</Text>
+                        <Text style={[styles.red_text, {paddingTop: 5}]}>Terminó</Text>
+                      </View>
+                      <View style={{width:'60%'}}>
+                        <View style={{paddingLeft: 20}}>
+                          <Text style={{color:'#fff'}}>Bayer Munchen</Text>
+                          <Text style={{color:'#fff', paddingTop: 5}}>Borussia Dormunt</Text>
+                        </View>
+                      </View>
+                      <View style={{ width:'15%', alignItems: 'flex-end'}}>
+                        <View style={{paddingLeft: 20}}>
+                          <Text style={{color:'#fff'}}>1</Text>
+                          <Text style={{color:'#fff', paddingTop: 5}}>0</Text>
+                        </View>
+                      </View>
+                    </View>
+                    <View style={styles.container_body}>
+                      <View style={{width:'25%',alignItems:'flex-start', justifyContent: 'center', borderRightColor: '#fff', borderRightWidth: 1,}}>
+                        <Text style={{color:'#fff'}}>10:30 am</Text>
+                        <Text style={[styles.green_text, {paddingTop: 5}]}>En vivo</Text>
+                      </View>
+                      <View style={{width:'60%'}}>
+                        <View style={{paddingLeft: 20}}>
+                          <Text style={{color:'#fff'}}>Bayer Munchen</Text>
+                          <Text style={{color:'#fff', paddingTop: 5}}>Borussia Dormunt</Text>
+                        </View>
+                      </View>
+                      <View style={{ width:'15%', alignItems: 'flex-end'}}>
+                        <View style={{paddingLeft: 20}}>
+                          <Text style={{color:'#fff'}}>1</Text>
+                          <Text style={{color:'#fff', paddingTop: 5}}>0</Text>
+                        </View>
+                      </View>
+                    </View>
+                    <View style={styles.container_body}>
+                      <View style={{width:'25%',alignItems:'flex-start', justifyContent: 'center', borderRightColor: '#fff', borderRightWidth: 1,}}>
+                        <Text style={{color:'#fff'}}>1:30 pm</Text>
+                        {/* <Text style={[styles.green_text, {paddingTop: 5}]}>En vivo</Text> */}
+                      </View>
+                      <View style={{width:'60%'}}>
+                        <View style={{paddingLeft: 20}}>
+                          <Text style={{color:'#fff'}}>Bayer Munchen</Text>
+                          <Text style={{color:'#fff', paddingTop: 5}}>Borussia Dormunt</Text>
+                        </View>
+                      </View>
+                      <View style={{ width:'15%', alignItems: 'flex-end'}}>
+                        <View style={{paddingLeft: 20}}>
+                          <Text style={{color:'#fff'}}>0</Text>
+                          <Text style={{color:'#fff', paddingTop: 5}}>0</Text>
+                        </View>
+                      </View>
+                    </View>
+                  </CollapseBody>
+                </Collapse>
+              </View>
+              {/* <View style={{justifyContent: 'center', alignItems: 'center'}}>
+                  <Text style={styles.text_title}>Seleccione para continuar</Text>
+                  
+              </View>     */}
+              {/* <List.Section>
+                <List.Accordion
+                  style={{backgroundColor: '#262222', color: '#fff'}}
+                  title="Bundesliga"
+                  titleStyle={{color: '#fff'}}
+                  theme={{ colors: { primary: '#4169e1' } }}
+                  left={props => <Image {...props} style={styles.card_img} source={require('../../assets/img/png/barcelona.png')} />}
+                  right={props => <Image {...props}  style={styles.card_img} source={require('../../assets/img/png/barcelona.png')} />}
+                >
+                  <List.Item  style={{backgroundColor: '#262222', color: '#fff'}} titleStyle={{color: '#fff'}} 
+                    title={
+                      <View style={{flex: 1, flexDirection: 'row', width: '100%'}}>
+                        <View style={{flex: 1, backgroundColor: 'red'}}>
+                          <Text style={styles.text_title}>1</Text>
+                          
+                        </View>
+                        <View style={{flex: 1, backgroundColor: 'blue'}}>
+                          <Text style={styles.text_title}>1</Text>
+
+                        </View>
+                        <View style={{flex: 1, backgroundColor: 'yellow'}}>
+                          <Text style={styles.text_title}>1</Text>
+
+                        </View>
+                          
+                      </View>
+                    } 
+
+                  />
+                </List.Accordion>
+              </List.Section> */}
             </View>
           </ScrollView>
       </View>
@@ -293,6 +422,50 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 18,
     fontFamily: 'Montserrat-Bold',
+  },
+  text_title_accordion: {
+    color: '#fff',
+    fontSize: 18,
+    fontFamily: 'Montserrat-Bold',
+  },
+  card_img: {
+    width: 100,
+    height: 50,
+    resizeMode: 'contain'
+  },
+  colapse_header: {
+    flexDirection:'row',
+    alignItems:'center',
+    padding:10,
+    backgroundColor:'#262222'
+  },
+  counter_green: {
+      color:'#01CD01',
+  },
+  colapsed_body: {
+    alignItems:'center',
+    justifyContent:'center',
+    flexDirection:'column',
+    backgroundColor:'#262222', 
+  },
+  container_body:{
+    padding: 20,
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'center',
+  },
+  custom_icons: {
+    width:'15%', 
+    alignItems: 'flex-end', 
+    flex: 1, 
+    flexDirection: 'row', 
+    justifyContent: 'center'
+  },
+  red_text: {
+    color: 'red'
+  },
+  green_text: {
+    color: 'green'
   },
 });
 

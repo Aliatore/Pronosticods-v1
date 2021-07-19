@@ -45,7 +45,7 @@ const Video_N = ({dataVideo}) => {
                 <Card style={styles.card} elevation={0}>
                     <View style={{flex: 1, flexDirection: 'row'}}>
                         <View style={{flex: 1}}>
-                            <Card.Cover style={styles.card_cover} source={{ uri: 'https://picsum.photos/700' }} />
+                            <Card.Cover style={styles.card_cover} source={require('../assets/img/png/special.png')} />
                         </View>
                         <View style={{flex: 2}}>
                             <Card.Content>

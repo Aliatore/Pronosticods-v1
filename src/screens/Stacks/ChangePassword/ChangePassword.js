@@ -124,7 +124,7 @@ const ChangePassword = ({navigation}) => {
     }
     //   api call
     const changePassword = () => {  
-        let urlApi = UrlServices(1); 
+        let urlApi = UrlServices(3); 
         setVisible(true)
 
         if (data.old_p.length === 0 && data.new_p.length === 0 && data.c_new_p.length === 0 ){
