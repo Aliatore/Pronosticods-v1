@@ -216,13 +216,33 @@ const ForecastsScreen = ({navigation}) => {
                 {/* <Text  style={styles.top_text}>Pronóstico del día</Text> */}
               </View>
               <View style={styles.bot}>
+              {data.d_1.simples.length == 0  && data.d_1.simples.length == 0 && data.d_3.simples.length == 0  && data.d_3.simples.length == 0 && data.d_4.simples.length == 0  && data.d_4.simples.length == 0 && data.d_2.length ==0 ?
+                (<Card style={[styles.card, {marginTop: 20}]}>
+                  <Card.Content>
+                    <View style={styles.colapsed_body}>
+                      <View style={styles.container_body}>
+                        <View style={{width:'100%'}}>
+                          <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+                            <Text style={styles.top_text_empty}>Nuestros pronosticadores están trabajando... </Text>
+                            <Text style={styles.top_text_empty}>Pronto tendrás tus pronósticos, recibirás una notificación en tu correo correcto.</Text>
+                          </View>
+                        </View>
+                      </View>
+                    </View>
+                    </Card.Content>
+                </Card>)
+                :
+                ""
+              }
               {data.d_1 !== null || data.d_1 !== undefined || data.d_1 !== "" ?
               (
                 <>
-                {data.d_1.simples === undefined && data.d_1.combinadas === undefined ? null : 
+                {data.d_1.simples.length == 0  && data.d_1.simples.length == 0 ? 
+                  (<Text  style={styles.top_text}> </Text>) 
+                  : 
                   (<Text  style={styles.top_text}>Plan General</Text>)
                 }
-                <Text  style={styles.top_text}>Plan General</Text>
+                {/* <Text  style={styles.top_text}>Plan General</Text> */}
                 {data.d_1.simples === undefined ? null :
                     data.d_1.simples.map((e, i) => { 
                       return <Card key={i} style={[styles.card, {marginTop: 20}]}>
@@ -282,7 +302,11 @@ const ForecastsScreen = ({navigation}) => {
               {data.d_3 !== null || data.d_3 !== undefined || data.d_3 !== "" ?
               (
                 <>
-                <Text  style={styles.top_text}>Plan Special</Text>
+                {data.d_3.simples.length == 0  && data.d_3.simples.length == 0 ? 
+                  (<Text  style={styles.top_text}> </Text>) 
+                  : 
+                  (<Text  style={styles.top_text}>Plan Sports</Text>)
+                }
                 {data.d_3.simples === undefined ? null :
                     data.d_3.simples.map((e, i) => { 
                       return <Card key={i} style={[styles.card, {marginTop: 20}]}>
@@ -399,7 +423,11 @@ const ForecastsScreen = ({navigation}) => {
               {data.d_4 !== null || data.d_4 !== undefined || data.d_4 !== "" ?
               (
                 <>
-                <Text  style={styles.top_text}>Plan Trial</Text>
+                {data.d_4.simples.length == 0  && data.d_4.simples.length == 0 ? 
+                  (<Text  style={styles.top_text}> </Text>) 
+                  : 
+                  (<Text  style={styles.top_text}>Plan Trial</Text>)
+                }
                 {data.d_4.simples === undefined ? null :
                     data.d_4.simples.map((e, i) => { 
                       return <Card key={i} style={[styles.card, {marginTop: 20}]}>
@@ -459,9 +487,6 @@ const ForecastsScreen = ({navigation}) => {
               </View>
             </ScrollView>
         </View>
-
-      
-
 
       <View>
         <Portal>
@@ -546,6 +571,13 @@ const styles = StyleSheet.create({
     fontSize: 14,
     marginTop: 10,
     textAlign: 'left'
+  },
+  top_text_empty:{
+    color: '#fff',
+    fontFamily: 'Montserrat-Medium',
+    fontSize: 14,
+    marginTop: 10,
+    textAlign: 'center'
   },
   top_text_hipismo:{
     color: '#fff',
