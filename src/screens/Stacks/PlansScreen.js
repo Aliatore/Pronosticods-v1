@@ -61,7 +61,7 @@ const PlansScreen = () => {
 
   //api call
   const getPlans = (token_user, userdata) => {   
-    let urlApi = UrlServices(3);
+    let urlApi = UrlServices(1);
     setVisible(true)
     NetInfo.fetch().then(state => {
         console.log(state.isConnected);
@@ -142,11 +142,6 @@ const PlansScreen = () => {
 
   //render of swipeable
   const _renderItem = (item) => {
-    console.log("item que llega en params", item);
-    console.log("item que llega, 1",data.client_data);
-    console.log("item que llega, 2",data.data_plans);
-    console.log("item que llega, 3",data.general_sports);
-    console.log("item que llega, 4",data.hipismo);
     return (
       <View key={item.id}>
         <ScrollView>
@@ -294,7 +289,7 @@ const PlansScreen = () => {
               <Text style={styles.title_text}>Planes de suscripción</Text>
               <Text style={styles.title_text2}>PLAN ACTIVO</Text>
               <View style={styles.banner_suscription}>
-                  <Text style={[styles.text_suscription, {textTransform: 'uppercase'}]}>dummy</Text>
+                  <Text style={[styles.text_suscription, {textTransform: 'uppercase'}]}>{data.client_data.subscriptions[0].name}</Text>
               </View>
               <Text style={[styles.title_text, {marginTop: 25, marginBottom: 10}]}>SUGERENCIAS</Text>
             </View>
@@ -476,7 +471,7 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-start', 
   },
   bot: {
-    flex: 2.5, 
+    flex: 1.5, 
     alignItems: 'center', 
     justifyContent: 'flex-start',
     width: '100%', 
@@ -533,7 +528,7 @@ const styles = StyleSheet.create({
   },
   card:{
     // width: '100%',
-    height: 220,
+    height: 280,
     width: widthScreen,
     // marginTop: 10,
     backgroundColor: '#282424',
@@ -541,7 +536,7 @@ const styles = StyleSheet.create({
   },
   card_2:{
     // width: '100%',
-    height: 370,
+    height: 400,
     width: widthScreen,
     // marginTop: 10,
     backgroundColor: '#282424',

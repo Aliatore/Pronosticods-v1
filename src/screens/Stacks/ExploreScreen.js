@@ -11,7 +11,7 @@ import AsyncStorage from '@react-native-community/async-storage';
 import { Picker as SelectPicker } from '@react-native-picker/picker';
 import UrlServicesSports from '../../mixins/Services/UrlServicesSports';
 import { Collapse, CollapseHeader, CollapseBody } from "accordion-collapse-react-native";
-import { Thumbnail, List, ListItem, Separator } from 'native-base';
+import { Thumbnail } from 'native-base';
 
 const ExploreScreen = ({navigation}) => {
 
@@ -27,9 +27,10 @@ const ExploreScreen = ({navigation}) => {
     country: null,
     data_pronosticos: null,
     view_arrow: null,
+    is_visible: false,
   });
 
-  const [country, setCountrys] = useState();
+  const [deporte, setDesportes] = useState();
 
   const theme = useTheme();
   const [expanded, setExpanded] = React.useState(true);
@@ -62,18 +63,66 @@ const ExploreScreen = ({navigation}) => {
     var year = new Date().getFullYear();
     if(date<10)date='0'+date; //agrega cero si el menor de 10
     if(month<10)month='0'+month; //agrega cero si el menor de 10
-
     return year + '-' + month + '-' + date;//format: dd-mm-yyyy;
   }
-  const setCountry = (e) => {
+  const getDateToShow = () => {
+    var date = new Date().getDate();
+    var month = new Date().getMonth() + 1;
+    var year = new Date().getFullYear();
+    if(date<10)date='0'+date; //agrega cero si el menor de 10
+    if(month<10)month='0'+month; //agrega cero si el menor de 10
+    let monthText = "";
+    switch (month) {
+      case '01':
+        monthText = "Enero";
+        break;
+      case '02':
+        monthText = "Febrero";
+        break;
+      case '03':
+        monthText = "Marzo";
+        break;
+      case '04':
+        monthText ="Abril";
+        break; 
+      case '05':
+        monthText = "Mayo";
+        break;
+      case '06':
+        monthText = "Junio";
+        break;
+      case '07':
+        monthText = "Julio";
+        break;
+      case '08':
+        monthText = "Agosto";
+        break;
+      case '09':
+        monthText = "Septiembre";
+        break;
+      case '10':
+        monthText = "Octubre";
+        break;
+      case '11':
+        monthText = "Noviembre";
+        break;
+      case '12':
+        monthText = "Diciembre";
+        break;
+      default:
+        break;
+    }
+
+    return `${date} de ${monthText} del ${year}`;//format: dd-mm-yyyy;
+  }
+  const setDeporte = (e) => {
     console.log(e);
-    setCountrys(e)
-    getForecasts(e)
-      
+    setDesportes(e);
+    getForecasts(e);
   }
   //api call news
   const getForecasts = (sport) => {   
-    console.log(sport);
+    console.log("quewea es esto", sport);
     let urlApi = UrlServicesSports(sport);
     setVisible(true)
     let dateToday = getDate()
@@ -121,12 +170,35 @@ const ExploreScreen = ({navigation}) => {
                 console.log(response);
                   if (response.status === 200 || response.status === 201) {
                       // console.log('correcto');
-                      // console.log(response.data, "aqui");
+                      console.log(response.data, "aqui data");
                       setVisible(false)
-                      setData({
+                      if (response.data.events === null || response.data.events === undefined || response.data.events === '' ) {
+                        setVisible(false)
+                        setAlert(true)
+                        setData({
+                            ...data,
+                            data_pronosticos: '',
+                            is_visible: false,
+                            error_message: `No hay juegos disponibles`
+                        })
+                      }else{
+                        const newDirectory = Object.values(response.data.events.reduce((acc, item) => {
+                          if (!acc[item.idLeague]) acc[item.idLeague] = {
+                              id: item.idLeague,
+                              league_name: item.strLeague, 
+                              league_logo: item.strHomeTeamBadge, 
+                              info: []
+                          };
+                          acc[item.idLeague].info.push(item);
+                          return acc;
+                        }, {}))
+                        console.log("nuevo beta", newDirectory);
+                        setData({
                           ...data,
-                          data_pronosticos: response.data,
-                      })
+                          data_pronosticos: newDirectory,
+                          is_visible: true,
+                        })
+                      }
                   }else{
                       let error = response.data.errors
                       let parsed_error = JSON.stringify(error)
@@ -151,6 +223,77 @@ const ExploreScreen = ({navigation}) => {
     }); 
   }
 
+  const parseTime = (timex) => {
+    var time = timex; 
+    time = time.split(':')
+    var hours = Number(time[0]);
+    var minutes = Number(time[1]);
+    var timeValue;
+    
+    if (hours > 0 && hours <= 12) {
+      timeValue= "" + hours;
+    } else if (hours > 12) {
+      timeValue= "" + (hours - 12);
+    } else if (hours == 0) {
+      timeValue= "12";
+    }
+     
+    timeValue += (minutes < 10) ? ":0" + minutes : ":" + minutes;
+    timeValue += (hours >= 12) ? " pm" : " am";
+
+    // show
+    return timeValue;
+}
+  const parseTimeConditional = (timex) => {
+    var time = timex; 
+    time = time.split(':')
+    var hours = Number(time[0]);
+    var minutes = Number(time[1]);
+    var timeValue;
+    
+    if (hours > 0 && hours <= 12) {
+      timeValue= "" + hours;
+    } else if (hours > 12) {
+      timeValue= "" + (hours - 12);
+    } else if (hours == 0) {
+      timeValue= "12";
+    }
+     
+    timeValue += (minutes < 10) ? ":0" + minutes : ":" + minutes;
+    timeValue += (hours >= 12) ? " pm" : " am";
+
+    var hoursA = new Date().getHours();
+    var minA = new Date().getMinutes();
+
+    var timeValueA;
+    
+    if (hoursA > 0 && hoursA <= 12) {
+      timeValueA= "" + hoursA;
+    } else if (hoursA > 12) {
+      timeValueA= "" + (hoursA - 12);
+    } else if (hoursA == 0) {
+      timeValueA= "12";
+    }
+
+    timeValueA += (minA < 10) ? ":0" + minA : ":" + minA;
+    timeValueA += (hoursA >= 12) ? " pm" : " am";
+    
+
+    if (timeValueA === timeValue) {
+      return 'igual';
+    } else if (timeValueA > timeValue){
+      return 'mayor';
+    } else if (timeValueA < timeValue){
+      return 'menor';
+    } else {
+      return null;
+    }
+   
+
+    // show
+    // return timeValue;
+  }
+
 //   const scrollCall = ({layoutMeasurement, contentOffset, contentSize}) => {
 //     const paddingToBottom = 1;
 //     return layoutMeasurement.height + contentOffset.y >= contentSize.height - paddingToBottom;
@@ -164,7 +307,6 @@ const ExploreScreen = ({navigation}) => {
   //state hooks for popups
   const [visible, setVisible] = React.useState(false);
   const [alert, setAlert] = React.useState(false);
-  
     return (
       <>
       
@@ -183,141 +325,93 @@ const ExploreScreen = ({navigation}) => {
                 <Card style={styles.card}>
                   <View style={styles.action_picker}>
                     <SelectPicker
-                        selectedValue={country}
+                        selectedValue={deporte}
                         style={styles.picker}
                         mode={'dialog'}
-                        onValueChange={(e) => setCountry(e)}
+                        onValueChange={(e) => setDeporte(e)}
                     >
                         <SelectPicker.Item disabled value="" label="Deporte" />
-                        <SelectPicker.Item value="1" label="Fútbol" />
-                        <SelectPicker.Item value="2" label="Básquet" />
-                        <SelectPicker.Item value="3" label="Fútbol Americano" />
-                        <SelectPicker.Item value="4" label="Hockey" />
-                        <SelectPicker.Item value="5" label="Béisbol" />
+                        <SelectPicker.Item value="Soccer" label="Fútbol" />
+                        <SelectPicker.Item value="Basketball" label="Básquet" />
+                        <SelectPicker.Item value="American%20Football" label="Fútbol Americano" />
+                        <SelectPicker.Item value="Ice_Hockey" label="Hockey" />
+                        <SelectPicker.Item value="Baseball" label="Béisbol" />
                     </SelectPicker>
                   </View>
                 </Card>
               </View>
             <View style={styles.bot}>
-              <View style={{marginTop: 20}}>
-                <Collapse onToggle={(e) => setButton(e)}>
-                  <CollapseHeader  style={styles.colapse_header}>
-                    <View style={{width:'25%',alignItems:'center'}}>
-                      <Thumbnail source={require('../../assets/img/png/spain.png')} />
-                    </View>
-                    <View style={{width:'60%'}}>
-                      <Text style={{color:'#fff'}}>La Liga Santander</Text>
-                    </View>
-                    <View style={styles.custom_icons}>
-                      <Text style={styles.counter_green}>(10)</Text>
-                      {data.view_arrow == true ?
-                          <Feather2 
-                              name="chevron-up"
-                              size={20}
-                              style={{color: "#fff", marginLeft: 10}}
-                          />
-                      :
-                          <Feather2 
-                              name="chevron-down"
-                              size={20}
-                              style={{color: "#fff", marginLeft: 10}}
-                          />
-                      } 
-                    </View>
-                  </CollapseHeader>
-                  <CollapseBody style={styles.colapsed_body}>
-                    <View style={styles.container_body}>
-                      <View style={{width:'25%',alignItems:'flex-start', justifyContent: 'center', borderRightColor: '#fff', borderRightWidth: 1,}}>
-                        <Text style={{color:'#fff'}}>10:30 am</Text>
-                        <Text style={[styles.red_text, {paddingTop: 5}]}>Terminó</Text>
-                      </View>
-                      <View style={{width:'60%'}}>
-                        <View style={{paddingLeft: 20}}>
-                          <Text style={{color:'#fff'}}>Bayer Munchen</Text>
-                          <Text style={{color:'#fff', paddingTop: 5}}>Borussia Dormunt</Text>
-                        </View>
-                      </View>
-                      <View style={{ width:'15%', alignItems: 'flex-end'}}>
-                        <View style={{paddingLeft: 20}}>
-                          <Text style={{color:'#fff'}}>1</Text>
-                          <Text style={{color:'#fff', paddingTop: 5}}>0</Text>
-                        </View>
-                      </View>
-                    </View>
-                    <View style={styles.container_body}>
-                      <View style={{width:'25%',alignItems:'flex-start', justifyContent: 'center', borderRightColor: '#fff', borderRightWidth: 1,}}>
-                        <Text style={{color:'#fff'}}>10:30 am</Text>
-                        <Text style={[styles.green_text, {paddingTop: 5}]}>En vivo</Text>
-                      </View>
-                      <View style={{width:'60%'}}>
-                        <View style={{paddingLeft: 20}}>
-                          <Text style={{color:'#fff'}}>Bayer Munchen</Text>
-                          <Text style={{color:'#fff', paddingTop: 5}}>Borussia Dormunt</Text>
-                        </View>
-                      </View>
-                      <View style={{ width:'15%', alignItems: 'flex-end'}}>
-                        <View style={{paddingLeft: 20}}>
-                          <Text style={{color:'#fff'}}>1</Text>
-                          <Text style={{color:'#fff', paddingTop: 5}}>0</Text>
-                        </View>
-                      </View>
-                    </View>
-                    <View style={styles.container_body}>
-                      <View style={{width:'25%',alignItems:'flex-start', justifyContent: 'center', borderRightColor: '#fff', borderRightWidth: 1,}}>
-                        <Text style={{color:'#fff'}}>1:30 pm</Text>
-                        {/* <Text style={[styles.green_text, {paddingTop: 5}]}>En vivo</Text> */}
-                      </View>
-                      <View style={{width:'60%'}}>
-                        <View style={{paddingLeft: 20}}>
-                          <Text style={{color:'#fff'}}>Bayer Munchen</Text>
-                          <Text style={{color:'#fff', paddingTop: 5}}>Borussia Dormunt</Text>
-                        </View>
-                      </View>
-                      <View style={{ width:'15%', alignItems: 'flex-end'}}>
-                        <View style={{paddingLeft: 20}}>
-                          <Text style={{color:'#fff'}}>0</Text>
-                          <Text style={{color:'#fff', paddingTop: 5}}>0</Text>
-                        </View>
-                      </View>
-                    </View>
-                  </CollapseBody>
-                </Collapse>
-              </View>
-              {/* <View style={{justifyContent: 'center', alignItems: 'center'}}>
-                  <Text style={styles.text_title}>Seleccione para continuar</Text>
-                  
-              </View>     */}
-              {/* <List.Section>
-                <List.Accordion
-                  style={{backgroundColor: '#262222', color: '#fff'}}
-                  title="Bundesliga"
-                  titleStyle={{color: '#fff'}}
-                  theme={{ colors: { primary: '#4169e1' } }}
-                  left={props => <Image {...props} style={styles.card_img} source={require('../../assets/img/png/barcelona.png')} />}
-                  right={props => <Image {...props}  style={styles.card_img} source={require('../../assets/img/png/barcelona.png')} />}
-                >
-                  <List.Item  style={{backgroundColor: '#262222', color: '#fff'}} titleStyle={{color: '#fff'}} 
-                    title={
-                      <View style={{flex: 1, flexDirection: 'row', width: '100%'}}>
-                        <View style={{flex: 1, backgroundColor: 'red'}}>
-                          <Text style={styles.text_title}>1</Text>
-                          
-                        </View>
-                        <View style={{flex: 1, backgroundColor: 'blue'}}>
-                          <Text style={styles.text_title}>1</Text>
-
-                        </View>
-                        <View style={{flex: 1, backgroundColor: 'yellow'}}>
-                          <Text style={styles.text_title}>1</Text>
-
-                        </View>
-                          
-                      </View>
-                    } 
-
-                  />
-                </List.Accordion>
-              </List.Section> */}
+            {data.is_visible === false && data.data_pronosticos === null || data.data_pronosticos === undefined || data.data_pronosticos === "" ? 
+              (
+                <View style={{justifyContent: 'center', alignItems: 'center'}}>
+                  <Text  style={styles.top_text}>No hay fechas disponibles</Text>
+                </View>
+              )
+              :
+              (
+                <>
+                  <View style={{justifyContent: 'center', alignItems: 'center'}}>
+                    <Text  style={styles.top_text}>{getDateToShow()}</Text>
+                  </View>
+                  {data.data_pronosticos.map((e, i) => {
+                      return <View key={i} style={{marginTop: 20}}>
+                              <Collapse onToggle={(e) => setButton(e)}>
+                                <CollapseHeader  style={styles.colapse_header}>
+                                  <View style={{width:'25%',alignItems:'center'}}>
+                                    <Thumbnail style={{height: 70, resizeMode: 'contain'}} source={{uri: data.league_logo}} />
+                                  </View>
+                                  <View style={{width:'60%'}}>
+                                    <Text style={{color:'#fff'}}>{e.league_name}</Text>
+                                  </View>
+                                  <View style={styles.custom_icons}>
+                                    <Text style={styles.counter_green}>({e.info.length})</Text>
+                                    {data.view_arrow == true ?
+                                        <Feather2 
+                                            name="chevron-up"
+                                            size={20}
+                                            style={{color: "#fff", marginLeft: 10}}
+                                        />
+                                    :
+                                        <Feather2 
+                                            name="chevron-down"
+                                            size={20}
+                                            style={{color: "#fff", marginLeft: 10}}
+                                        />
+                                    } 
+                                  </View>
+                                </CollapseHeader>
+                                <CollapseBody style={styles.colapsed_body}>
+                                {e.info.map((e, i) => {
+                                  return <View key={i} style={styles.container_body}>
+                                          <View style={{width:'25%',alignItems:'flex-start', justifyContent: 'center', borderRightColor: '#fff', borderRightWidth: 1,}}>
+                                            <Text style={{color:'#fff'}}>{parseTime(e.strEventTime)}</Text>
+                                            <Text style={[styles.green_text, {paddingTop: 5}]}> {parseTimeConditional(e.strEventTime) === 'igual' ? "En vivo" : ''}</Text>
+                                            <Text style={[styles.red_text, {paddingTop: 5}]}> {parseTimeConditional(e.strEventTime) === 'mayor' ? "Termino" : ''}</Text>
+                                          </View>
+                                          <View style={{width:'60%'}}>
+                                            <View style={{paddingLeft: 20}}>
+                                              <Text style={{color:'#fff'}}>{e.strHomeTeam}</Text>
+                                              <Text style={{color:'#fff', paddingTop: 5}}>{e.strAwayTeam}</Text>
+                                            </View>
+                                          </View>
+                                          <View style={{ width:'15%', alignItems: 'flex-end'}}>
+                                            <View style={{paddingLeft: 20}}>
+                                              <Text style={{color:'#fff'}}>{e.intHomeScore}</Text>
+                                              <Text style={{color:'#fff', paddingTop: 5}}>{e.intAwayScore}</Text>
+                                            </View>
+                                          </View>
+                                        </View>
+                                })}
+                                </CollapseBody>
+                              </Collapse>
+                            </View>
+                  })}
+                </>
+              )
+            
+            }
+              
+              
             </View>
           </ScrollView>
       </View>
@@ -416,7 +510,7 @@ const styles = StyleSheet.create({
   },
   bot: {
     flex: 2, 
-    marginTop: 50
+    marginTop: 10
   },
   text_title: {
     color: '#fff',
@@ -466,6 +560,13 @@ const styles = StyleSheet.create({
   },
   green_text: {
     color: 'green'
+  },
+  top_text:{
+    color: '#fff',
+    fontFamily: 'Montserrat-Medium',
+    fontSize: 14,
+    marginTop: 10,
+    textAlign: 'left'
   },
 });
 

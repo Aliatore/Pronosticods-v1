@@ -51,7 +51,7 @@ const ProfileScreen = ({navigation}) => {
 }
   //api call
   const getHouse = (token_user) => {   
-    let urlApi = UrlServices(3);
+    let urlApi = UrlServices(1);
     setVisible(true)
 
     let dateToday = getDate()

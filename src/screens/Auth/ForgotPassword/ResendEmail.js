@@ -33,7 +33,7 @@ const ResendEmailScreen = ({navigation, route}) => {
     const [alert, setAlert] = React.useState(false);
 
     const sendEmail = (email) => { 
-        let urlApi = UrlServices(3);  
+        let urlApi = UrlServices(1);  
         setVisible(true)
         NetInfo.fetch().then(state => {
             console.log(state.isConnected);

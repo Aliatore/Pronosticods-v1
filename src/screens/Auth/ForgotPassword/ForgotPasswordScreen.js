@@ -48,7 +48,7 @@ const ForgotPasswordScreen = ({navigation}) => {
     }
 
     const sendEmail = (email) => {   
-        let urlApi = UrlServices(3);
+        let urlApi = UrlServices(1);
         setVisible(true)
         NetInfo.fetch().then(state => {
             // console.log(state.isConnected);

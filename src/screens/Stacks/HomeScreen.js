@@ -54,7 +54,7 @@ const HomeScreen = ({navigation}) => {
 }
   //api call news
   const getNews = (token_user) => {   
-    let urlApi = UrlServices(3);
+    let urlApi = UrlServices(1);
     setVisible(true)
     let dateToday = getDate()
 
@@ -112,8 +112,8 @@ const HomeScreen = ({navigation}) => {
                     const responseOne = responses[0].data.data;
                     const responseTwo = responses[1].data.data;
 
-                    console.log(responseOne);
-                    console.log(responseTwo);
+                    // console.log(responseOne);
+                    // console.log(responseTwo);
                     
                     if (responses[0].status === 200 || responses[0].status === 201 && responses[1].status === 200 || responses[1].status === 201) {
                         setVisible(false)
