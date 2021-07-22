@@ -30,17 +30,44 @@ const PaymentScreen = ({navigation, route}) => {
         card_number: '',
         caducidad: '',
         cvv: '',
-        ammount: route.params.ammount ? route.params.ammount : '',
-        currency: route.params.currency ? route.params.currency : '',
-        name_plan: route.params.name_plan ? route.params.name_plan : '',
-        plan_id: route.params.plan_id ? route.params.plan_id : '',
-        u_token: route.params.client_user_token ? route.params.client_user_token : '',
+        ammount: '',
+        currency: '',
+        name_plan: '',
+        plan_id: '',
+        u_token: '',
     });
+
+    React.useEffect(() => {
+        setVariables(route.params);
+    }, []);
+    console.log(route.params);
 
     const [visible, setVisible] = React.useState(false);
     const [disabled_pagar, setDisabled_pagar] = React.useState(data.name != '' && data.card_number != '' && data.caducidad != '' && data.cvv != '' ? true : false);
     const [alert, setAlert] = React.useState(false);
 
+    const setVariables = (e) => {
+        console.log("jejex", e);
+        if(e.length > 0 ) {
+            setData({
+                ...data,
+                ammount: route.params.ammount ? route.params.ammount : '',
+                currency: route.params.currency ? route.params.currency : '',
+                name_plan: route.params.name_plan ? route.params.name_plan : '',
+                plan_id: route.params.plan_id ? route.params.plan_id : '',
+                u_token: route.params.u_token ? route.params.u_token : '',
+            });
+        } else {
+            setData({
+                ...data,
+                ammount: route.params.ammount ? route.params.ammount : '',
+                currency: route.params.currency ? route.params.currency : '',
+                name_plan: route.params.name_plan ? route.params.name_plan : '',
+                plan_id: route.params.plan_id ? route.params.plan_id : '',
+                u_token: route.params.u_token ? route.params.u_token : '',
+            });
+        }
+    }
     const setName = (e) => {
         if(e.trim().length > 0 ) {
             setData({

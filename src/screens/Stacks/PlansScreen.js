@@ -11,7 +11,7 @@ import Hipismo from '../../assets/img/svg/hipismoLogo.svg';
 import Gold from '../../assets/img/svg/oro.svg';
 import { ScrollView } from 'react-native-gesture-handler';
 import UrlServices from '../../mixins/Services/UrlServices';
-import Carousel, { PaginationLight } from 'react-native-x2-carousel';
+import Carousel from 'react-native-snap-carousel';
 import { useNavigation } from '@react-navigation/native';
 
 const PlansScreen = () => {
@@ -141,7 +141,7 @@ const PlansScreen = () => {
   }
 
   //render of swipeable
-  const _renderItem = (item) => {
+  const _renderItem2 = (item) => {
     return (
       <View key={item.id}>
         <ScrollView>
@@ -215,15 +215,15 @@ const PlansScreen = () => {
       </View>
     );
   }
-  const render = (data) => {
-    console.log("item que llega, en render item",data);
+  const _renderItem = (e) => {
+    console.log("item que llega, en render item",e);
     return (
-      <Card key={data.id} style={styles.card}>
+      <Card key={e.id} style={styles.card}>
       <Card.Content>
-        <Title numberOfLines={1}  style={styles.bot_text}>{data.name != null ? data.name : null}</Title>
+        <Title numberOfLines={1}  style={styles.bot_text}>{e.item.name != null ? e.item.name : null}</Title>
         <View style={styles.container_swapp}>
           <View style={styles.container_swapp2}>
-          {data.name != null && data.name == "Hipismo" ? 
+          {e.name != null && e.name == "Hipismo" ? 
             (<FlatList
               data={[
                 {id: 1, key: 'Mas de 200 datos mensuales'},
@@ -249,10 +249,11 @@ const PlansScreen = () => {
               <TouchableOpacity
                 style={styles.signIn}
                 onPress={() => navigation.navigate('PaymentScreen', {
-                  ammount: data.amount ? data.amount : '',
-                  currency: data.currency ? data.currency : '',
-                  name_plan: data.name ? data.name : '',
-                  plan_id: data.data_plans.id ? data.data_plans.id : '',
+                  ammount: e.item.amount ? e.item.amount : '',
+                  currency: e.item.currency ? e.item.currency : '',
+                  name_plan: e.item.name ? e.item.name : '',
+                  plan_id: e.item.id ? e.item.id : '',
+                  u_token: data.client_token ? data.client_token : '', 
                 })}
               >
                   <LinearGradient
@@ -297,10 +298,13 @@ const PlansScreen = () => {
             {data.data_plans != null ? 
               (
                 <Carousel
-                  pagination={PaginationLight}
-                  renderItem={render}
+                  ref={(c) => { data._carousel = c; }}
                   data={data.data_plans}
+                  renderItem={_renderItem}
+                  sliderWidth={300}
+                  itemWidth={300}
                 />
+                
               ) : 
               (
                 <View style={styles.container}>
@@ -372,9 +376,11 @@ const PlansScreen = () => {
               {data.data_plans != null ? 
                 (
                   <Carousel
-                    pagination={PaginationLight}
-                    renderItem={_renderItem}
+                    ref={(c) => { data._carousel = c; }}
                     data={data.data_plans}
+                    renderItem={_renderItem2}
+                    sliderWidth={300}
+                    itemWidth={300}
                   />
                 ) : 
                 (
@@ -463,7 +469,7 @@ const styles = StyleSheet.create({
   container_swapp2: {
     justifyContent: 'center', 
     alignItems: 'flex-start', 
-    width: 250, 
+    width: '100%', 
   },
   top: {
     flex: 1, 
@@ -527,9 +533,9 @@ const styles = StyleSheet.create({
     textAlign: 'left'
   },
   card:{
-    // width: '100%',
+    width: '100%',
     height: 280,
-    width: widthScreen,
+    // width: widthScreen,
     // marginTop: 10,
     backgroundColor: '#282424',
     // borderRadius: 5
@@ -553,7 +559,7 @@ const styles = StyleSheet.create({
     marginTop: 20
   },
   signIn: {
-    width: 280,
+    width: '100%',
     height: 40,
     justifyContent: 'center',
     alignItems: 'center',
