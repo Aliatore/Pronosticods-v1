@@ -8,8 +8,13 @@ const UserProfileData = ({dataUser, have_bets}) => {
 
     // console.log("User Profile element", dataUser ? dataUser : null)
     console.log(dataUser);
-
-    if (dataUser !== null && dataUser !== '') {
+    console.log('bets', have_bets);
+    // return(
+    //     <></>
+    // )
+    const dataUserAr = [dataUser];
+    console.log("nuevo array", dataUserAr);
+    if (dataUserAr !== null && dataUserAr !== '' && dataUserAr !== undefined && dataUserAr !== []) {
         return(
             <>
                 <View style={styles.card}>
@@ -28,7 +33,7 @@ const UserProfileData = ({dataUser, have_bets}) => {
                             <Text style={[styles.textSign, {
                                 color: '#fff',
                                 marginLeft: 18,
-                            }]}>{dataUser.first_name ? dataUser.first_name : null}</Text>
+                            }]}>{dataUserAr[0].first_name ? dataUserAr[0].first_name : null}</Text>
                         </TouchableOpacity>
                     </View>
                     <View style={{justifyContent: 'center', alignItems: 'center'}}>
@@ -43,7 +48,7 @@ const UserProfileData = ({dataUser, have_bets}) => {
                             <Text style={[styles.textSign, {
                                 color: '#fff',
                                 marginLeft: 18,
-                            }]}>{dataUser.last_name ? dataUser.last_name : null}</Text>
+                            }]}>{dataUserAr[0].last_name ? dataUserAr[0].last_name : null}</Text>
                         </TouchableOpacity>
                     </View>
                     <View style={{justifyContent: 'center', alignItems: 'center'}}>
@@ -58,7 +63,7 @@ const UserProfileData = ({dataUser, have_bets}) => {
                             <Text style={[styles.textSign, {
                                 color: '#fff',
                                 marginLeft: 18,
-                            }]}>{dataUser.country_name ? dataUser.country_name : null}</Text>
+                            }]}>{dataUserAr[0].country_name ? dataUserAr[0].country_name : null}</Text>
                         </TouchableOpacity>
                     </View>
                     <View style={{justifyContent: 'center', alignItems: 'center'}}>
@@ -73,7 +78,7 @@ const UserProfileData = ({dataUser, have_bets}) => {
                             <Text style={[styles.textSign, {
                                 color: '#fff',
                                 marginLeft: 18,
-                            }]}>{have_bets ? have_bets : null}</Text>
+                            }]}>{have_bets !== null && have_bets !== undefined && have_bets !== '' ? have_bets[0].name : "no encontrado"}</Text>
                         </TouchableOpacity>
                     </View>
                     <View style={{justifyContent: 'center', alignItems: 'center'}}>
@@ -88,7 +93,7 @@ const UserProfileData = ({dataUser, have_bets}) => {
                             <Text style={[styles.textSign, {
                                 color: '#fff',
                                 marginLeft: 18,
-                            }]}>{dataUser.email ? dataUser.email : null}</Text>
+                            }]}>{dataUserAr[0].email ? dataUserAr[0].email : null}</Text>
                         </TouchableOpacity>
                     </View>
                     {/* <View style={{justifyContent: 'center', alignItems: 'center'}}>
@@ -120,7 +125,7 @@ const UserProfileData = ({dataUser, have_bets}) => {
                             <Text style={[styles.textSign, {
                                 color: '#fff',
                                 marginLeft: 18,
-                            }]}>{dataUser.first_name ? dataUser.first_name : null}</Text>
+                            }]}>{dataUserAr[0].first_name ? dataUserAr[0].first_name : null}</Text>
                         </TouchableOpacity>
                     </View>
                 </View>

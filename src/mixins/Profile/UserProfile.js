@@ -6,22 +6,26 @@ import LinearGradient from 'react-native-linear-gradient';
 import { useNavigation } from '@react-navigation/native';
 
 const UserProfile = ({dataUser}) => {
-
-    // console.log("User Profile element", dataUser ? dataUser : null)
+    console.log("User Profile element", dataUser ? dataUser : null)
+    const dataUserAr = [dataUser];
+    console.log("nuevo array", dataUserAr);
+    // return(
+    //             <></>
+    // )
     const navigation = useNavigation();
-    if (dataUser !== null && dataUser !== '') {
+    if (dataUserAr !== null && dataUserAr !== '' && dataUserAr !== undefined && dataUserAr !== []) {
         return(
             <>
                 <View style={styles.card}>
                     <Card style={styles.card}>
                         <View style={{justifyContent: 'center', alignItems: 'center', marginTop: 20, marginBottom: 20}}>
-                            <Avatar.Image size={120} source={{ uri: `${dataUser.avatar_preview}` }} />
+                            <Avatar.Image size={120} source={{ uri: `${dataUserAr[0].avatar_preview}` }} />
                         </View>
                         <Card.Content>
                             <View style={{justifyContent: 'center', alignItems: 'center'}}>
-                                <Title style={styles.card_white}>{dataUser.first_name ? dataUser.first_name : null } {dataUser.last_name ? dataUser.last_name : null }</Title>
-                                <Title style={styles.card_green}>{dataUser.email ? dataUser.email : null }</Title>                
-                                <Title style={styles.card_white_small}>{dataUser.country_name ? dataUser.country_name.trim() : null }</Title>                
+                                <Title style={styles.card_white}>{dataUserAr[0].first_name ? dataUserAr[0].first_name : null } {dataUserAr[0].last_name ? dataUserAr[0].last_name : null }</Title>
+                                <Title style={styles.card_green}>{dataUserAr[0].email ? dataUserAr[0].email : null }</Title>                
+                                <Title style={styles.card_white_small}>{dataUserAr[0].country_name ? dataUserAr[0].country_name.trim() : null }</Title>                
                             </View>
                             <View style={{justifyContent: 'center', alignItems: 'center'}}>
                                 <TouchableOpacity

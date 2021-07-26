@@ -216,7 +216,14 @@ const ForecastsScreen = ({navigation}) => {
                 {/* <Text  style={styles.top_text}>Pronóstico del día</Text> */}
               </View>
               <View style={styles.bot}>
-              {data.d_1.simples.length == 0  && data.d_1.simples.length == 0 && data.d_3.simples.length == 0  && data.d_3.simples.length == 0 && data.d_4.simples.length == 0  && data.d_4.simples.length == 0 && data.d_2.length ==0 ?
+              {data.d_1.simples ==  null || data.d_1.simples == undefined || data.d_1.simples == [] || data.d_1.simples == "" && 
+              data.d_1.combinadas ==  null || data.d_1.combinadas == undefined || data.d_1.combinadas == [] || data.d_1.combinadas == "" && 
+              data.d_3.simples ==  null || data.d_3.simples == undefined || data.d_3.simples == [] || data.d_3.simples == "" && 
+              data.d_3.combinadas ==  null || data.d_3.combinadas == undefined || data.d_3.combinadas == [] || data.d_3.combinadas == "" && 
+              data.d_4.simples ==  null || data.d_4.simples == undefined || data.d_4.simples == [] || data.d_4.simples == "" && 
+              data.d_4.combinadas ==  null || data.d_4.combinadas == undefined || data.d_4.combinadas == [] || data.d_4.combinadas == "" && 
+              data.d_2 == null || data.d_2 == undefined || data.d_2 == [] || data.d_2 == "" ?
+          
                 (<Card style={[styles.card, {marginTop: 20}]}>
                   <Card.Content>
                     <View style={styles.colapsed_body}>
@@ -224,7 +231,7 @@ const ForecastsScreen = ({navigation}) => {
                         <View style={{width:'100%'}}>
                           <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
                             <Text style={styles.top_text_empty}>Nuestros pronosticadores están trabajando... </Text>
-                            <Text style={styles.top_text_empty}>Pronto tendrás tus pronósticos, recibirás una notificación en tu correo correcto.</Text>
+                            <Text style={styles.top_text_empty}>Pronto tendrás tus pronósticos, recibirás una notificación en tu correo electrónico.</Text>
                           </View>
                         </View>
                       </View>
@@ -237,7 +244,7 @@ const ForecastsScreen = ({navigation}) => {
               {data.d_1 !== null || data.d_1 !== undefined || data.d_1 !== "" ?
               (
                 <>
-                {data.d_1.simples.length == 0  && data.d_1.simples.length == 0 ? 
+                {data.d_1.simples == 0  && data.d_1.simples == 0 ? 
                   (<Text  style={styles.top_text}> </Text>) 
                   : 
                   (<Text  style={styles.top_text}>Plan General</Text>)
@@ -302,7 +309,7 @@ const ForecastsScreen = ({navigation}) => {
               {data.d_3 !== null || data.d_3 !== undefined || data.d_3 !== "" ?
               (
                 <>
-                {data.d_3.simples.length == 0  && data.d_3.simples.length == 0 ? 
+                {data.d_3.simples == 0  && data.d_3.simples == 0 ? 
                   (<Text  style={styles.top_text}> </Text>) 
                   : 
                   (<Text  style={styles.top_text}>Plan Sports</Text>)
@@ -423,7 +430,7 @@ const ForecastsScreen = ({navigation}) => {
               {data.d_4 !== null || data.d_4 !== undefined || data.d_4 !== "" ?
               (
                 <>
-                {data.d_4.simples.length == 0  && data.d_4.simples.length == 0 ? 
+                {data.d_4.simples == 0  && data.d_4.simples == 0 ? 
                   (<Text  style={styles.top_text}> </Text>) 
                   : 
                   (<Text  style={styles.top_text}>Plan Trial</Text>)

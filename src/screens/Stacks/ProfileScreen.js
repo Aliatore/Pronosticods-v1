@@ -161,11 +161,11 @@ const ProfileScreen = ({navigation}) => {
         <StatusBar barStyle= { theme.dark ? "light-content" : "dark-content" }/>
           <ScrollView>
             <UserProfile 
-              dataUser={data.data_user}
+              dataUser={data.data_user !== null && data.data_user !== undefined && data.data_user !== "" ? data.data_user : ""}
               navigation={navigation}
             />
             <UserProfileData 
-              dataUser={data.data_user}
+              dataUser={data.data_user !== null && data.data_user !== undefined && data.data_user !== "" ? data.data_user : ""}
               have_bets={data.home_gambler}
             />
           </ScrollView>
