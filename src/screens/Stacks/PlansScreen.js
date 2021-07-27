@@ -8,7 +8,7 @@ import NetInfo from "@react-native-community/netinfo";
 import AsyncStorage from '@react-native-community/async-storage';
 import LinearGradient from 'react-native-linear-gradient';
 import Hipismo from '../../assets/img/svg/hipismoLogo.svg';
-import Gold from '../../assets/img/svg/oro.svg';
+import Gold from '../../assets/img/svg/Gold.svg';
 import { ScrollView } from 'react-native-gesture-handler';
 import UrlServices from '../../mixins/Services/UrlServices';
 import Carousel from 'react-native-snap-carousel';
@@ -141,36 +141,41 @@ const PlansScreen = () => {
   }
 
   //render of swipeable
-  const _renderItem2 = (item) => {
+  const _renderItem2 = (e) => {
+    console.log("render 2", e);
     return (
-      <View key={item.id}>
-        <ScrollView>
-          
-          <View style={styles.bot}>
-            <Card style={styles.card_2}>
+  
+            <Card key={e.id} style={styles.card_2}>
                 <Card.Content>
                   <View style={{backgroundColor: '#171717', height: 50, justifyContent: 'center', alignItems: 'center', position: 'relative'}}>
-                    {item.name != null && item.name.toUpperCase() === "HIPISMO" ? 
-                      <Hipismo 
-                        width="50"
-                        style={{marginLeft: 0}}
-                      />
-                      : null
-                    }
-                    {item.name != null && item.name.toUpperCase() === "DEPORTES GENERALES" ? 
-                      <Gold 
-                        width="50" 
-                        style={{marginLeft: 0}}
-                      />
-                      : null
+                    {e.item.name === null && e.item.name === undefined ? 
+                      null
+                      
+                      :
+                      (
+                        <>
+                          {e.item.name === "Hipismo" ? 
+                            <Hipismo 
+                              width="50"
+                              style={{marginLeft: 0}}
+                            />
+                            :
+                            <Gold 
+                              width="50" 
+                              style={{marginLeft: 0}}
+                            />
+                          }
+                        </>
+                      )
+                      
                     }
                   </View>
-                  <Title numberOfLines={1}  style={styles.bot_text_alt}>{item.nickname.toUpperCase()}</Title>
+                  <Title numberOfLines={1}  style={[styles.bot_text, {marginTop: 40}]}>{e.item.name != null ? e.item.name : null}</Title>
                   <SafeAreaView>
                     <View style={styles.container_swapp}>
                       <View style={styles.container_swapp2}>
                         
-                          {item.name != null && item.name == "Hipismo" ? 
+                          {e.name != null && e.name == "Hipismo" ? 
                             (<FlatList
                               data={data.hipismo}
                               renderItem={({item}) => <Text key={item.id} style={styles.bot_text2}><Text style={{color: '#01CD01'}}>&bull;</Text> &nbsp;&nbsp;{item.key}</Text>}
@@ -182,15 +187,15 @@ const PlansScreen = () => {
                             />) 
                           }
                       </View>
-                      <Text style={styles.text_amount}>{item.amount}{item.currency === 'usd' ? "$" : null }</Text>
+                      <Text style={styles.text_amount}>{e.amount}{e.currency === 'usd' ? "$" : null }</Text>
                       <View style={styles.button}>
                           <TouchableOpacity
                             style={styles.signIn}
                             onPress={() => navigation.navigate('PaymentScreen', {
-                              ammount: item.amount ? item.amount : '',
-                              currency: item.currency ? item.currency : '',
-                              name_plan: item.name ? item.name : '',
-                              plan_id: item.id ? item.id : '',
+                              ammount: e.item.amount ? e.item.amount : '',
+                              currency: e.item.currency ? e.item.currency : '',
+                              name_plan: e.item.name ? e.item.name : '',
+                              plan_id: e.item.id ? e.item.id : '',
                               client_user_token: data.client_token != undefined ? data.client_token : '',
                             })}
                           >
@@ -210,9 +215,7 @@ const PlansScreen = () => {
                   </SafeAreaView>
                 </Card.Content>
             </Card>
-          </View>
-        </ScrollView>
-      </View>
+       
     );
   }
   const _renderItem = (e) => {
@@ -373,22 +376,26 @@ const PlansScreen = () => {
               <Text style={styles.title_text3}>SUGERENCIAS</Text>
             </View>
             <View style={styles.bot_2}>
-              {data.data_plans != null ? 
-                (
-                  <Carousel
-                    ref={(c) => { data._carousel = c; }}
-                    data={data.data_plans}
-                    renderItem={_renderItem2}
-                    sliderWidth={300}
-                    itemWidth={300}
-                  />
-                ) : 
-                (
-                  <View style={styles.container}>
-                      <Text style={styles.title_text}>Cargando</Text>
-                  </View>
-                )
-              }
+              <ScrollView>
+                <View style={{marginTop: 20}}>
+                    {data.data_plans != null ? 
+                      (
+                        <Carousel
+                          ref={(c) => { data._carousel = c; }}
+                          data={data.data_plans !== null || data.data_plans !== undefined || data.data_plans !== '' ? data.data_plans : ''}
+                          renderItem={_renderItem2}
+                          sliderWidth={300}
+                          itemWidth={300}
+                        />
+                      ) : 
+                      (
+                        <View style={styles.container}>
+                            <Text style={styles.title_text}>Cargando</Text>
+                        </View>
+                      )
+                    }
+                </View>
+              </ScrollView>
             </View>
           </View>
           <View>
@@ -541,9 +548,9 @@ const styles = StyleSheet.create({
     // borderRadius: 5
   },
   card_2:{
-    // width: '100%',
+    width: '100%',
     height: 400,
-    width: widthScreen,
+    // width: widthScreen,
     // marginTop: 10,
     backgroundColor: '#282424',
     // borderRadius: 5

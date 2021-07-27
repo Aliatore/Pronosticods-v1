@@ -216,41 +216,65 @@ const ForecastsScreen = ({navigation}) => {
                 {/* <Text  style={styles.top_text}>Pronóstico del día</Text> */}
               </View>
               <View style={styles.bot}>
-              {data.d_1.simples ==  null || data.d_1.simples == undefined || data.d_1.simples == [] || data.d_1.simples == "" && 
-              data.d_1.combinadas ==  null || data.d_1.combinadas == undefined || data.d_1.combinadas == [] || data.d_1.combinadas == "" && 
-              data.d_3.simples ==  null || data.d_3.simples == undefined || data.d_3.simples == [] || data.d_3.simples == "" && 
-              data.d_3.combinadas ==  null || data.d_3.combinadas == undefined || data.d_3.combinadas == [] || data.d_3.combinadas == "" && 
-              data.d_4.simples ==  null || data.d_4.simples == undefined || data.d_4.simples == [] || data.d_4.simples == "" && 
-              data.d_4.combinadas ==  null || data.d_4.combinadas == undefined || data.d_4.combinadas == [] || data.d_4.combinadas == "" && 
-              data.d_2 == null || data.d_2 == undefined || data.d_2 == [] || data.d_2 == "" ?
+              {data.d_1 ==  null || data.d_1 == undefined || data.d_1 == "" &&
+              data.d_3 ==  null || data.d_3 == undefined ||  data.d_3 == "" &&
+              data.d_4 ==  null || data.d_4 == undefined ||  data.d_4 == "" &&
+              data.d_2 == null || data.d_2 == undefined ||  data.d_2 == "" ?
           
-                (<Card style={[styles.card, {marginTop: 20}]}>
-                  <Card.Content>
-                    <View style={styles.colapsed_body}>
-                      <View style={styles.container_body}>
-                        <View style={{width:'100%'}}>
-                          <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-                            <Text style={styles.top_text_empty}>Nuestros pronosticadores están trabajando... </Text>
-                            <Text style={styles.top_text_empty}>Pronto tendrás tus pronósticos, recibirás una notificación en tu correo electrónico.</Text>
-                          </View>
-                        </View>
-                      </View>
-                    </View>
-                    </Card.Content>
-                </Card>)
+                (
+                  <Card style={[styles.card, {marginTop: 20}]}>
+                          <Card.Content>
+                            <View style={styles.colapsed_body}>
+                              <View style={styles.container_body}>
+                                <View style={{width:'100%'}}>
+                                  <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+                                    <Text style={styles.top_text_empty}>Nuestros pronosticadores están trabajando... </Text>
+                                    <Text style={styles.top_text_empty}>Pronto tendrás tus pronósticos, recibirás una notificación en tu correo electrónico.</Text>
+                                  </View>
+                                </View>
+                              </View>
+                            </View>
+                            </Card.Content>
+                        </Card>
+                  /* <>
+                  {data.d_1.simples ==  null || data.d_1.simples == undefined || data.d_1.simples == [] || data.d_1.simples == "" &&
+                    data.d_1.combinadas ==  null || data.d_1.combinadas == undefined || data.d_1.combinadas == [] || data.d_1.combinadas == "" &&
+                    data.d_3.simples ==  null || data.d_3.simples == undefined || data.d_3.simples == [] || data.d_3.simples == "" &&
+                    data.d_3.combinadas ==  null || data.d_3.combinadas == undefined || data.d_3.combinadas == [] || data.d_3.combinadas == "" &&
+                    data.d_4.simples ==  null || data.d_4.simples == undefined || data.d_4.simples == [] || data.d_4.simples == "" &&
+                    data.d_4.combinadas ==  null || data.d_4.combinadas == undefined || data.d_4.combinadas == [] || data.d_4.combinadas == "" &&
+                    data.d_2 == null || data.d_2 == undefined || data.d_2 == [] || data.d_2 == "" ?
+                        (<Card style={[styles.card, {marginTop: 20}]}>
+                          <Card.Content>
+                            <View style={styles.colapsed_body}>
+                              <View style={styles.container_body}>
+                                <View style={{width:'100%'}}>
+                                  <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+                                    <Text style={styles.top_text_empty}>Nuestros pronosticadores están trabajando... </Text>
+                                    <Text style={styles.top_text_empty}>Pronto tendrás tus pronósticos, recibirás una notificación en tu correo electrónico.</Text>
+                                  </View>
+                                </View>
+                              </View>
+                            </View>
+                            </Card.Content>
+                        </Card>)
+                        :null
+                  }
+                  </> */
+                )
                 :
-                ""
+                null
               }
-              {data.d_1 !== null || data.d_1 !== undefined || data.d_1 !== "" ?
+              {data.d_1 !== null && data.d_1 !== undefined && data.d_1 !== "" ?
               (
                 <>
-                {data.d_1.simples == 0  && data.d_1.simples == 0 ? 
+                {data.d_1.simples == null || data.d_1.simples == undefined || data.d_1.simples == "" ? 
                   (<Text  style={styles.top_text}> </Text>) 
                   : 
                   (<Text  style={styles.top_text}>Plan General</Text>)
                 }
                 {/* <Text  style={styles.top_text}>Plan General</Text> */}
-                {data.d_1.simples === undefined ? null :
+                {data.d_1.simples == null || data.d_1.simples == undefined || data.d_1.simples == "" ? null :
                     data.d_1.simples.map((e, i) => { 
                       return <Card key={i} style={[styles.card, {marginTop: 20}]}>
                                   <Card.Content>
@@ -276,7 +300,7 @@ const ForecastsScreen = ({navigation}) => {
                                   </Card.Content>
                               </Card>
                 })}
-                {data.d_1.combinadas === undefined ? null :
+                {data.d_1.combinadas == null || data.d_1.combinadas == undefined || data.d_1.combinadas == "" ? null :
                     data.d_1.combinadas.map((e, i) => { 
                       return <View key={i} style={{flex: 1}}>
                                   {e.childs.map((e, i) => {  
@@ -305,16 +329,16 @@ const ForecastsScreen = ({navigation}) => {
                 })}
                 </>
               )
-              : ""}
-              {data.d_3 !== null || data.d_3 !== undefined || data.d_3 !== "" ?
+              : null}
+              {data.d_3 !== null && data.d_3 !== undefined && data.d_3 !== "" ?
               (
                 <>
-                {data.d_3.simples == 0  && data.d_3.simples == 0 ? 
+                {data.d_3.simples == null || data.d_3.simples == undefined || data.d_3.simples == "" ? 
                   (<Text  style={styles.top_text}> </Text>) 
                   : 
                   (<Text  style={styles.top_text}>Plan Sports</Text>)
                 }
-                {data.d_3.simples === undefined ? null :
+                {data.d_3.simples == null || data.d_3.simples == undefined || data.d_3.simples == "" ? null :
                     data.d_3.simples.map((e, i) => { 
                       return <Card key={i} style={[styles.card, {marginTop: 20}]}>
                                   <Card.Content>
@@ -340,7 +364,7 @@ const ForecastsScreen = ({navigation}) => {
                                   </Card.Content>
                               </Card>
                 })}
-                {data.d_3.combinadas === undefined ? null :
+                {data.d_3.combinadas == null || data.d_3.combinadas == undefined || data.d_3.combinadas == "" ? null :
                     data.d_3.combinadas.map((e, i) => { 
                       return <View key={i} style={{flex: 1}}>
                                   {e.childs.map((e, i) => {  
@@ -369,73 +393,47 @@ const ForecastsScreen = ({navigation}) => {
                 })}
                 </>
               )
-              : ""}
-              {data.d_2 !== null || data.d_2 !== undefined || data.d_2 !== "" ?
+              : null}
+              {data.d_2 !== null && data.d_2 !== undefined && data.d_2 !== "" ?
               (
                 <>
-                {data.d_2 === undefined || data.d_2 === null || data.d_2 === '' ? null :
-                    data.d_2.map((e, i) => { 
-                      return <View key={i} style={{flex: 1}}>  
-                              <Text  style={[styles.top_text_hipismo, {marginTop: 20}]}>Plan Riders</Text>
-                                <Collapse onToggle={(evt) => setButton(evt)}>
-                                  <CollapseHeader  style={styles.colapse_header}>
-                                    <ImageBackground source={require('../../assets/img/jpg/Hipismo.jpg')} style={styles.image}>
-                                        <Text style={[styles.image ,{color:'#fff'}]}>{e.name}</Text>
-                                    </ImageBackground>
-                                  </CollapseHeader>
-                                  <CollapseBody style={styles.colapsed_body}>
-                                  {e.forecasts.map((e, i) => {
-                                    return  <View key={i} style={styles.container_riders}>
-                                              <View style={{width:'100%',alignItems:'flex-start', justifyContent: 'center', borderBottomColor: '#fff', borderBottomWidth: 1,}}>
-                                              <Text numberOfLines={1} style={styles.text_forecast9}>Carrera {e.race_number}</Text>
-                                                    <Text numberOfLines={1} style={[styles.text_forecast10, {marginTop: 20}]}>1er Favorito {e.favorito1}</Text>
-                                                    <Text numberOfLines={1} style={styles.text_forecast11}>2do Favorito {e.favorito2}</Text>
-                                                    <Text numberOfLines={1} style={[styles.text_forecast11, {marginBottom: 20}]}>3er Favorito {e.favorito3}</Text>
+                  {data.d_2 === undefined || data.d_2 === null || data.d_2 === '' ? null :
+                      data.d_2.map((e, i) => { 
+                        return <View key={i} style={{flex: 1}}>  
+                                <Text  style={[styles.top_text_hipismo, {marginTop: 20}]}>Plan Riders</Text>
+                                  <Collapse onToggle={(evt) => setButton(evt)}>
+                                    <CollapseHeader  style={styles.colapse_header}>
+                                      <ImageBackground source={require('../../assets/img/jpg/Hipismo.jpg')} style={styles.image}>
+                                          <Text style={[styles.image ,{color:'#fff'}]}>{e.name}</Text>
+                                      </ImageBackground>
+                                    </CollapseHeader>
+                                    <CollapseBody style={styles.colapsed_body}>
+                                    {e.forecasts.map((e, i) => {
+                                      return  <View key={i} style={styles.container_riders}>
+                                                <View style={{width:'100%',alignItems:'flex-start', justifyContent: 'center', borderBottomColor: '#fff', borderBottomWidth: 1,}}>
+                                                <Text numberOfLines={1} style={styles.text_forecast9}>Carrera {e.race_number}</Text>
+                                                      <Text numberOfLines={1} style={[styles.text_forecast10, {marginTop: 20}]}>1er Favorito {e.favorito1}</Text>
+                                                      <Text numberOfLines={1} style={styles.text_forecast11}>2do Favorito {e.favorito2}</Text>
+                                                      <Text numberOfLines={1} style={[styles.text_forecast11, {marginBottom: 20}]}>3er Favorito {e.favorito3}</Text>
+                                                </View>
                                               </View>
-                                            </View>
-                                  })}
-                                  </CollapseBody>
-                                </Collapse>
-                              </View>
-                })}
-                {/* {data.d_2 === undefined ? null :
-                    } */}
-                   {/* { data.d_2.map((e, i) => {
-                      return <View key={i} style={{flex: 1}}>  
-                              <Text  style={[styles.top_text_hipismo, {marginTop: 20}]}>Plan Riders</Text>
-                                <Collapse onToggle={(evt) => setButton(evt)}>
-                                  <CollapseHeader  style={styles.colapse_header}>
-                                    <ImageBackground source={require('../../assets/img/jpg/Hipismo.jpg')} style={styles.image}>
-                                        <Text style={[styles.image ,{color:'#fff'}]}>{e.name}</Text>
-                                    </ImageBackground>
-                                  </CollapseHeader>
-                                  <CollapseBody style={styles.colapsed_body}>
-                                  {e.forecasts.map((e, i) => {
-                                    return  <View key={i} style={styles.container_riders}>
-                                              <View style={{width:'100%',alignItems:'flex-start', justifyContent: 'center', borderBottomColor: '#fff', borderBottomWidth: 1,}}>
-                                              <Text numberOfLines={1} style={styles.text_forecast9}>Carrera 1</Text>
-                                                    <Text numberOfLines={1} style={[styles.text_forecast10, {marginTop: 20}]}>1er Favorito (7)</Text>
-                                                    <Text numberOfLines={1} style={styles.text_forecast11}>2do Favorito (1)</Text>
-                                                    <Text numberOfLines={1} style={[styles.text_forecast11, {marginBottom: 20}]}>3er Favorito (3)</Text>
-                                              </View>
-                                            </View>
-                                  })}
-                                  </CollapseBody>
-                                </Collapse>
-                              </View>
-                })} */}
+                                    })}
+                                    </CollapseBody>
+                                  </Collapse>
+                                </View>
+                  })}
                 </>
               )   
-              : ""}
-              {data.d_4 !== null || data.d_4 !== undefined || data.d_4 !== "" ?
+              : null}
+              {data.d_4 !== null && data.d_4 !== undefined && data.d_4 !== "" ?
               (
                 <>
-                {data.d_4.simples == 0  && data.d_4.simples == 0 ? 
+                {data.d_4.simples == null || data.d_4.simples == undefined || data.d_4.simples == "" ? 
                   (<Text  style={styles.top_text}> </Text>) 
                   : 
                   (<Text  style={styles.top_text}>Plan Trial</Text>)
                 }
-                {data.d_4.simples === undefined ? null :
+                {data.d_4.simples == null || data.d_4.simples == undefined || data.d_4.simples == "" ? null :
                     data.d_4.simples.map((e, i) => { 
                       return <Card key={i} style={[styles.card, {marginTop: 20}]}>
                                   <Card.Content>
@@ -461,7 +459,7 @@ const ForecastsScreen = ({navigation}) => {
                                   </Card.Content>
                               </Card>
                 })}
-                {data.d_4.combinadas === undefined ? null :
+                {data.d_4.combinadas == null || data.d_4.combinadas == undefined || data.d_4.combinadas == "" ? null :
                     data.d_4.combinadas.map((e, i) => { 
                       return <View key={i} style={{flex: 1}}>
                                   {e.childs.map((e, i) => {  
@@ -490,7 +488,7 @@ const ForecastsScreen = ({navigation}) => {
                 })}
                 </>
               )
-              : ""}
+              : null}
               </View>
             </ScrollView>
         </View>
