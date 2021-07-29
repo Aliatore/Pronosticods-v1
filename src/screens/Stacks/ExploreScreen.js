@@ -355,13 +355,15 @@ const ExploreScreen = ({navigation}) => {
                   </View>
                   {data.data_pronosticos.map((e, i) => {
                       return <View key={i} style={{marginTop: 20}}>
+                      {console.log(e)}
                               <Collapse onToggle={(e) => setButton(e)}>
                                 <CollapseHeader  style={styles.colapse_header}>
                                   <View style={{width:'25%',alignItems:'center'}}>
-                                    <Thumbnail style={{height: 70, resizeMode: 'contain'}} source={{uri: data.league_logo}} />
+                                    <Thumbnail style={{height: 70, resizeMode: 'contain'}} source={{uri: e.league_logo}} />
                                   </View>
                                   <View style={{width:'60%'}}>
                                     <Text style={{color:'#fff'}}>{e.league_name}</Text>
+                                    <Image /> 
                                   </View>
                                   <View style={styles.custom_icons}>
                                     <Text style={styles.counter_green}>({e.info.length})</Text>
