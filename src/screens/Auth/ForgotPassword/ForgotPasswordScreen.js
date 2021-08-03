@@ -2,11 +2,9 @@ import React from 'react';
 import { 
     View, 
     TouchableOpacity, 
-    TextInput,
     Platform,
     StyleSheet ,
     StatusBar,
-    Alert,
     ImageBackground,
     ScrollView,
     Dimensions
@@ -14,7 +12,7 @@ import {
 import * as Animatable from 'react-native-animatable';
 import Feather from 'react-native-vector-icons/AntDesign';
 import Layer from '../../../assets/img/svg/Layer.svg';
-import { Portal, Text, Dialog } from 'react-native-paper';
+import { Portal, Text, Dialog, TextInput } from 'react-native-paper';
 import { Spinner } from 'native-base'
 import AwesomeAlert from 'react-native-awesome-alerts';
 import axios from 'axios';
@@ -48,7 +46,7 @@ const ForgotPasswordScreen = ({navigation}) => {
     }
 
     const sendEmail = (email) => {   
-        let urlApi = UrlServices(1);
+        let urlApi = UrlServices(3);
         setVisible(true)
         NetInfo.fetch().then(state => {
             // console.log(state.isConnected);
@@ -167,13 +165,23 @@ const ForgotPasswordScreen = ({navigation}) => {
                     >
                     <ScrollView style={styles.scrollviewSize} showsVerticalScrollIndicator={false}>
                         <View style={styles.login}>
-                            <Text style={styles.text_footer}>EMAIL</Text>
+                            {/* <Text style={styles.text_footer}>EMAIL</Text> */}
                             <View style={styles.action}>
                                 <TextInput 
-                                    placeholder="EMAIL@EMAIL.COM"
+                                    label="EMAIL"
+                                    mode="outlined"
                                     style={styles.textInput}
                                     autoCapitalize="none"
-                                    placeholderTextColor='#c4c4c4'
+                                    placeholderTextColor='#01CD01'
+                                    outlineColor='#01CD01'
+                                    underlineColor='#01CD01'
+                                    selectionColor='#01CD01'
+                                    theme={{
+                                        colors: {
+                                            placeholder: '#01CD01', text: '#fff', primary: '#01CD01',
+                                            underlineColor: 'transparent', background: '#303030', color: '#fff'
+                                        },
+                                    }}
                                     onChangeText={(e) => setEmail(e)}
                                 />
                             </View>
@@ -314,13 +322,13 @@ const styles = StyleSheet.create({
   },
   action: {
     flexDirection: 'row',
-    marginTop: 10,
+    marginTop: 15,
     color: '#fff',
-    borderColor: '#01CD01',
-    borderWidth: 1.5,
-    borderRadius: 5,
-    paddingTop: 10,
-    paddingLeft: 10
+    // borderColor: '#01CD01',
+    // borderWidth: 1.5,
+    // borderRadius: 5,
+    // paddingTop: 10,
+    // paddingLeft: 10
   },
   text_footer: {
     color: '#fff',
@@ -333,8 +341,8 @@ const styles = StyleSheet.create({
   textInput: {
     flex: 1,
     marginTop: Platform.OS === 'ios' ? 0 : -15,
-    padding: 10,
-    color: '#fff'
+    paddingTop: 5,
+    fontSize: 16,
   },
   scrollviewSize: {
     width: '100%'

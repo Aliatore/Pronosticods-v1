@@ -61,7 +61,7 @@ const PlansScreen = () => {
 
   //api call
   const getPlans = (token_user, userdata) => {   
-    let urlApi = UrlServices(1);
+    let urlApi = UrlServices(3);
     setVisible(true)
     NetInfo.fetch().then(state => {
         console.log(state.isConnected);
@@ -289,16 +289,16 @@ const PlansScreen = () => {
       return (
         <>
           <View style={{backgroundColor:'#303030', flex: 1}}>
-            <View style={styles.top}>
+            {/* <View style={styles.top}>
               <Text style={styles.title_text}>Planes de suscripción</Text>
               <Text style={styles.title_text2}>PLAN ACTIVO</Text>
               <View style={styles.banner_suscription}>
                   <Text style={[styles.text_suscription, {textTransform: 'uppercase'}]}>{data.client_data.subscriptions[0].name}</Text>
               </View>
               <Text style={[styles.title_text, {marginTop: 25, marginBottom: 10}]}>SUGERENCIAS</Text>
-            </View>
+            </View> */}
             <View style={styles.bot}>
-            {data.data_plans != null ? 
+            {/* {data.data_plans != null ? 
               (
                 <Carousel
                   ref={(c) => { data._carousel = c; }}
@@ -307,6 +307,71 @@ const PlansScreen = () => {
                   sliderWidth={300}
                   itemWidth={300}
                 />
+                
+              ) : 
+              (
+                <View style={styles.container}>
+                    <Text style={styles.title_text}>Cargando</Text>
+                </View>
+              )
+            } */}
+            {console.log(data.data_plans)}
+            {data.data_plans != null && data.data_plans != undefined ? 
+              (
+                <Card style={styles.card}>
+                  <Card.Content>
+                    <Title numberOfLines={1}  style={styles.bot_text}>{data.client_data.subscriptions[0].name}</Title>
+                    <View style={styles.container_swapp}>
+                      {data.data_plans.name === null && data.data_plans.name === undefined ? 
+                        null
+                        
+                        :
+                        (
+                          <>
+                            {data.data_plans.name === "Hipismo" ? 
+                              <Hipismo 
+                                width="50"
+                                style={{marginLeft: 0}}
+                              />
+                              :
+                              <Gold 
+                                width="50" 
+                                style={{marginLeft: 0}}
+                              />
+                            }
+                          </>
+                        )
+                        
+                      }
+                      <Text style={styles.title_text}>Planes de suscripción</Text>
+                      <Text style={styles.title_text2}>PLAN ACTIVO</Text>
+                      {/* <View style={styles.banner_suscription}>
+                          <Text style={[styles.text_suscription, {textTransform: 'uppercase'}]}></Text>
+                      </View> */}
+                      <View style={styles.button}>
+                          <TouchableOpacity
+                            style={styles.signIn}
+                            onPress={() => navigation.navigate('PaymentScreen', {
+                              ammount: data.data_plans.amount ? data.data_plans.amount : '',
+                              currency: data.data_plans.currency ? data.data_plans.currency : '',
+                              name_plan: data.data_plans.name ? data.data_plans.name : '',
+                              plan_id: data.data_plans.id ? data.data_plans.id : '',
+                              u_token: data.client_token ? data.client_token : '', 
+                            })}
+                          >
+                              <LinearGradient
+                                  colors={['#CD0101', '#CD0101']}
+                                  style={styles.signIn}
+                              >
+                                  <Text style={[styles.textSign, {
+                                      color:'#fff'
+                                  }]}>Cancelar</Text>
+                              </LinearGradient>
+                          </TouchableOpacity>
+                      </View>
+                    </View>
+                  </Card.Content>
+                </Card>  
                 
               ) : 
               (

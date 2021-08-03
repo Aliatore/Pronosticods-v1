@@ -221,7 +221,8 @@ const UserProfileData = ({dataUser, have_bets, clientName, lastname, country, be
                             style={[styles.signIn, {
                                 borderColor: '#fff',
                                 borderWidth: 1,
-                                marginTop: 25
+                                marginTop: 25,
+                                marginBottom:25
                             }]}
                         >
                             <TextInput 
@@ -233,7 +234,7 @@ const UserProfileData = ({dataUser, have_bets, clientName, lastname, country, be
                             />
                         </TouchableOpacity>
                     </View>
-                    <View style={[styles.action_picker, {marginTop: 25, marginBottom:25}]}>
+                    {/* <View style={[styles.action_picker, {marginTop: 25, marginBottom:25}]}>
                         <SelectPicker
                             selectedValue={data.service}
                             style={styles.picker}
@@ -245,7 +246,7 @@ const UserProfileData = ({dataUser, have_bets, clientName, lastname, country, be
                             <SelectPicker.Item label="PLAN SILVER" value="silver" />
                             <SelectPicker.Item label="PLAN BRONZE" value="bronze" />
                         </SelectPicker>
-                    </View>
+                    </View> */}
                 </View>
             </>
         )

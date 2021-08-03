@@ -5,9 +5,8 @@ import { View,
     ScrollView, 
     TouchableOpacity, 
     Platform, 
-    TextInput, 
 } from 'react-native';
-import { Portal, Text, Dialog } from 'react-native-paper';
+import { Portal, TextInput, Dialog } from 'react-native-paper';
 import { Spinner } from 'native-base'
 import AwesomeAlert from 'react-native-awesome-alerts';
 import Feather from 'react-native-vector-icons/AntDesign';
@@ -124,7 +123,7 @@ const ChangePassword = ({navigation}) => {
     }
     //   api call
     const changePassword = () => {  
-        let urlApi = UrlServices(1); 
+        let urlApi = UrlServices(3); 
         setVisible(true)
 
         if (data.old_p.length === 0 && data.new_p.length === 0 && data.c_new_p.length === 0 ){
@@ -298,95 +297,131 @@ const ChangePassword = ({navigation}) => {
                     />
                 </View>
                 <View style={styles.change_p}>
-                    <Text style={styles.text_footer}>Antigua Contraseña</Text>
+                    {/* <Text style={styles.text_footer}>Antigua Contraseña</Text> */}
                     <View style={styles.action}>
                         <TextInput 
-                            placeholder="*******"
+                            label='ANTIGUA CONTRASEÑA'
+                            mode="outlined"
                             style={styles.textInput}
                             autoCapitalize="none"
-                            placeholderTextColor='#c4c4c4'
+                            placeholderTextColor='#01CD01'
+                            outlineColor='#01CD01'
+                            underlineColor='#01CD01'
+                            selectionColor='#01CD01'
+                            theme={{
+                                colors: {
+                                    placeholder: '#01CD01', text: '#fff', primary: '#01CD01',
+                                    underlineColor: 'transparent', background: '#303030', color: '#fff'
+                                },
+                            }}
                             secureTextEntry={data.viewSecure ? true : false}
                             onChangeText={(e) => getOldPassword(e)}
                         />
-                        <TouchableOpacity
-                            onPress={viewPassword}
-                        >
-                            {data.viewSecure ?
-                                <Feather2 
-                                    name="eye-off"
-                                    color="grey"
-                                    size={20}
-                                    style={{color: "#fff", marginRight: 10}}
-                                />
-                            :
-                                <Feather2 
-                                    name="eye"
-                                    color="grey"
-                                    size={20}
-                                    style={{color: "#fff", marginRight: 10}}
-                                />
-                            }   
-                        </TouchableOpacity>
+                        <View style={styles.custom_eye}>
+                            <TouchableOpacity
+                                onPress={viewPassword}
+                            >
+                                {data.viewSecure ?
+                                    <Feather2 
+                                        name="eye-off"
+                                        color="grey"
+                                        size={20}
+                                        style={{color: "#fff", marginRight: 10}}
+                                    />
+                                :
+                                    <Feather2 
+                                        name="eye"
+                                        color="grey"
+                                        size={20}
+                                        style={{color: "#fff", marginRight: 10}}
+                                    />
+                                }   
+                            </TouchableOpacity>
+                        </View>
                     </View>
-                    <Text style={[styles.text_footer, {marginTop: 20}]}>Nueva Contraseña</Text>
+                    {/* <Text style={[styles.text_footer, {marginTop: 20}]}>Nueva Contraseña</Text> */}
                     <View style={styles.action}>
                         <TextInput 
-                            placeholder="*******"
+                            placeholder="NUEVA CONTRASEÑA"
+                            mode="outlined"
                             style={styles.textInput}
                             autoCapitalize="none"
-                            placeholderTextColor='#c4c4c4'
+                            placeholderTextColor='#01CD01'
+                            outlineColor='#01CD01'
+                            underlineColor='#01CD01'
+                            selectionColor='#01CD01'
+                            theme={{
+                                colors: {
+                                    placeholder: '#01CD01', text: '#fff', primary: '#01CD01',
+                                    underlineColor: 'transparent', background: '#303030', color: '#fff'
+                                },
+                            }}
                             secureTextEntry={data.viewSecure1 ? true : false}
                             onChangeText={(e) => getNewPassword(e)}
                         />
-                        <TouchableOpacity
-                            onPress={viewPassword1}
-                        >
-                            {data.viewSecure1 ?
-                                <Feather2 
-                                    name="eye-off"
-                                    color="grey"
-                                    size={20}
-                                    style={{color: "#fff", marginRight: 10}}
-                                />
-                            :
-                                <Feather2 
-                                    name="eye"
-                                    color="grey"
-                                    size={20}
-                                    style={{color: "#fff", marginRight: 10}}
-                                />
-                            }   
-                        </TouchableOpacity>
+                        <View style={styles.custom_eye}>
+                            <TouchableOpacity
+                                onPress={viewPassword1}
+                            >
+                                {data.viewSecure1 ?
+                                    <Feather2 
+                                        name="eye-off"
+                                        color="grey"
+                                        size={20}
+                                        style={{color: "#fff", marginRight: 10}}
+                                    />
+                                :
+                                    <Feather2 
+                                        name="eye"
+                                        color="grey"
+                                        size={20}
+                                        style={{color: "#fff", marginRight: 10}}
+                                    />
+                                }   
+                            </TouchableOpacity>
+                        </View>
                     </View>
-                    <Text style={[styles.text_footer, {marginTop: 20}]}>Confirmar Nueva Contraseña</Text>
+                    {/* <Text style={[styles.text_footer, {marginTop: 20}]}>Confirmar Nueva Contraseña</Text> */}
                     <View style={styles.action}>
                         <TextInput 
-                            placeholder="*******"
+                            label="CONFIRAMR NUEVA CONTRASEÑA"
+                             mode="outlined"
                             style={styles.textInput}
                             autoCapitalize="none"
-                            placeholderTextColor='#c4c4c4'
+                            placeholderTextColor='#01CD01'
+                            outlineColor='#01CD01'
+                            underlineColor='#01CD01'
+                            selectionColor='#01CD01'
+                            theme={{
+                                colors: {
+                                    placeholder: '#01CD01', text: '#fff', primary: '#01CD01',
+                                    underlineColor: 'transparent', background: '#303030', color: '#fff'
+                                },
+                            }}
                             secureTextEntry={data.viewSecure2 ? true : false}
                             onChangeText={(e) => getConfirmNewPassword(e)}
                         />
-                        <TouchableOpacity
-                            onPress={viewPassword2}
-                        >
-                            {data.viewSecure2 ?
-                                <Feather2 
-                                    name="eye-off"
-                                    color="grey"
-                                    size={20}
-                                    style={{color: "#fff", marginRight: 10}}
-                                />
-                            :
-                                <Feather2 
-                                    name="eye"
-                                    color="grey"
-                                    size={20}
-                                    style={{color: "#fff", marginRight: 10}}
-                                />
-                            }   
-                        </TouchableOpacity>
+                        <View style={styles.custom_eye}>
+                            <TouchableOpacity
+                                onPress={viewPassword2}
+                            >
+                                {data.viewSecure2 ?
+                                    <Feather2 
+                                        name="eye-off"
+                                        color="grey"
+                                        size={20}
+                                        style={{color: "#fff", marginRight: 10}}
+                                    />
+                                :
+                                    <Feather2 
+                                        name="eye"
+                                        color="grey"
+                                        size={20}
+                                        style={{color: "#fff", marginRight: 10}}
+                                    />
+                                }   
+                            </TouchableOpacity>
+                        </View>
                     </View>
                 </View>
             </ScrollView>
@@ -506,20 +541,30 @@ const styles = StyleSheet.create({
     },
     action: {
         flexDirection: 'row',
-        marginTop: 10,
+        marginTop: 15,
         color: '#fff',
-        borderColor: '#01CD01',
-        borderWidth: 1.5,
-        borderRadius: 5,
-        paddingTop: 10,
-        paddingLeft: 10
-    },
+        // borderColor: '#01CD01',
+        // borderWidth: 1.5,
+        // borderRadius: 5,
+        // paddingTop: 10,
+        // paddingLeft: 10
+      },
     textInput: {
         flex: 1,
         marginTop: Platform.OS === 'ios' ? 0 : -15,
         padding: 10,
         color: '#fff'
     },
+    custom_eye: {
+        flex: 1,
+        position: 'absolute',
+        justifyContent: 'center', 
+        alignItems: 'center',
+        width: 50, 
+        zIndex: 5,
+        right: 0,
+        top: 17
+      }
 });
 
 

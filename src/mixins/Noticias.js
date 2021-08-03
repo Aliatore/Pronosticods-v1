@@ -23,7 +23,7 @@ const Noticias = ({dataNews}) => {
             dataNews.map((e, i) => {
                 return <View key={i} style={styles.card}>
                             <Card style={styles.card} onPress={() => openLink(e.url)}>
-                                <Card.Cover style={styles.card_cover} source={{ uri: e.imagen }} />
+                                <Card.Cover style={styles.card_cover} source={{ uri: e.imagen_preview }} />
                                 <Card.Content>
                                     <Title numberOfLines={1} style={styles.title_text}>{e.titulo.toUpperCase()}</Title>
                                     <Paragraph numberOfLines={1} style={styles.paragraph_white}>{e.subtitulo.toUpperCase()}</Paragraph>

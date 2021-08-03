@@ -1,10 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { 
     View, 
-    Button, 
     TouchableOpacity, 
     Dimensions,
-    TextInput,
     Platform,
     StyleSheet,
     ScrollView,
@@ -19,7 +17,7 @@ import Layer from '../../assets/img/svg/Layer.svg';
 import { Picker as SelectPicker } from '@react-native-picker/picker';
 import DateTimePicker from '@react-native-community/datetimepicker';    
 import Countries from '../../model/countries'
-import { Portal, Text, Dialog } from 'react-native-paper';
+import { Portal, Text, Dialog, TextInput } from 'react-native-paper';
 import { Spinner } from 'native-base'
 import AwesomeAlert from 'react-native-awesome-alerts';
 import axios from 'axios';
@@ -182,7 +180,7 @@ const SignUpScreen = ({navigation}) => {
     }
     
     const sendRegister = (name, lastname, email, password, birthday, countryid) => {   
-        let urlApi = UrlServices(1);
+        let urlApi = UrlServices(3);
         setVisible(true)
         NetInfo.fetch().then(state => {
             console.log(state.isConnected);
@@ -308,23 +306,43 @@ const SignUpScreen = ({navigation}) => {
                         <View style={styles.login}>
                             <View style={styles.action}>
                                 <TextInput 
-                                    placeholder="NOMBRE"
+                                    label="NOMBRE"
                                     style={styles.textInput}
                                     autoCapitalize="none"
-                                    placeholderTextColor='#fff'
+                                    mode="outlined"
+                                    placeholderTextColor='#01CD01'
+                                    outlineColor='#01CD01'
+                                    underlineColor='#01CD01'
+                                    selectionColor='#01CD01'
+                                    theme={{
+                                        colors: {
+                                            placeholder: '#01CD01', text: '#fff', primary: '#01CD01',
+                                            underlineColor: 'transparent', background: '#303030', color: '#fff'
+                                        },
+                                    }}
                                     onChangeText={(e) => setName(e)}
                                 />
                             </View>
-                            <View style={[styles.action, {marginTop: 20}]}>
+                            <View style={[styles.action, {marginTop: 10}]}>
                                 <TextInput 
-                                    placeholder="APELLIDO"
+                                    label="APELLIDO"
                                     style={styles.textInput}
                                     autoCapitalize="none"
-                                    placeholderTextColor='#fff'
+                                    mode="outlined"
+                                    placeholderTextColor='#01CD01'
+                                    outlineColor='#01CD01'
+                                    underlineColor='#01CD01'
+                                    selectionColor='#01CD01'
+                                    theme={{
+                                        colors: {
+                                            placeholder: '#01CD01', text: '#fff', primary: '#01CD01',
+                                            underlineColor: 'transparent', background: '#303030', color: '#fff'
+                                        },
+                                    }}
                                     onChangeText={(e) => setLastname(e)}
                                 />
                             </View>
-                            <View style={[styles.action_picker, {marginTop: 20}]}>
+                            <View style={[styles.action_picker, {marginTop: 10}]}>
                                 <SelectPicker
                                     selectedValue={data.country}
                                     style={styles.picker}
@@ -335,7 +353,7 @@ const SignUpScreen = ({navigation}) => {
                                     {Countries !== null ? setCountries() : null}
                                 </SelectPicker>
                             </View>
-                            <View style={[styles.action_date, {marginTop: 20}]}>
+                            <View style={[styles.action_date, {marginTop: 10}]}>
                                 <View style={styles.container_date}>
                                     <View style={styles.c1}>
                                         <Text style={styles.text_date}>
@@ -367,73 +385,107 @@ const SignUpScreen = ({navigation}) => {
                                     />
                                 )}
                             </View>
-                            <View style={[styles.action, {marginTop: 20}]}>
+                            <View style={[styles.action, {marginTop: 10}]}>
                                 <TextInput 
-                                    placeholder="CORREO"
+                                    label="CORREO"
                                     style={styles.textInput}
                                     autoCapitalize="none"
-                                    placeholderTextColor='#fff'
+                                    mode="outlined"
+                                    placeholderTextColor='#01CD01'
+                                    outlineColor='#01CD01'
+                                    underlineColor='#01CD01'
+                                    selectionColor='#01CD01'
+                                    theme={{
+                                        colors: {
+                                            placeholder: '#01CD01', text: '#fff', primary: '#01CD01',
+                                            underlineColor: 'transparent', background: '#303030', color: '#fff'
+                                        },
+                                    }}
                                     onChangeText={(e) => setEmail(e)}
                                 />
                             </View>
                             
-                            <View style={[styles.action, {marginTop: 20}]}>
+                            <View style={[styles.action, {marginTop: 10}]}>
                                 <TextInput 
-                                    placeholder="CONTRASEÑA"
+                                    label="CONTRASEÑA"
                                     style={[styles.textInput, {color: '#fff'}]}
-                                    placeholderTextColor='#fff'
+                                    mode="outlined"
+                                    placeholderTextColor='#01CD01'
+                                    outlineColor='#01CD01'
+                                    underlineColor='#01CD01'
+                                    selectionColor='#01CD01'
+                                    theme={{
+                                        colors: {
+                                            placeholder: '#01CD01', text: '#fff', primary: '#01CD01',
+                                            underlineColor: 'transparent', background: '#303030', color: '#fff'
+                                        },
+                                    }}
                                     secureTextEntry={data.viewSecure ? true : false}
                                     autoCapitalize="none"
                                     onChangeText={(e) => setPassword(e)}
                                 />
-                                <TouchableOpacity
-                                        onPress={viewPassword}
-                                    >
-                                        {data.viewSecure ?
-                                            <Feather 
-                                                name="eye-off"
-                                                color="grey"
-                                                size={20}
-                                                style={{color: "#fff", marginRight: 10}}
-                                            />
-                                        :
-                                            <Feather 
-                                                name="eye"
-                                                color="grey"
-                                                size={20}
-                                                style={{color: "#fff", marginRight: 10}}
-                                            />
-                                        }   
-                                </TouchableOpacity>
+                                <View style={styles.custom_eye}>
+                                    <TouchableOpacity
+                                            onPress={viewPassword}
+                                        >
+                                            {data.viewSecure ?
+                                                <Feather 
+                                                    name="eye-off"
+                                                    color="grey"
+                                                    size={20}
+                                                    style={{color: "#fff", marginRight: 10}}
+                                                />
+                                            :
+                                                <Feather 
+                                                    name="eye"
+                                                    color="grey"
+                                                    size={20}
+                                                    style={{color: "#fff", marginRight: 10}}
+                                                />
+                                            }   
+                                    </TouchableOpacity>
+                                </View>
                             </View>
-                            <View style={[styles.action, {marginTop: 20, marginBottom: 20}]}>
+                            <View style={[styles.action, {marginTop: 10, marginBottom: 20}]}>
                                 <TextInput 
-                                    placeholder="CONFIRMAR CONTRASEÑA"
+                                    label="CONFIRMAR CONTRASEÑA"
                                     style={[styles.textInput, {color: '#fff'}]}
-                                    placeholderTextColor='#fff'
+                                    mode="outlined"
+                                    placeholderTextColor='#01CD01'
+                                    outlineColor='#01CD01'
+                                    underlineColor='#01CD01'
+                                    selectionColor='#01CD01'
+                                    theme={{
+                                        colors: {
+                                            placeholder: '#01CD01', text: '#fff', primary: '#01CD01',
+                                            underlineColor: 'transparent', background: '#303030', color: '#fff'
+                                        },
+                                    }}
                                     secureTextEntry={data.viewSecure2 ? true : false}
                                     autoCapitalize="none"
                                     onChangeText={(e) => setConfirmPassword(e)}
                                 />
-                                <TouchableOpacity
-                                        onPress={viewConPassword}
-                                    >
-                                        {data.viewSecure2 ?
-                                            <Feather 
-                                                name="eye-off"
-                                                color="grey"
-                                                size={20}
-                                                style={{color: "#fff", marginRight: 10}}
-                                            />
-                                        :
-                                            <Feather 
-                                                name="eye"
-                                                color="grey"
-                                                size={20}
-                                                style={{color: "#fff", marginRight: 10}}
-                                            />
-                                        }   
-                                </TouchableOpacity>
+                                <View style={styles.custom_eye}>
+                                    <TouchableOpacity
+                                            onPress={viewConPassword}
+                                        >
+                                            {data.viewSecure2 ?
+                                                <Feather 
+                                                    name="eye-off"
+                                                    color="grey"
+                                                    size={20}
+                                                    style={{color: "#fff", marginRight: 10}}
+                                                />
+                                            :
+                                                <Feather 
+                                                    name="eye"
+                                                    color="grey"
+                                                    size={20}
+                                                    style={{color: "#fff", marginRight: 10}}
+                                                />
+                                            }   
+                                    </TouchableOpacity>
+                                </View>
                             </View>
                         </View>
                     </ScrollView>
@@ -582,12 +634,7 @@ const styles = StyleSheet.create({
     action: {
       flexDirection: 'row',
       marginTop: 10,
-      color: '#fff',
-      borderColor: '#fff',
-      borderWidth: 1.5,
-      borderRadius: 5,
-      paddingTop: 15,
-      paddingLeft: 10
+
     },
     text_footer: {
       color: '#fff',
@@ -606,7 +653,8 @@ const styles = StyleSheet.create({
       flex: 1,
       marginTop: Platform.OS === 'ios' ? 0 : -15,
       padding: 10,
-      color: '#fff'
+      color: '#fff',
+      height: 60
     },
     scrollviewSize: {
       width: '100%'
@@ -628,11 +676,13 @@ const styles = StyleSheet.create({
         borderWidth: 1.5,
         borderRadius: 5,
         paddingTop: 10,
-        paddingLeft: 10
+        paddingLeft: 10,
+        marginLeft: 10,
+        marginRight: 10,
     },
     action_date: {
         flexDirection: 'row',
-        marginTop: 10,
+        marginTop: 20,
         paddingBottom: 10,
         color: '#fff',
         backgroundColor: '#262222',
@@ -640,7 +690,9 @@ const styles = StyleSheet.create({
         borderWidth: 1.5,
         borderRadius: 5,
         paddingTop: 10,
-        paddingLeft: 10
+        paddingLeft: 10,
+        marginLeft: 10,
+        marginRight: 10,
     },
     container_date: {
         flex:1, 
@@ -667,6 +719,16 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         marginRight: 10
     },
+    custom_eye: {
+        flex: 1,
+        position: 'absolute',
+        justifyContent: 'center', 
+        alignItems: 'center',
+        width: 50, 
+        zIndex: 5,
+        right: 0,
+        top: 21
+    }
   });
   
   

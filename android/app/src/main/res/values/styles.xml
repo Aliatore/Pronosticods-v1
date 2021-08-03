@@ -11,6 +11,7 @@
     <style name="Dialog.Theme" parent="Theme.AppCompat.Light.Dialog">
 	    <item name="colorAccent">#3d3d3d</item>
 	    <item name="android:textColorPrimary">#000000</item>
+	    <item name="android:autofilledHighlight">@android:color/transparent</item>
  	</style>
 
 </resources>

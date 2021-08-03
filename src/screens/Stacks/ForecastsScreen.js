@@ -68,7 +68,7 @@ const ForecastsScreen = ({navigation}) => {
   }
 
   const getForecasts = (token_user) => {   
-    let urlApi = UrlServices(1);
+    let urlApi = UrlServices(3);
     setVisible(true)
     let dateToday = getDate()
     const requestOne = axios({

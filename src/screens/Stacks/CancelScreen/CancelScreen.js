@@ -18,7 +18,7 @@ import UrlServices from '../../../mixins/Services/UrlServices';
 import LinearGradient from 'react-native-linear-gradient';
 
 
-const PaymentScreen = ({navigation, route}) => {
+const CancelScreen = ({navigation, route}) => {
 
     const [data, setData] = React.useState({
         name: '',
@@ -417,7 +417,7 @@ const PaymentScreen = ({navigation, route}) => {
 //                                                         if (v.match(/^\d{2}$/) !== null) {
 //                                                             this.value = v + '/';
 //                                                         }  
-export default PaymentScreen;
+export default CancelScreen;
 
 const {height} = Dimensions.get("screen");
 let widthScreen = Dimensions.get('window').width *1.01;
