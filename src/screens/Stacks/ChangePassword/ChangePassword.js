@@ -123,7 +123,7 @@ const ChangePassword = ({navigation}) => {
     }
     //   api call
     const changePassword = () => {  
-        let urlApi = UrlServices(3); 
+        let urlApi = UrlServices(1); 
         setVisible(true)
 
         if (data.old_p.length === 0 && data.new_p.length === 0 && data.c_new_p.length === 0 ){
@@ -342,7 +342,7 @@ const ChangePassword = ({navigation}) => {
                     {/* <Text style={[styles.text_footer, {marginTop: 20}]}>Nueva Contraseña</Text> */}
                     <View style={styles.action}>
                         <TextInput 
-                            placeholder="NUEVA CONTRASEÑA"
+                            label="NUEVA CONTRASEÑA"
                             mode="outlined"
                             style={styles.textInput}
                             autoCapitalize="none"
@@ -384,8 +384,8 @@ const ChangePassword = ({navigation}) => {
                     {/* <Text style={[styles.text_footer, {marginTop: 20}]}>Confirmar Nueva Contraseña</Text> */}
                     <View style={styles.action}>
                         <TextInput 
-                            label="CONFIRAMR NUEVA CONTRASEÑA"
-                             mode="outlined"
+                            label="CONFIRMAR NUEVA CONTRASEÑA"
+                            mode="outlined"
                             style={styles.textInput}
                             autoCapitalize="none"
                             placeholderTextColor='#01CD01'

@@ -16,6 +16,7 @@ const HomeScreen = ({navigation}) => {
 
   const [data, setData] = React.useState({
     client_token: '',
+    client_data: '',
     data_news: null,
     data_video: null,
     error_message: '',
@@ -30,18 +31,12 @@ const HomeScreen = ({navigation}) => {
   const obtainToken = async () => {
     try {
         const value = await AsyncStorage.getItem('userToken');
-        setClientToken(value)
+        const value2 = await AsyncStorage.getItem('dataUser');
+        const valueParsed = JSON.parse(value2);
+        getNews(value, value2)
     } catch(e) {
         console.log(e);
     }
-  }
-  const setClientToken = (e) => {
-    setData({
-        ...data,
-        client_token: e
-    }); 
-    getNews(e)
-    // getVideo(e)
   }
   const getDate = () => {
     var date = new Date().getDate();
@@ -53,8 +48,8 @@ const HomeScreen = ({navigation}) => {
     return year + '-' + month + '-' + date;//format: dd-mm-yyyy;
 }
   //api call news
-  const getNews = (token_user) => {   
-    let urlApi = UrlServices(3);
+  const getNews = (token_user, data_user) => {   
+    let urlApi = UrlServices(1);
     setVisible(true)
     let dateToday = getDate()
 
@@ -121,6 +116,8 @@ const HomeScreen = ({navigation}) => {
                             ...data,
                             data_news: responseOne,
                             data_video: responseTwo,
+                            client_token: token_user,
+                            client_data: JSON.parse(data_user),
                         })
                     }else{
                         setVisible(false)
@@ -176,7 +173,9 @@ const HomeScreen = ({navigation}) => {
             // }}
             // scrollEventThrottle={0}
           >
-            <Banner />
+            <Banner 
+                allData={data.client_data}
+            />
             <Noticias 
                 dataNews={data.data_news}
             />

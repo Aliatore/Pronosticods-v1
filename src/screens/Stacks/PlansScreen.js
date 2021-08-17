@@ -11,8 +11,9 @@ import Hipismo from '../../assets/img/svg/hipismoLogo.svg';
 import Gold from '../../assets/img/svg/Gold.svg';
 import { ScrollView } from 'react-native-gesture-handler';
 import UrlServices from '../../mixins/Services/UrlServices';
-import Carousel from 'react-native-snap-carousel';
+import Carousel, { Pagination } from 'react-native-snap-carousel';
 import { useNavigation } from '@react-navigation/native';
+import Dots from 'react-native-dots-pagination';
 
 const PlansScreen = () => {
   const [data, setData] = React.useState({
@@ -32,6 +33,7 @@ const PlansScreen = () => {
       {id: 3, key: 'Duracion de un mes'},
       {id: 4, key: 'Disponibilidad inmediata'},
     ],
+    currentIndex: 0,
   });
 
   const navigation = useNavigation();
@@ -61,7 +63,7 @@ const PlansScreen = () => {
 
   //api call
   const getPlans = (token_user, userdata) => {   
-    let urlApi = UrlServices(3);
+    let urlApi = UrlServices(1);
     setVisible(true)
     NetInfo.fetch().then(state => {
         console.log(state.isConnected);
@@ -221,74 +223,76 @@ const PlansScreen = () => {
   const _renderItem = (e) => {
     console.log("item que llega, en render item",e);
     return (
-      <Card key={e.id} style={styles.card}>
-      <Card.Content>
-        <Title numberOfLines={1}  style={styles.bot_text}>{e.item.name != null ? e.item.name : null}</Title>
-        <View style={styles.container_swapp}>
-          <View style={styles.container_swapp2}>
-          {e.name != null && e.name == "Hipismo" ? 
-            (<FlatList
-              data={[
-                {id: 1, key: 'Mas de 200 datos mensuales'},
-                {id: 2, key: 'Solo hipodromos clase A en USA'},
-                {id: 3, key: 'De miercoles a domingo'},
-                {id: 4, key: 'Disponibilidad inmediata'},
-              ]}
-              renderItem={({item}) => <Text key={item.id} style={styles.bot_text2}><Text style={{color: '#01CD01'}}>&bull;</Text> &nbsp;&nbsp;{item.key}</Text>}
-            />) 
-          : 
-          (<FlatList
-              data={[
-                {id: 1, key: '3 pronosticos diarios'},
-                {id: 2, key: 'La jugada del dia'},
-                {id: 3, key: 'Duracion de un mes'},
-                {id: 4, key: 'Disponibilidad inmediata'},
-              ]}
-              renderItem={({item}) => <Text key={item.id} style={styles.bot_text2}><Text style={{color: '#01CD01'}}>&bull;</Text> &nbsp;&nbsp;{item.key}</Text>}
-            />) 
-          }
+      <Card key={e.index} style={[styles.card, {marginTop: 100}]}>
+        <Card.Content>
+          <View style={styles.container_swappp}>
+            {data.client_data.plan_id[e.index].name !== null && data.client_data.plan_id[e.index].name === "Hipismo" ? 
+               <Hipismo 
+                 width="50"
+                 height="70"
+                 style={{marginLeft: 0, resizeMode: 'contain'}}
+               />
+               :
+               <Gold 
+                 width="50" 
+                 style={{marginLeft: 0, resizeMode: 'contain'}}
+               />
+             }
+            <View>
+              <Title numberOfLines={1}  style={styles.bot_text}>{data.client_data.plan_id[e.index].name}</Title>
+              <Text style={styles.title_text}>ESTATUS: <Text style={styles.title_text2}>Activo</Text></Text>
+              <Text style={styles.title_text}>COSTO: <Text style={styles.title_text2}>{data.client_data.plan_id[e.index].amount}</Text></Text>
+              <Text style={styles.title_text}>FECHA DE CORTE: <Text style={styles.title_text2}>{data.client_data.trial_ends_at.split('T')[0]}</Text></Text>
+            </View>
+            <View style={styles.button}>
+                <TouchableOpacity
+                  style={styles.signIn}
+                  onPress={() => navigation.navigate('CancelScreen', {
+                    plan_id: data.client_data.plan_id[e.index].id ? data.client_data.plan_id[e.index].id : '',
+                    u_token: data.client_token ? data.client_token : '', 
+                  })}
+                >
+                    <LinearGradient
+                        colors={['#CD0101', '#CD0101']}
+                        style={styles.signIn}
+                    >
+                        <Text style={[styles.textSign, {
+                            color:'#fff'
+                        }]}>Cancelar</Text>
+                    </LinearGradient>
+                </TouchableOpacity>
+            </View>
           </View>
-          <View style={styles.button}>
-              <TouchableOpacity
-                style={styles.signIn}
-                onPress={() => navigation.navigate('PaymentScreen', {
-                  ammount: e.item.amount ? e.item.amount : '',
-                  currency: e.item.currency ? e.item.currency : '',
-                  name_plan: e.item.name ? e.item.name : '',
-                  plan_id: e.item.id ? e.item.id : '',
-                  u_token: data.client_token ? data.client_token : '', 
-                })}
-              >
-                  <LinearGradient
-                      colors={['#01CD01', '#01CD01']}
-                      style={styles.signIn}
-                  >
-                      <Text style={[styles.textSign, {
-                          color:'#fff'
-                      }]}>ADQUIRIR</Text>
-                  </LinearGradient>
-              </TouchableOpacity>
-          </View>
-        </View>
-      </Card.Content>
-    </Card>    
+        </Card.Content>
+      </Card>  
 
     );
   }
-
-  console.log(data.client_data, "data del cliente");
-
-  // return(
-  //   <View style={styles.container}>
-  //       <Text style={styles.title_text}>Lo sentimos, no se obtuvo contenido</Text>
-  //   </View>
-  // )
+  const onSnapToItem = (index) => {
+    setData({
+      ...data,
+      currentIndex: index,
+    })
+  }
+  const renderPagination = (activeIndex, total, context) => {
+    return <Dots 
+              length={total} 
+              active={activeIndex} 
+              activeDotWidth={10}
+              activeDotHeight={10}
+              passiveDotHeight={10}
+              passiveDotWidth={10}
+              passiveColor={'#282424'}
+              activeColor={'#01CD01'}
+            /> 
+  }
+ 
 
   if (data.client_data !== null || data.client_data !== undefined || data.client_data !== '') {
     if (data.client_data !== null && data.client_data.subscribed == true) {
       return (
         <>
-          <View style={{backgroundColor:'#303030', flex: 1}}>
+          <View style={{backgroundColor:'#303030', flex: 1, justifyContent: 'center', alignItems: 'center'}}>
             {/* <View style={styles.top}>
               <Text style={styles.title_text}>Planes de suscripción</Text>
               <Text style={styles.title_text2}>PLAN ACTIVO</Text>
@@ -297,81 +301,41 @@ const PlansScreen = () => {
               </View>
               <Text style={[styles.title_text, {marginTop: 25, marginBottom: 10}]}>SUGERENCIAS</Text>
             </View> */}
-            <View style={styles.bot}>
-            {/* {data.data_plans != null ? 
+            <>
+            {data.client_data != null && data.client_data != undefined ? 
               (
-                <Carousel
-                  ref={(c) => { data._carousel = c; }}
-                  data={data.data_plans}
-                  renderItem={_renderItem}
-                  sliderWidth={300}
-                  itemWidth={300}
-                />
-                
-              ) : 
-              (
-                <View style={styles.container}>
-                    <Text style={styles.title_text}>Cargando</Text>
-                </View>
-              )
-            } */}
-            {console.log(data.data_plans)}
-            {data.data_plans != null && data.data_plans != undefined ? 
-              (
-                <Card style={styles.card}>
-                  <Card.Content>
-                    <Title numberOfLines={1}  style={styles.bot_text}>{data.client_data.subscriptions[0].name}</Title>
-                    <View style={styles.container_swapp}>
-                      {data.data_plans.name === null && data.data_plans.name === undefined ? 
-                        null
-                        
-                        :
-                        (
-                          <>
-                            {data.data_plans.name === "Hipismo" ? 
-                              <Hipismo 
-                                width="50"
-                                style={{marginLeft: 0}}
-                              />
-                              :
-                              <Gold 
-                                width="50" 
-                                style={{marginLeft: 0}}
-                              />
-                            }
-                          </>
-                        )
-                        
-                      }
-                      <Text style={styles.title_text}>Planes de suscripción</Text>
-                      <Text style={styles.title_text2}>PLAN ACTIVO</Text>
-                      {/* <View style={styles.banner_suscription}>
-                          <Text style={[styles.text_suscription, {textTransform: 'uppercase'}]}></Text>
-                      </View> */}
-                      <View style={styles.button}>
-                          <TouchableOpacity
-                            style={styles.signIn}
-                            onPress={() => navigation.navigate('PaymentScreen', {
-                              ammount: data.data_plans.amount ? data.data_plans.amount : '',
-                              currency: data.data_plans.currency ? data.data_plans.currency : '',
-                              name_plan: data.data_plans.name ? data.data_plans.name : '',
-                              plan_id: data.data_plans.id ? data.data_plans.id : '',
-                              u_token: data.client_token ? data.client_token : '', 
-                            })}
-                          >
-                              <LinearGradient
-                                  colors={['#CD0101', '#CD0101']}
-                                  style={styles.signIn}
-                              >
-                                  <Text style={[styles.textSign, {
-                                      color:'#fff'
-                                  }]}>Cancelar</Text>
-                              </LinearGradient>
-                          </TouchableOpacity>
-                      </View>
-                    </View>
-                  </Card.Content>
-                </Card>  
+                <>
+                  <Carousel
+                    ref={(c) => { data._carousel = c; }}
+                    data={data.data_plans !== null || data.data_plans !== undefined || data.data_plans !== '' ? data.data_plans : ''}
+                    renderItem={_renderItem}
+                    sliderWidth={300}
+                    itemWidth={300}
+                    onSnapToItem={onSnapToItem}
+                  /> 
+                  <Pagination
+                    activeDotIndex={data.currentIndex}
+                    dotsLength={data.client_data.plan_id.length}
+                    renderDots={renderPagination}
+                    containerStyle={{ backgroundColor: '#303030' }}
+                    dotStyle={{
+                        width: 10,
+                        height: 10,
+                        borderRadius: 5,
+                        marginHorizontal: 8,
+                        backgroundColor: 'rgba(255, 255, 255, 0.92)'
+                    }}
+                    inactiveDotStyle={{
+                        width: 10,
+                        height: 10,
+                        borderRadius: 5,
+                        marginHorizontal: 8,
+                        backgroundColor: 'rgba(255, 255, 255, 0.92)'
+                    }}
+                    inactiveDotOpacity={0.4}
+                    inactiveDotScale={0.6}
+                  />
+                </>
                 
               ) : 
               (
@@ -382,7 +346,7 @@ const PlansScreen = () => {
             }
               
                
-            </View>
+            </>
           </View>
           <View>
             <Portal>
@@ -445,13 +409,38 @@ const PlansScreen = () => {
                 <View style={{marginTop: 20}}>
                     {data.data_plans != null ? 
                       (
-                        <Carousel
-                          ref={(c) => { data._carousel = c; }}
-                          data={data.data_plans !== null || data.data_plans !== undefined || data.data_plans !== '' ? data.data_plans : ''}
-                          renderItem={_renderItem2}
-                          sliderWidth={300}
-                          itemWidth={300}
-                        />
+                        <>
+                          <Carousel
+                            ref={(c) => { data._carousel = c; }}
+                            data={data.data_plans !== null || data.data_plans !== undefined || data.data_plans !== '' ? data.data_plans : ''}
+                            renderItem={_renderItem2}
+                            sliderWidth={300}
+                            itemWidth={300}
+                            onSnapToItem={onSnapToItem}
+                          /> 
+                          <Pagination
+                            activeDotIndex={data.currentIndex}
+                            dotsLength={data.client_data.plan_id.length}
+                            renderDots={renderPagination}
+                            containerStyle={{ backgroundColor: '#303030' }}
+                            dotStyle={{
+                                width: 10,
+                                height: 10,
+                                borderRadius: 5,
+                                marginHorizontal: 8,
+                                backgroundColor: 'rgba(255, 255, 255, 0.92)'
+                            }}
+                            inactiveDotStyle={{
+                                width: 10,
+                                height: 10,
+                                borderRadius: 5,
+                                marginHorizontal: 8,
+                                backgroundColor: 'rgba(255, 255, 255, 0.92)'
+                            }}
+                            inactiveDotOpacity={0.4}
+                            inactiveDotScale={0.6}
+                          />
+                        </>
                       ) : 
                       (
                         <View style={styles.container}>
@@ -533,6 +522,12 @@ const styles = StyleSheet.create({
     alignItems: 'center', 
     justifyContent: 'center', 
   }, 
+  container_swappp: { 
+    textAlign: 'center', 
+    justifyContent: 'flex-end', 
+    alignItems: 'center',
+    backgroundColor:'#282424'
+  },
   container_swapp: {
     textAlign: 'center', 
     justifyContent: 'center', 
@@ -547,6 +542,13 @@ const styles = StyleSheet.create({
     flex: 1, 
     alignItems: 'center', 
     justifyContent: 'flex-start', 
+  },
+  top2: {
+    flex: 1, 
+    alignItems: 'center', 
+    justifyContent: 'center', 
+    marginLeft: 10,
+    marginRight: 10,
   },
   bot: {
     flex: 1.5, 
@@ -606,7 +608,7 @@ const styles = StyleSheet.create({
   },
   card:{
     width: '100%',
-    height: 280,
+    height: 'auto',
     // width: widthScreen,
     // marginTop: 10,
     backgroundColor: '#282424',

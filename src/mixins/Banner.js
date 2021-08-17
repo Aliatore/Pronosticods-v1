@@ -2,22 +2,28 @@ import React from 'react';
 import { View, Text, Image, StyleSheet, Dimensions, TouchableOpacity} from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 
-const Banner = () => {
+const Banner = ({allData}) => {
     const navigation = useNavigation();
+    console.log(allData.banner);
 
-    return(
-        <TouchableOpacity  onPress={() => navigation.navigate('Notifications')}>
-            <View style={styles.card}>
-                <View style={styles.banner}>
-                    <View style={styles.banner_background} />
-                    <Image style={styles.card_img} source={require('../assets/img/png/LeBron.png')} />
-                    <View style={styles.banner_content}>
-                        <Text style={styles.banner_text}>Unete a nuestros planes especiales</Text>
+    if (allData) {
+        return(
+            <TouchableOpacity  onPress={() => navigation.navigate('Notifications')}>
+                <View style={styles.card}>
+                    <View style={styles.banner}>
+                        <View style={styles.banner_background} /> 
+                        <Image style={styles.card_img} source={{uri: allData.banner.image_url}} />
+                        <View style={styles.banner_content}>
+                            <Text style={styles.banner_text}>{allData.banner.titulo1} {allData.banner.titulo2}</Text>
+                        </View>
                     </View>
                 </View>
-            </View>
-        </TouchableOpacity>
-    )
+            </TouchableOpacity>
+        )
+        
+    }else{
+        return null;
+    }
 }
 
 export default Banner;
@@ -70,6 +76,8 @@ const styles = StyleSheet.create({
         justifyContent: 'center', 
         alignItems: 'center',
         position: 'relative',
+        width: 320, 
+        height: 400,
         zIndex: 2
     },
     card_cover:{

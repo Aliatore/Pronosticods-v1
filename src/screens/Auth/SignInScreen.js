@@ -30,7 +30,8 @@ const SignInScreen = ({navigation}) => {
         email: '',
         password: '',
         error_message: '',
-        viewSecure: true
+        viewSecure: true,
+        prueba_: null
 
     });
     const [visible, setVisible] = React.useState(false);
@@ -72,7 +73,7 @@ const SignInScreen = ({navigation}) => {
         });
     }
     const loginHandle = (email, password) => {
-        let urlApi = UrlServices(3);
+        let urlApi = UrlServices(1);
         setVisible(true)
         NetInfo.fetch().then(state => {
             console.log(state.isConnected);
@@ -108,7 +109,9 @@ const SignInScreen = ({navigation}) => {
                             setAlert(true)
                             setData({
                                 ...data,
-                                error_message: `Ha ocurrido un error, ${error}`
+                                error_message: `Ha ocurrido un error, ${error}`,
+                                prueba_: JSON.stringify(error)
+
                             })
                         })
                         .then(response => {
@@ -124,7 +127,8 @@ const SignInScreen = ({navigation}) => {
                                 setAlert(true)
                                 setData({
                                     ...data,
-                                    error_message: `Ha ocurrido un error, ${response.data.errors.email}`
+                                    error_message: `Ha ocurrido un error, ${response.data.errors.email}`,
+                                    prueba_: JSON.stringify(response)
                                 })
                             }
                         })
@@ -134,7 +138,8 @@ const SignInScreen = ({navigation}) => {
                             setAlert(true)
                             setData({
                                 ...data,
-                                error_message: `Ha ocurrido un error, ${err}`
+                                error_message: `Ha ocurrido un error, ${err}`,
+                                prueba_: JSON.stringify(err)
                             })
                     }   
                 }
@@ -149,7 +154,7 @@ const SignInScreen = ({navigation}) => {
         }); 
     }
     const executeValidation = async (email, password, token) => {
-        let urlApi = UrlServices(3);
+        let urlApi = UrlServices(1);
         const email_user = await email;
         const password_user = await password;
         const token_user = await token;
@@ -178,7 +183,8 @@ const SignInScreen = ({navigation}) => {
                         setAlert(true)
                         setData({
                             ...data,
-                            error_message: `Ha ocurrido un error, ${error}`
+                            error_message: `Ha ocurrido un error, ${error}`,
+                            prueba_: JSON.stringify(error)
                         })
                     })
                     .then(response => {
@@ -207,7 +213,8 @@ const SignInScreen = ({navigation}) => {
                     setAlert(true)
                     setData({
                         ...data,
-                        error_message: `Ha ocurrido un error, ${err}`
+                        error_message: `Ha ocurrido un error, ${err}`,
+                        prueba_: JSON.stringify(err)
                     })
                 }
             }else{
@@ -233,15 +240,15 @@ const SignInScreen = ({navigation}) => {
                         <ScrollView style={styles.scrollviewSize} showsVerticalScrollIndicator={false}>
                             <View style={{justifyContent: 'center', alignItems: 'center'}}>
                                 <Layer style={{marginBottom: 50, marginTop: 50}}/>
+                                {/* <Text style={styles.text_footer}>{data.prueba_ != null ? data.prueba_ : "vacio"}</Text> */}
                             </View>
                             <View style={styles.login}>
                                 {/* <Text style={styles.text_footer}>EMAIL</Text> */}
                                 <View style={styles.action}>
                                     <TextInput 
                                         label="EMAIL"
+                                        style={[styles.textInput, {color: '#fff'}]}
                                         mode="outlined"
-                                        style={styles.textInput}
-                                        autoCapitalize="none"
                                         placeholderTextColor='#01CD01'
                                         outlineColor='#01CD01'
                                         underlineColor='#01CD01'
@@ -256,12 +263,11 @@ const SignInScreen = ({navigation}) => {
                                     />
                                 </View>
                                 {/* <Text style={[styles.text_footer, {marginTop: 20}]}>CONTRASEÑA</Text> */}
-                                <View style={[styles.action, {marginTop: 20}]}>
+                                <View style={styles.action}>
                                     <TextInput 
                                         label="CONTRASEÑA"
+                                        style={[styles.textInput, {color: '#fff'}]}
                                         mode="outlined"
-                                        style={styles.textInput}
-                                        autoCapitalize="none"
                                         placeholderTextColor='#01CD01'
                                         outlineColor='#01CD01'
                                         underlineColor='#01CD01'
@@ -273,6 +279,7 @@ const SignInScreen = ({navigation}) => {
                                             },
                                         }}
                                         secureTextEntry={data.viewSecure ? true : false}
+                                        autoCapitalize="none"
                                         onChangeText={(e) => setPassword(e)}
                                     />
                                     <View style={styles.custom_eye}>
@@ -284,14 +291,14 @@ const SignInScreen = ({navigation}) => {
                                                     name="eye-off"
                                                     color="grey"
                                                     size={20}
-                                                    style={{color: "#01CD01", marginRight: 10}}
+                                                    style={{color: "#fff", marginRight: 10}}
                                                 />
                                             :
                                                 <Feather 
                                                     name="eye"
                                                     color="grey"
                                                     size={20}
-                                                    style={{color: "#01CD01", marginRight: 10}}
+                                                    style={{color: "#fff", marginRight: 10}}
                                                 />
                                             }   
                                         </TouchableOpacity>
@@ -456,13 +463,8 @@ const styles = StyleSheet.create({
   },
   action: {
     flexDirection: 'row',
-    marginTop: 15,
-    color: '#fff',
-    // borderColor: '#01CD01',
-    // borderWidth: 1.5,
-    // borderRadius: 5,
-    // paddingTop: 10,
-    // paddingLeft: 10
+    marginTop: 10,
+
   },
   text_footer: {
     color: '#fff',
@@ -475,8 +477,9 @@ const styles = StyleSheet.create({
   textInput: {
     flex: 1,
     marginTop: Platform.OS === 'ios' ? 0 : -15,
-    paddingTop: 5,
-    fontSize: 16,
+    padding: 10,
+    color: '#fff',
+    fontSize: 16
   },
   scrollviewSize: {
     width: '100%'
@@ -489,7 +492,6 @@ const styles = StyleSheet.create({
     width: 50, 
     zIndex: 5,
     right: 0,
-    top: 14
+    top: 21
   }
 });
-

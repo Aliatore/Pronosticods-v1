@@ -1,253 +1,91 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, Image, StyleSheet, Dimensions, TouchableOpacity, TextInput} from 'react-native';
-import { Avatar, Button, Card, Title, Paragraph } from 'react-native-paper';
+import { View, Text, StatusBar, StyleSheet, Dimensions, TouchableOpacity, TextInput, ScrollView} from 'react-native';
+import { Avatar, Button, Card, Title, Paragraph, Portal, Dialog } from 'react-native-paper';
+import { Spinner } from 'native-base'
+import AwesomeAlert from 'react-native-awesome-alerts';
 import { Picker as SelectPicker } from '@react-native-picker/picker';
 import * as Animatable from 'react-native-animatable';
 import LinearGradient from 'react-native-linear-gradient';
+import axios from 'axios';
+import NetInfo from "@react-native-community/netinfo";
 import Countries from '../../model/countries'
+import UrlServices from '../../mixins/Services/UrlServices';
 import AsyncStorage from '@react-native-community/async-storage';
 
-const UserProfileData = ({dataUser, have_bets, clientName, lastname, country, bethouse, email, service}) => {
+const UserProfileData = ({dataUser, have_bets}) => {
+
+    console.log("a", have_bets);
+
+    const [visible, setVisible] = React.useState(false);
+    const [alert, setAlert] = React.useState(false);
+    const [errorA, setError] = React.useState("");
 
     const [data, setData] = React.useState({
-        name: clientName ? clientName : null,
-        lastname: lastname ? lastname : null,
-        service: service ? service : null,
-        country: country ? country : null,
+        name: '',
+        lastname: '',
+        service: '',
+        country: '',
         date_selected: '',
-        bet_house: bethouse ? bethouse : null,
-        email: email ? email : null,
+        bet_house: '',
+        email: '',
         password: '',
         confirm_password: '',
         error_message: '',
         viewSecure: true,
         viewSecure2: true,
     });
-    const setName = async(e) => {
-        if(e.trim().length >= 3 ) {
-            setData({
-                ...data,
-                name: e
-            });
-            try {
-                await AsyncStorage.setItem('toUpload_username', e)
-            } catch (e) {
-                console.log(e);
-            }
-        } else {
-            setData({
-                ...data,
-                name: e
-            });
-        }
-        console.log(e);
-    }
-    const setLastname = async(e) => {
-        if(e.trim().length >= 3 ) {
-            setData({
-                ...data,
-                lastname: e
-            });
-            try {
-                await AsyncStorage.setItem('toUpload_lastname', e)
-            } catch (e) {
-                console.log(e);
-            }
-        } else {
-            setData({
-                ...data,
-                lastname: e
-            });
-        }
-        console.log(e);
-    }
-    const setCountry = async(e) => {
-        if(e.length !== 0 ) {
-            setData({
-                ...data,
-                country: e
-            });
-            try {
-                await AsyncStorage.setItem('toUpload_country', e.toString())
-            } catch (e) {
-                console.log(e);
-            }
-        } else {
-            setData({
-                ...data,
-                country: e
-            });
-        }
-        console.log(e);
-    }
-    const setBetHouse = async(e) => {
-        if(e.length !== 0 ) {
-            setData({
-                ...data,
-                setBetHouse: e
-            });
-            try {
-                await AsyncStorage.setItem('toUpload_bethouse', e)
-            } catch (e) {
-                console.log(e);
-            }
-        } else {
-            setData({
-                ...data,
-                setBetHouse: e
-            });
-        }
-        console.log(e);
-    }
-    const setCountries = () =>{
-        return Countries.map((e, i) => {
-          return <SelectPicker.Item key={i} label={e.name} value={e.id} />
-        }) 
-    }
-    const setEmail = async(e) => {
-        if(e.length !== 0 ) {
-            setData({
-                ...data,
-                email: e
-            });
-            try {
-                await AsyncStorage.setItem('toUpload_email', e)
-            } catch (e) {
-                console.log(e);
-            }
-        } else {
-            setData({
-                ...data,
-                email: e
-            });
-        }
-        console.log(e);
-    }
-    const setService = async(e) => {
-        if(e.length !== 0 ) {
-            setData({
-                ...data,
-                service: e
-            });
-            try {
-                await AsyncStorage.setItem('toUpload_service', e)
-            } catch (e) {
-                console.log(e);
-            }
-        } else {
-            setData({
-                ...data,
-                service: e
-            });
-        }
-        console.log(e);
-    }
+    
 
     if (dataUser !== null && dataUser !== '') {
         return(
             <>
-                <View style={styles.card}>
-                    <View style={{justifyContent: 'center', alignItems: 'center'}}>
-                        <Title style={styles.title_white}>Datos Generales</Title>
-                    </View>
-                    <View style={{justifyContent: 'center', alignItems: 'center'}}>
-                        <TouchableOpacity
-                            disabled={true}
-                            style={[styles.signIn, {
-                                borderColor: '#fff',
-                                borderWidth: 1,
-                                marginTop: 18
-                            }]}
-                        >
-                             <TextInput 
-                                placeholder="NOMBRE"
-                                style={styles.textInput}
-                                autoCapitalize="none"
-                                placeholderTextColor='#fff'
-                                onChangeText={(e) => setName(e)}
-                            />
-                        </TouchableOpacity>
-                    </View>
-                    <View style={{justifyContent: 'center', alignItems: 'center'}}>
-                        <TouchableOpacity
-                            disabled={true}
-                            style={[styles.signIn, {
-                                borderColor: '#fff',
-                                borderWidth: 1,
-                                marginTop: 25
-                            }]}
-                        >
-                            <TextInput 
-                                placeholder="APELLIDO"
-                                style={styles.textInput}
-                                autoCapitalize="none"
-                                placeholderTextColor='#fff'
-                                onChangeText={(e) => setLastname(e)}
-                            />
-                        </TouchableOpacity>
-                    </View>
-                    <View style={[styles.action_picker, {marginTop: 25}]}>
-                        <SelectPicker
-                            selectedValue={data.country}
-                            style={styles.picker}
-                            mode={'dialog'}
-                            onValueChange={(e) => setCountry(e)}
-                        >
-                            <SelectPicker.Item value="" label="SELECCIONA TU PAÍS" />
-                            {Countries !== null ? setCountries() : null}
-                        </SelectPicker>
-                    </View>
-                    <View style={{justifyContent: 'center', alignItems: 'center'}}>
-                        <TouchableOpacity
-                            disabled={true}
-                            style={[styles.signIn, {
-                                borderColor: '#fff',
-                                borderWidth: 1,
-                                marginTop: 25
-                            }]}
-                        >
-                           <TextInput 
-                                placeholder="CASA DE APUESTAS"
-                                style={styles.textInput}
-                                autoCapitalize="none"
-                                placeholderTextColor='#fff'
-                                onChangeText={(e) => setBetHouse(e)}
-                            />
-                        </TouchableOpacity>
-                    </View>
-                    <View style={{justifyContent: 'center', alignItems: 'center'}}>
-                        <TouchableOpacity
-                            disabled={true}
-                            style={[styles.signIn, {
-                                borderColor: '#fff',
-                                borderWidth: 1,
-                                marginTop: 25,
-                                marginBottom:25
-                            }]}
-                        >
-                            <TextInput 
-                                placeholder="CORREO"
-                                style={styles.textInput}
-                                autoCapitalize="none"
-                                placeholderTextColor='#fff'
-                                onChangeText={(e) => setEmail(e)}
-                            />
-                        </TouchableOpacity>
-                    </View>
-                    {/* <View style={[styles.action_picker, {marginTop: 25, marginBottom:25}]}>
-                        <SelectPicker
-                            selectedValue={data.service}
-                            style={styles.picker}
-                            mode={'dialog'}
-                            onValueChange={(e) => setService(e)}
-                        >
-                            <SelectPicker.Item value="" label="SELECCIONA TU PLAN" />
-                            <SelectPicker.Item label="PLAN GOLD" value="gold" />
-                            <SelectPicker.Item label="PLAN SILVER" value="silver" />
-                            <SelectPicker.Item label="PLAN BRONZE" value="bronze" />
-                        </SelectPicker>
-                    </View> */}
-                </View>
+                
+                <View>
+        <Portal>
+              <StatusBar
+                  barStyle={Platform.OS === true && theme.dark ? 'light-content' : 'light-content'}
+                  backgroundColor='#000000'
+              />
+              <Dialog 
+                  visible={visible} 
+                  // onDismiss={() => setVisible(false)}
+                  dismissable={false}
+                  style={{borderRadius: 20, backgroundColor: 'transparent'}}
+              >
+                  <Dialog.ScrollArea>
+                  <ScrollView contentContainerStyle={{paddingHorizontal: 24, marginTop: 50, marginBottom: 30, alignItems: 'center'}}>
+                      <Spinner 
+                          color={"#fff"}
+                      />                          
+                  </ScrollView>
+                  </Dialog.ScrollArea>
+              </Dialog>
+          </Portal>
+      </View>
+      <View>
+          <AwesomeAlert
+              show={alert}
+              showProgress={false}
+              title="INFORMACIÓN"
+              message={errorA}
+              closeOnTouchOutside={true}
+              closeOnHardwareBackPress={false}
+              showCancelButton={false}
+              showConfirmButton={true}
+              // cancelText="CANCELAR"
+              confirmText="ACEPTAR"
+              confirmButtonColor="#01CD01"
+              contentContainerStyle={{backgroundColor: '#262222'}}
+              titleStyle={{color: '#fff'}}
+              messageStyle={{color: '#fff', textAlign: 'center'}}
+              // onCancelPressed={() => {
+              //     this.hideAlert();
+              // }}
+              onConfirmPressed={() => {
+                  setAlert(false);
+              }}
+          />
+      </View>
             </>
         )
     } else {
@@ -277,6 +115,12 @@ const styles = StyleSheet.create({
         marginBottom: 20,
         backgroundColor: '#131011',
         borderRadius: 5
+    },
+    container_title:{
+        flex: 1, 
+        justifyContent: 'center', 
+        alignContent: 'center',
+        width: widthScreen,
     },
     title_white:{
         color: '#fff',
@@ -354,4 +198,11 @@ const styles = StyleSheet.create({
         paddingTop: 15,
         paddingLeft: 10
       },
+      text_header: {
+        color: '#fff',
+        fontSize: 14,
+        fontFamily: 'Montserrat-Bold',
+        textAlign: 'center',
+        marginBottom: 20,
+    },
 })

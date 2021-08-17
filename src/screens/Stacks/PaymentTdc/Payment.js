@@ -117,7 +117,7 @@ const PaymentScreen = ({navigation, route}) => {
     }
 
     const sendPayment = () => {   
-        let urlApi = UrlServices(3);
+        let urlApi = UrlServices(1);
         setVisible(true)
         if (data.caducidad.length === 0 ||  data.cvv.length === 0 ) {
             setVisible(false)

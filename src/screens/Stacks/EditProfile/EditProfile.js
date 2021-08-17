@@ -4,9 +4,13 @@ import {
     StyleSheet, 
     StatusBar, 
     ScrollView,
-    TouchableOpacity
+    TouchableOpacity,
+    Text, 
+    Dimensions, 
+    TextInput
 } from 'react-native';
-import { Portal, Dialog } from 'react-native-paper';
+import { Avatar, Button, Card, Title, Paragraph, Portal, Dialog } from 'react-native-paper';
+import { Picker as SelectPicker } from '@react-native-picker/picker';
 import { Spinner } from 'native-base'
 import AwesomeAlert from 'react-native-awesome-alerts';
 import axios from 'axios';
@@ -19,6 +23,7 @@ import UserProfile from '../../../mixins/EditProfile/UserProfile'
 import UserProfileData from '../../../mixins/EditProfile/UserProfileData'
 import DefaultUser from '../../../assets/img/png/default_user.png';
 import UrlServices from '../../../mixins/Services/UrlServices';
+import Countries from '../../../model/countries';
 
 const EditProfile = ({navigation}) => {
 
@@ -28,14 +33,22 @@ const EditProfile = ({navigation}) => {
     error_message: '',
     date_today: '',
     home_gambler: '',
+    paises: '',
     uri_profile: DefaultUser,
     clientName: '', 
     lastname: '', 
-    country: '', 
     bethouse: '', 
     email: '', 
+    callApi: false,
+    name: '',
     service: '',
-
+    country: '',
+    date_selected: '',
+    bet_house: '',
+    password: '',
+    confirm_password: '',
+    viewSecure: true,
+    viewSecure2: true,
   });
 
   const theme = useTheme();
@@ -45,15 +58,93 @@ const EditProfile = ({navigation}) => {
     try {
         const value = await AsyncStorage.getItem('dataUser');
         const valueParsed = JSON.parse(value);
-        setClientData(valueParsed)
+        getAllData(valueParsed);
     } catch(e) {
         console.log(e);
     }
   }
-  const setClientData = (e) => {
-    setData({
-        ...data,
-        data_user: e
+  const getAllData = (e) => {   
+    let urlApi = UrlServices(1);
+    setVisible(true)
+    console.log(e);
+
+    const requestOne = axios({
+        method: 'get',
+        url: `${urlApi}/casa_apuesta`,
+        timeout: 9000,
+        headers: {
+            'Authorization': `Bearer ${e.api_token}`,
+            'Content-Type': 'application/json',
+            'X-Requested-With': 'XMLHttpRequest'
+        },
+        validateStatus: (status) => {
+            return true; 
+        }
+    });
+    const requestTwo = axios({
+        method: 'get',
+        url: `${urlApi}/country?limit=all`,
+        timeout: 9000,
+        headers: {
+            'Authorization': `Bearer ${e.api_token}`,
+            'Content-Type': 'application/json',
+            'X-Requested-With': 'XMLHttpRequest'
+        },
+        validateStatus: (status) => {
+            return true; 
+        }
+    })
+
+    NetInfo.fetch().then(state => {
+        if (state.isConnected === true){
+            if (e.api_token.length === 0) {
+                setVisible(false)
+                setAlert(true)
+                setData({
+                    ...data,
+                    error_message: `Error al obtener el token del usuario, intente nuevamente`
+                })
+            } else {
+                axios.all([requestOne, requestTwo]).then(axios.spread((...responses) => {
+                    const responseOne = responses[0].data.data;
+                    const responseTwo = responses[1].data.data;
+
+                    console.log(responseOne);
+                    console.log(responseTwo);
+                    
+                    if (responses[0].status === 200 || responses[0].status === 201 && responses[1].status === 200 || responses[1].status === 201) {
+                        setVisible(false)
+                        setData({
+                            ...data,
+                            home_gambler: responseOne,
+                            paises: responseTwo,
+                            data_user: e,
+                        })
+                    }else{
+                        setVisible(false)
+                        setAlert(true)
+                        setData({
+                            ...data,
+                            error_message: `Ha ocurrido un error.`
+                        })
+                    }
+                })).catch(errors => {
+                    setVisible(false)
+                    setAlert(true)
+                    setData({
+                    ...data,
+                    error_message: `Ha ocurrido un error, ${errors}`
+                    })
+                })
+            }
+        }else{
+            setData({
+                ...data,
+                error_message: 'Por favor, revise su conexión a internet.',
+            });
+            setVisible(true)
+            setLoginState(false)
+        }
     }); 
   }
   const getDate = () => {
@@ -64,145 +155,186 @@ const EditProfile = ({navigation}) => {
     if(month<10)month='0'+month; //agrega cero si el menor de 10
 
     return year + '-' + month + '-' + date;//format: dd-mm-yyyy;
-}
-  //api call
-  const updateProfile = async() => {   
-    let urlApi = UrlServices(4); 
-    setVisible(true)
-    console.log(data.data_user.api_token)
+  }
+  const setName = async(e) => {
+    if(e.trim().length >= 3 ) {
+        setData({
+            ...data,
+            name: e
+        });
+    } else {
+        setData({
+            ...data,
+            name: e
+        });
+    }
+    console.log(e);
+  }
+  const setLastname = async(e) => {
+    if(e.trim().length >= 3 ) {
+        setData({
+            ...data,
+            lastname: e
+        });
+    } else {
+        setData({
+            ...data,
+            lastname: e
+        });
+    }
+    console.log(e);
+  }
+  const setCountry = async(e) => {
+    if(e.length !== 0 ) {
+        setData({
+            ...data,
+            country: e
+        });
+    } else {
+        setData({
+            ...data,
+            country: e
+        });
+    }
+    console.log(e);
+  }
+  const setBetHouse = async(e) => {
+    if(e.length !== 0 ) {
+        setData({
+            ...data,
+            bet_house: e
+        });
+    } else {
+        setData({
+            ...data,
+            bet_house: e
+        });
+    }
+    console.log(e);
+  }
+  const setCountries = () =>{
+    if (data.paises !== undefined && data.paises !== null && data.paises !== "") {
+        return data.paises.map((e, i) => {
+          return <SelectPicker.Item key={i} label={e.name} value={e.id} />
+        }) 
+    }
+  }
+  const setBettHouses = () =>{
+      if (data.home_gambler !== undefined && data.home_gambler !== null && data.home_gambler !== "") {
+          return data.home_gambler.map((e, i) => {
+            return <SelectPicker.Item key={i} label={e.name} value={e.id} />
+          }) 
+      }
+  }
+  const setEmail = async(e) => {
+    if(e.length !== 0 ) {
+        setData({
+            ...data,
+            email: e
+        });
+    } else {
+        setData({
+            ...data,
+            email: e
+        });
+    }
+    console.log(e);
+  }
+  const setService = async(e) => {
+    if(e.length !== 0 ) {
+        setData({
+            ...data,
+            service: e
+        });
+    } else {
+        setData({
+            ...data,
+            service: e
+        });
+    }
+    console.log(e);
+  }
+  const updateProfile = (e) => {
     try {
-        const it1 = await AsyncStorage.getItem('toUpload_uri_img');
-        const it2 = await AsyncStorage.getItem('toUpload_username');
-        const it3 = await AsyncStorage.getItem('toUpload_lastname');
-        const it4 = await AsyncStorage.getItem('toUpload_country');
-        const it5 = await AsyncStorage.getItem('toUpload_bethouse');
-        const it6 = await AsyncStorage.getItem('toUpload_email');
-        const it7 = await AsyncStorage.getItem('toUpload_service');
-        if(it1 !== null &&  it2 !== null && it3 !== null && it4 !== null &&
-            it5 !== null && it6 !== null && it7 !== null) {
-            NetInfo.fetch().then(state => {
-                console.log(state.isConnected);
-                if (state.isConnected === true){
-                    if (data.data_user.api_token.length === 0) {
+        let urlApi = UrlServices(1);
+        setVisible(true)
+        NetInfo.fetch().then(state => {
+            console.log(state.isConnected);
+            if (state.isConnected === true){
+                try {
+                    axios({
+                        method: 'post',
+                        url: `${urlApi}/user`,
+                        timeout: 9000,
+                        data: {
+                            first_name: data.name,
+                            last_name: data.lastname,
+                            country_id: data.country,
+                            casa_apuestas_id: data.setBetHouse
+                        },
+                        headers: {
+                          'Authorization': `Bearer ${data.data_user.api_token}`,
+                          'Content-Type': 'application/json; charset=utf-8',
+                          'X-Requested-With': 'XMLHttpRequest',
+                          'Access-Control-Allow-Origin': '*',
+                          'Access-Control-Allow-Credentials': 'true'
+                        },
+                        validateStatus: (status) => {
+                            return true; 
+                        }
+                    })
+                    .catch(function(error) {
+                        console.log(error);
                         setVisible(false)
                         setAlert(true)
                         setData({
                             ...data,
-                            error_message: `Error al obtener el token del usuario, intente nuevamente`
+                            error_message: `Ha ocurrido un error, ${error}`
                         })
-                    } else {
-
-                        const requestOne = axios({
-                            method: 'post',
-                            url: `${urlApi}/user`,
-                            timeout: 9000,
-                            data: {
-                                first_name: it2,
-                                last_name: it3,
-                                country_id: it4,
-                                casa_apuestas_id: it5
-                            },
-                            headers: {
-                              'Authorization': `Bearer ${data.data_user.api_token}`,
-                              'Content-Type': 'application/json; charset=utf-8',
-                              'X-Requested-With': 'XMLHttpRequest',
-                              'Access-Control-Allow-Origin': '*',
-                              'Access-Control-Allow-Credentials': 'true'
-                            },
-                            validateStatus: (status) => {
-                                return true; 
-                            }
-                        });
-                        const requestTwo = axios({
-                            method: 'put',
-                            url: `${urlApi}/user/avatar`,
-                            timeout: 9000,
-                            data: {
-                                avatar: it1,
-                            },
-                            headers: {
-                                'Authorization': `Bearer ${data.data_user.api_token}`,
-                                "Content-Type": "application/json; charset=utf-8",
-                                "X-Requested-With": "XMLHttpRequest",
-                                "Access-Control-Allow-Origin": "*",
-                                "Access-Control-Allow-Credentials": "true",
-                            },
-                            validateStatus: (status) => {
-                                return true; 
-                            }
-                        });
-
-                        axios.all([requestOne, requestTwo]).then(axios.spread( async(...responses) => {
-                            const responseOne = responses[0];
-                            const responseTwo = responses[1];
-                            console.log("RESPUESTA DE 1",responseOne);
-                            console.log("RESPUESTA DE 2",responseTwo);
-                            
-                            if (responses[0].status === 200 || responses[0].status === 201 && responses[1].status === 200 || responses[1].status === 201) {
-                                setVisible(false)
-                                setData({
-                                    ...data,
-                                    uri_profile: DefaultUser,
-                                    clientName: '', 
-                                    lastname: '', 
-                                    country: '', 
-                                    bethouse: '', 
-                                    email: '', 
-                                    service: '',
-                                })
-                                await AsyncStorage.removeItem('toUpload_uri_img');
-                                await AsyncStorage.removeItem('toUpload_username');
-                                await AsyncStorage.removeItem('toUpload_lastname');
-                                await AsyncStorage.removeItem('toUpload_country');
-                                await AsyncStorage.removeItem('toUpload_bethouse');
-                                await AsyncStorage.removeItem('toUpload_email');
-                                await AsyncStorage.removeItem('toUpload_service');
-                            }else{
-                                // let error = response.data.errors
-                                // let parsed_error = JSON.stringify(error)
-                                // console.log(parsed_error);
-                                setVisible(false)
-                                setAlert(true)
-                                setData({
-                                    ...data,
-                                    error_message: `Ha ocurrido un error. ${responses[0].status}`
-                                })
-                            }
-                        })).catch(errors => {
-                            // react on errors.
-                            // console.log(errors);
-                            // console.log(error);
+                        
+                    })
+                    .then(response => {
+                        console.log(response.data);
+                        if (response.status === 200) {
                             setVisible(false)
                             setAlert(true)
                             setData({
-                            ...data,
-                            error_message: `Ha ocurrido un error, ${errors}`
+                                ...data,
+                                error_message: `Su perfil ha sido editado satisfactoriamente.`
                             })
+                            navigation.goBack();
+                        }else{
+                            setVisible(false)
+                            setAlert(true)
+                            setData({
+                                ...data,
+                                error_message: `Ha ocurrido un error`
+                            })
+                        }
+                    })
+                } catch (err) {
+                        console.log('catch de errores: ', err);
+                        setVisible(false)
+                        setAlert(true)
+                        
+                        setData({
+                            ...data,
+                            error_message: `Ha ocurrido un error, ${error}`
                         })
-                    }
-                }else{
-                    setData({
-                        ...data,
-                        error_message: 'Por favor, revise su conexión a internet.',
-                    });
-                    setVisible(true)
-                }
-            }); 
-        }else{
-            setVisible(false)
-            setAlert(true)
-            setData({
-                ...data,
-                error_message: `Los datos a enviar no pueden estar vacios`
-            })
-        }
-    } catch(e) {
+                } 
+            }else{
+                setData({
+                    ...data,
+                    error_message: `Ha ocurrido un error`
+                })
+                setVisible(true)
+                
+            }
+        }); 
+    } catch (e) {
         console.log(e);
-    }
-
-    
-
-  
+        
+    } 
   }
 
   //this hook calls the token function
@@ -213,6 +345,7 @@ const EditProfile = ({navigation}) => {
   //state hooks for popups
   const [visible, setVisible] = React.useState(false);
   const [alert, setAlert] = React.useState(false);
+        
   
     return (
       <>
@@ -222,7 +355,7 @@ const EditProfile = ({navigation}) => {
             animation="fadeInUpBig"
             style={styles.top}
         >   
-            <View style={styles.container_title}>
+            <View style={styles.container_title2}>
                 <View style={styles.c1}>
                     <TouchableOpacity
                         onPress={() => navigation.goBack()}
@@ -250,22 +383,107 @@ const EditProfile = ({navigation}) => {
         <Animatable.View
             animation="fadeInUpBig"
             style={styles.bot}
+            
         >
           <ScrollView>
-            <UserProfile 
-              dataUser={data.data_user}
-              uri_profile={data.uri_profile}
-            />
-            <UserProfileData 
-                dataUser={data.data_user}
-                have_bets={data.home_gambler}
-                clientName={data.clientName}
-                lastname={data.lastname}
-                country={data.country}
-                bethouse={data.bethouse}
-                email={data.email}
-                service={data.service}
-            />
+            <View style={styles.container_title}>
+                    <Text style={styles.text_header}>EDITAR PERFIL</Text>
+                </View>
+                <View style={styles.card}>
+                    <View style={{justifyContent: 'center', alignItems: 'center'}}>
+                        <Title style={styles.title_white}>Datos Generales</Title>
+                    </View>
+                    <View style={{justifyContent: 'center', alignItems: 'center'}}>
+                        <TouchableOpacity
+                            disabled={true}
+                            style={[styles.signIn, {
+                                borderColor: '#fff',
+                                borderWidth: 1,
+                                marginTop: 18
+                            }]}
+                        >
+                             <TextInput 
+                                placeholder="NOMBRE"
+                                style={styles.textInput}
+                                autoCapitalize="none"
+                                placeholderTextColor='#fff'
+                                onChangeText={(e) => setName(e)}
+                            />
+                        </TouchableOpacity>
+                    </View>
+                    <View style={{justifyContent: 'center', alignItems: 'center'}}>
+                        <TouchableOpacity
+                            disabled={true}
+                            style={[styles.signIn, {
+                                borderColor: '#fff',
+                                borderWidth: 1,
+                                marginTop: 25
+                            }]}
+                        >
+                            <TextInput 
+                                placeholder="APELLIDO"
+                                style={styles.textInput}
+                                autoCapitalize="none"
+                                placeholderTextColor='#fff'
+                                onChangeText={(e) => setLastname(e)}
+                            />
+                        </TouchableOpacity>
+                    </View>
+                    <View style={[styles.action_picker, {marginTop: 25}]}>
+                        <SelectPicker
+                            selectedValue={data.country}
+                            style={styles.picker}
+                            mode={'dialog'}
+                            onValueChange={(e) => setCountry(e)}
+                        >
+                            <SelectPicker.Item value="" label="SELECCIONA TU PAÍS" />
+                            {Countries !== null ? setCountries() : null}
+                        </SelectPicker>
+                    </View>
+                    <View style={[styles.action_picker, {marginTop: 25}]}>
+                        <SelectPicker
+                            selectedValue={data.bet_house}
+                            style={styles.picker}
+                            mode={'dialog'}
+                            onValueChange={(e) => setBetHouse(e)}
+                        >
+                            <SelectPicker.Item value="" label="CASA DE APUESTAS" />
+                            {data.home_gambler !== null ? setBettHouses() : null}
+                        </SelectPicker>
+                    </View>
+                    <View style={{justifyContent: 'center', alignItems: 'center'}}>
+                        <TouchableOpacity
+                            disabled={true}
+                            style={[styles.signIn, {
+                                borderColor: '#fff',
+                                borderWidth: 1,
+                                marginTop: 25,
+                                marginBottom:25
+                            }]}
+                        >
+                            <TextInput 
+                                placeholder="CORREO"
+                                style={styles.textInput}
+                                autoCapitalize="none"
+                                placeholderTextColor='#fff'
+                                onChangeText={(e) => setEmail(e)}
+                            />
+                        </TouchableOpacity>
+                    </View>
+                    {/* <View style={[styles.action_picker, {marginTop: 25, marginBottom:25}]}>
+                        <SelectPicker
+                            selectedValue={data.service}
+                            style={styles.picker}
+                            mode={'dialog'}
+                            onValueChange={(e) => setService(e)}
+                        >
+                            <SelectPicker.Item value="" label="SELECCIONA TU PLAN" />
+                            <SelectPicker.Item label="PLAN GOLD" value="gold" />
+                            <SelectPicker.Item label="PLAN SILVER" value="silver" />
+                            <SelectPicker.Item label="PLAN BRONZE" value="bronze" />
+                        </SelectPicker>
+                    </View> */}
+                </View>
           </ScrollView>
 
         </Animatable.View>
@@ -321,7 +539,9 @@ const EditProfile = ({navigation}) => {
 };
 
 export default EditProfile;
-
+let widthScreen = Dimensions.get('window').width / 1.10;
+let heightScreen = Dimensions.get('window').height;
+let widthButton = Dimensions.get('window').width / 1.28;
 const styles = StyleSheet.create({
     container: {
         flex: 1, 
@@ -336,7 +556,7 @@ const styles = StyleSheet.create({
         marginBottom: -10
     },
     top: {
-        flex: 0.8, 
+        flex:0.9, 
         alignItems: 'center',
         width: '100%',
     },
@@ -346,7 +566,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         width: '100%',
     },
-    container_title: {
+    container_title2: {
         flexDirection: 'row',
         backgroundColor: '#171717',
     },
@@ -354,7 +574,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row'
     },
      c1: {
-        flex:2, 
+        flex:1, 
         alignItems: 'flex-start',
         padding: 10
     },
@@ -363,11 +583,11 @@ const styles = StyleSheet.create({
         alignItems: 'flex-end',
         padding: 10
     },
-    text_header: {
-        color: '#fff',
-        fontSize: 14,
-        fontFamily: 'Montserrat-Bold'
-    },
+    // text_header: {
+    //     color: '#fff',
+    //     fontSize: 14,
+    //     fontFamily: 'Montserrat-Bold'
+    // },
     scrollviewSize: {
         width: '100%'
     },
@@ -389,12 +609,96 @@ const styles = StyleSheet.create({
         paddingTop: 10,
         paddingLeft: 10
     },
-    textInput: {
-        flex: 1,
-        marginTop: Platform.OS === 'ios' ? 0 : -15,
-        padding: 10,
-        color: '#fff'
+    // textInput: {
+    //     flex: 1,
+    //     marginTop: Platform.OS === 'ios' ? 0 : -15,
+    //     padding: 10,
+    //     color: '#fff'
+    // },
+    text_header: {
+        color: '#fff',
+        fontSize: 14,
+        fontFamily: 'Montserrat-Bold',
+        textAlign: 'center',
+        marginBottom: 20,
     },
+    card:{
+        flex: 1, 
+        justifyContent: 'flex-start', 
+        alignContent: 'center',
+        width: widthScreen,
+        // height: heightScreen,
+        marginTop: 10,
+        marginBottom: 20,
+        backgroundColor: '#131011',
+        borderRadius: 5
+    },
+    container_title:{
+        flex: 1, 
+        justifyContent: 'center', 
+        alignContent: 'center',
+        width: widthScreen,
+    },
+    title_white:{
+        color: '#fff',
+        fontFamily: 'Montserrat-Regular',
+        fontSize: 14,
+        marginBottom: -10
+    },
+    signIn: {
+        width: widthButton,
+        height: 40,
+        borderRadius: 5,
+        flexDirection: 'row',
+        marginTop: 10,
+        color: '#fff',
+        borderColor: '#fff',
+        borderWidth: 1.5,
+        borderRadius: 5,
+        paddingTop: 15,
+        paddingLeft: 10
+    },
+    action_picker: {
+        flexDirection: 'row',
+        marginTop: 10,
+        color: '#fff',
+        backgroundColor: '#131011',
+        borderColor: '#fff',
+        borderWidth: 1.5,
+        borderRadius: 5,
+        paddingTop: 7,
+        paddingLeft: 10,
+        marginLeft: 23,
+
+        width: '85%',
+    },
+    picker: {
+        height: 30, 
+        width: '100%', 
+        paddingBottom: 5,
+        marginBottom: 7,
+        marginTop: -5,
+        color: '#fff',
+    },
+    textInput: {
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center',
+      marginTop: Platform.OS === 'ios' ? 0 : -15,
+      paddingLeft: 10,
+      color: '#fff'
+    },
+    action: {
+        flexDirection: 'row',
+        marginTop: 10,
+        color: '#fff',
+        borderColor: '#fff',
+        borderWidth: 1.5,
+        borderRadius: 5,
+        paddingTop: 15,
+        paddingLeft: 10
+      },
+    
 });
 
 

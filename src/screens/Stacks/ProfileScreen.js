@@ -10,6 +10,7 @@ import AsyncStorage from '@react-native-community/async-storage';
 import UserProfile from '../../mixins/Profile/UserProfile'
 import UserProfileData from '../../mixins/Profile/UserProfileData'
 import UrlServices from '../../mixins/Services/UrlServices';
+import DefaultUser from '../../assets/img/png/default_user.png';
 
 const ProfileScreen = ({navigation}) => {
 
@@ -18,7 +19,8 @@ const ProfileScreen = ({navigation}) => {
     data_user: null,
     error_message: '',
     date_today: '',
-    home_gambler: ''
+    home_gambler: '',
+    uri_profile: DefaultUser,
   });
 
   const theme = useTheme();
@@ -51,7 +53,7 @@ const ProfileScreen = ({navigation}) => {
 }
   //api call
   const getHouse = (token_user) => {   
-    let urlApi = UrlServices(3);
+    let urlApi = UrlServices(1);
     setVisible(true)
 
     let dateToday = getDate()
@@ -91,7 +93,7 @@ const ProfileScreen = ({navigation}) => {
                         })
                     })
                     .then(response => {
-                        console.log(response)
+                        console.log("casas", response)
                         if (response.status === 200 || response.status === 201) {
                             console.log('correcto', response);
                             let filter_casa_apuestas = response.data.data.filter((order) => {
@@ -162,7 +164,6 @@ const ProfileScreen = ({navigation}) => {
           <ScrollView>
             <UserProfile 
               dataUser={data.data_user !== null && data.data_user !== undefined && data.data_user !== "" ? data.data_user : ""}
-              navigation={navigation}
             />
             <UserProfileData 
               dataUser={data.data_user !== null && data.data_user !== undefined && data.data_user !== "" ? data.data_user : ""}

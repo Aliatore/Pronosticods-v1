@@ -180,7 +180,7 @@ const SignUpScreen = ({navigation}) => {
     }
     
     const sendRegister = (name, lastname, email, password, birthday, countryid) => {   
-        let urlApi = UrlServices(3);
+        let urlApi = UrlServices(1);
         setVisible(true)
         NetInfo.fetch().then(state => {
             console.log(state.isConnected);

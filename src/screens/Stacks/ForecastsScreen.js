@@ -68,7 +68,7 @@ const ForecastsScreen = ({navigation}) => {
   }
 
   const getForecasts = (token_user) => {   
-    let urlApi = UrlServices(3);
+    let urlApi = UrlServices(1);
     setVisible(true)
     let dateToday = getDate()
     const requestOne = axios({
@@ -216,10 +216,10 @@ const ForecastsScreen = ({navigation}) => {
                 {/* <Text  style={styles.top_text}>Pronóstico del día</Text> */}
               </View>
               <View style={styles.bot}>
-              {data.d_1 ==  null || data.d_1 == undefined || data.d_1 == "" ||
-              data.d_3 ==  null || data.d_3 == undefined ||  data.d_3 == "" ||
-              data.d_4 ==  null || data.d_4 == undefined ||  data.d_4 == "" ||
-              data.d_2 == null || data.d_2 == undefined ||  data.d_2 == "" ?
+              {data.d_1 ==  null && data.d_1 == undefined && data.d_1 == "" ||
+              data.d_3 ==  null && data.d_3 == undefined &&  data.d_3 == "" ||
+              data.d_4 ==  null && data.d_4 == undefined &&  data.d_4 == "" ||
+              data.d_2 == null && data.d_2 == undefined &&  data.d_2 == "" ?
           
                 (
                   <Card style={[styles.card, {marginTop: 20}]}>

@@ -31,6 +31,8 @@ import EditProfile from './src/screens/Stacks/EditProfile/EditProfile';
 import RestorePassword from './src/screens/Stacks/ChangePassword/ChangePassword';
 import ResumePassword from './src/screens/Stacks/ChangePassword/ResumeChPass';
 import PaymentScreen from './src/screens/Stacks/PaymentTdc/Payment';
+import CancelSuscriptionScreen from './src/screens/Stacks/CancelSuscription/Cancel';
+import EndCancelSuscriptionScreen from './src/screens/Stacks/CancelSuscription/EndCancel';
 
 import { AuthContext } from './src/components/context';
 
@@ -184,6 +186,8 @@ const App = () => {
           <Drawer.Screen name="RestorePasswordScreen" component={RestorePassword} />
           <Drawer.Screen name="ResumePasswordScreen" component={ResumePassword} />
           <Drawer.Screen name="PaymentScreen" component={PaymentScreen} />
+          <Drawer.Screen name="CancelScreen" component={CancelSuscriptionScreen} />
+          <Drawer.Screen name="EndCancelScreen" component={EndCancelSuscriptionScreen} />
         </Drawer.Navigator>
       )
     :
