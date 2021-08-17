@@ -7,9 +7,8 @@ import {
     TouchableOpacity,
     Text, 
     Dimensions, 
-    TextInput
 } from 'react-native';
-import { Avatar, Button, Card, Title, Paragraph, Portal, Dialog } from 'react-native-paper';
+import { Avatar, Button, Card, Title, TextInput, Portal, Dialog } from 'react-native-paper';
 import { Picker as SelectPicker } from '@react-native-picker/picker';
 import { Spinner } from 'native-base'
 import AwesomeAlert from 'react-native-awesome-alerts';
@@ -386,50 +385,50 @@ const EditProfile = ({navigation}) => {
             
         >
           <ScrollView>
-            <View style={styles.container_title}>
+                <View style={styles.container_title}>
                     <Text style={styles.text_header}>EDITAR PERFIL</Text>
                 </View>
                 <View style={styles.card}>
                     <View style={{justifyContent: 'center', alignItems: 'center'}}>
                         <Title style={styles.title_white}>Datos Generales</Title>
                     </View>
-                    <View style={{justifyContent: 'center', alignItems: 'center'}}>
-                        <TouchableOpacity
-                            disabled={true}
-                            style={[styles.signIn, {
-                                borderColor: '#fff',
-                                borderWidth: 1,
-                                marginTop: 18
-                            }]}
-                        >
-                             <TextInput 
-                                placeholder="NOMBRE"
-                                style={styles.textInput}
-                                autoCapitalize="none"
-                                placeholderTextColor='#fff'
-                                onChangeText={(e) => setName(e)}
-                            />
-                        </TouchableOpacity>
+                    <View style={styles.action}>
+                        <TextInput 
+                            label="NOMBRE"
+                            style={styles.textInput}
+                            mode="outlined"
+                            placeholderTextColor='#fff'
+                            outlineColor='#fff'
+                            underlineColor='#fff'
+                            selectionColor='#01CD01'
+                            theme={{
+                                colors: {
+                                    placeholder: '#fff', text: '#fff', primary: '#fff',
+                                    underlineColor: 'transparent', background: '#131011', color: '#fff'
+                                },
+                            }}
+                            onChangeText={(e) => setName(e)}
+                        />
                     </View>
-                    <View style={{justifyContent: 'center', alignItems: 'center'}}>
-                        <TouchableOpacity
-                            disabled={true}
-                            style={[styles.signIn, {
-                                borderColor: '#fff',
-                                borderWidth: 1,
-                                marginTop: 25
-                            }]}
-                        >
-                            <TextInput 
-                                placeholder="APELLIDO"
-                                style={styles.textInput}
-                                autoCapitalize="none"
-                                placeholderTextColor='#fff'
-                                onChangeText={(e) => setLastname(e)}
-                            />
-                        </TouchableOpacity>
+                    <View style={styles.action}>
+                        <TextInput 
+                            label="APELLIDO"
+                            style={styles.textInput}
+                            mode="outlined"
+                            placeholderTextColor='#fff'
+                            outlineColor='#fff'
+                            underlineColor='#fff'
+                            selectionColor='#01CD01'
+                            theme={{
+                                colors: {
+                                    placeholder: '#fff', text: '#fff', primary: '#fff',
+                                    underlineColor: 'transparent', background: '#131011', color: '#fff'
+                                },
+                            }}
+                            onChangeText={(e) => setLastname(e)}
+                        />
                     </View>
-                    <View style={[styles.action_picker, {marginTop: 25}]}>
+                    <View style={[styles.action_picker, {marginTop: 10}]}>
                         <SelectPicker
                             selectedValue={data.country}
                             style={styles.picker}
@@ -451,24 +450,23 @@ const EditProfile = ({navigation}) => {
                             {data.home_gambler !== null ? setBettHouses() : null}
                         </SelectPicker>
                     </View>
-                    <View style={{justifyContent: 'center', alignItems: 'center'}}>
-                        <TouchableOpacity
-                            disabled={true}
-                            style={[styles.signIn, {
-                                borderColor: '#fff',
-                                borderWidth: 1,
-                                marginTop: 25,
-                                marginBottom:25
-                            }]}
-                        >
-                            <TextInput 
-                                placeholder="CORREO"
-                                style={styles.textInput}
-                                autoCapitalize="none"
-                                placeholderTextColor='#fff'
-                                onChangeText={(e) => setEmail(e)}
-                            />
-                        </TouchableOpacity>
+                    <View style={[styles.action, {marginTop: 20}]}>
+                        <TextInput 
+                            label="CORREO"
+                            style={styles.textInput}
+                            mode="outlined"
+                            placeholderTextColor='#fff'
+                            outlineColor='#fff'
+                            underlineColor='#fff'
+                            selectionColor='#01CD01'
+                            theme={{
+                                colors: {
+                                    placeholder: '#fff', text: '#fff', primary: '#fff',
+                                    underlineColor: 'transparent', background: '#131011', color: '#fff'
+                                },
+                            }}
+                            onChangeText={(e) => setEmail(e)}
+                        />
                     </View>
                     {/* <View style={[styles.action_picker, {marginTop: 25, marginBottom:25}]}>
                         <SelectPicker
@@ -587,34 +585,20 @@ const styles = StyleSheet.create({
     //     color: '#fff',
     //     fontSize: 14,
     //     fontFamily: 'Montserrat-Bold'
-    // },
-    scrollviewSize: {
-        width: '100%'
-    },
     change_p: {
         width: '100%'
+    },
+    inputCustom: {
+        flex: 1,
+        backgroundColor: 'red',
+        width: '100%'
+
     },
     text_footer: {
         color: '#fff',
         fontSize: 15,
         fontFamily: 'Montserrat-SemiBold',
     },
-    action: {
-        flexDirection: 'row',
-        marginTop: 10,
-        color: '#fff',
-        borderColor: '#01CD01',
-        borderWidth: 1.5,
-        borderRadius: 5,
-        paddingTop: 10,
-        paddingLeft: 10
-    },
-    // textInput: {
-    //     flex: 1,
-    //     marginTop: Platform.OS === 'ios' ? 0 : -15,
-    //     padding: 10,
-    //     color: '#fff'
-    // },
     text_header: {
         color: '#fff',
         fontSize: 14,
@@ -624,14 +608,14 @@ const styles = StyleSheet.create({
     },
     card:{
         flex: 1, 
-        justifyContent: 'flex-start', 
+        justifyContent: 'center', 
         alignContent: 'center',
         width: widthScreen,
         // height: heightScreen,
         marginTop: 10,
         marginBottom: 20,
         backgroundColor: '#131011',
-        borderRadius: 5
+        borderRadius: 5,
     },
     container_title:{
         flex: 1, 
@@ -681,22 +665,21 @@ const styles = StyleSheet.create({
         color: '#fff',
     },
     textInput: {
-      flex: 1,
-      justifyContent: 'center',
-      alignItems: 'center',
-      marginTop: Platform.OS === 'ios' ? 0 : -15,
-      paddingLeft: 10,
-      color: '#fff'
+        flex: 1,
+        marginTop: Platform.OS === 'ios' ? 0 : -15,
+        padding: 10,
+        color: '#fff',
+        fontSize: 16
     },
     action: {
         flexDirection: 'row',
         marginTop: 10,
-        color: '#fff',
-        borderColor: '#fff',
-        borderWidth: 1.5,
-        borderRadius: 5,
-        paddingTop: 15,
-        paddingLeft: 10
+        marginLeft: 15, 
+        marginRight: 15,
+    
+      },
+      scrollviewSize: {
+        width: '100%'
       },
     
 });
