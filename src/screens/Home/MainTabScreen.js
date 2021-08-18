@@ -34,7 +34,7 @@ const MainTabScreen = () => (
           tabBarLabel: '',
           tabBarColor: '#424242',
           tabBarIcon: ({ color }) => (
-            <Icon name="ios-home" color={color} size={26} />
+            <Icon name="ios-home" color={color} size={24} />
           ),
         }}
       />
@@ -45,7 +45,7 @@ const MainTabScreen = () => (
           tabBarLabel: '',
           tabBarColor: '#424242',
           tabBarIcon: ({ color }) => (
-            <Icon name="compass" color={color} size={26} />
+            <Icon name="compass" color={color} size={24} />
           ),
         }}
       />
@@ -56,7 +56,7 @@ const MainTabScreen = () => (
           tabBarLabel: '',
           tabBarColor: '#424242',
           tabBarIcon: ({ color }) => (
-            <Icon name="disc-outline" color={color} size={26} />
+            <Icon name="disc-outline" color={color} size={24} />
           ),
         }}
       />
@@ -67,7 +67,7 @@ const MainTabScreen = () => (
           tabBarLabel: '',
           tabBarColor: '#424242',
           tabBarIcon: ({ color }) => (
-            <Icon name="calendar" color={color} size={26} />
+            <Icon name="calendar" color={color} size={24} />
           ),
         }}
       />
@@ -78,7 +78,7 @@ const MainTabScreen = () => (
           tabBarLabel: '',
           tabBarColor: '#424242',
           tabBarIcon: ({ color }) => (
-            <Icon name="person" color={color} size={26} />
+            <Icon name="person" color={color} size={24} />
           ),
         }}
       />

@@ -64,19 +64,6 @@ const ChangePassword = ({navigation}) => {
 
         return year + '-' + month + '-' + date;//format: dd-mm-yyyy;
     }
-    const getOldPassword = (e) => {
-        if(e.length !== 0) {
-            setData({
-                ...data,
-                old_p: e
-            });
-        } else {
-            setData({
-                ...data,
-                old_p: e
-            });
-        }
-    }
     const getNewPassword = (e) => {
         if(e.length !== 0) {
             setData({
@@ -126,7 +113,7 @@ const ChangePassword = ({navigation}) => {
         let urlApi = UrlServices(1); 
         setVisible(true)
 
-        if (data.old_p.length === 0 && data.new_p.length === 0 && data.c_new_p.length === 0 ){
+        if (data.new_p.length === 0 || data.c_new_p.length === 0 ){
             setVisible(false)
             setAlert(true)
             setData({
@@ -298,7 +285,7 @@ const ChangePassword = ({navigation}) => {
                 </View>
                 <View style={styles.change_p}>
                     {/* <Text style={styles.text_footer}>Antigua Contraseña</Text> */}
-                    <View style={styles.action}>
+                    {/* <View style={styles.action}>
                         <TextInput 
                             label='ANTIGUA CONTRASEÑA'
                             mode="outlined"
@@ -338,7 +325,7 @@ const ChangePassword = ({navigation}) => {
                                 }   
                             </TouchableOpacity>
                         </View>
-                    </View>
+                    </View> */}
                     {/* <Text style={[styles.text_footer, {marginTop: 20}]}>Nueva Contraseña</Text> */}
                     <View style={styles.action}>
                         <TextInput 

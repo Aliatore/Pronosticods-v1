@@ -9,138 +9,138 @@ const UserProfileData = ({dataUser, have_bets}) => {
     // console.log("User Profile element", dataUser ? dataUser : null)
     console.log(dataUser);
     console.log('bets', have_bets);
-    // return(
-    //     <></>
-    // )
-    const dataUserAr = [dataUser];
-    console.log("nuevo array", dataUserAr);
-    if (dataUserAr !== null && dataUserAr !== '' && dataUserAr !== undefined && dataUserAr !== []) {
-        return(
-            <>
-                <View style={styles.card}>
-                    <View style={{justifyContent: 'center', alignItems: 'center'}}>
-                        <Title style={styles.title_white}>Datos Generales</Title>
-                    </View>
-                    <View style={{justifyContent: 'center', alignItems: 'center'}}>
-                        <TouchableOpacity
-                            disabled={true}
-                            style={[styles.signIn, {
-                                borderColor: '#fff',
-                                borderWidth: 1,
-                                marginTop: 18
-                            }]}
-                        >
-                            <Text style={[styles.textSign, {
-                                color: '#fff',
-                                marginLeft: 18,
-                            }]}>{dataUserAr[0].first_name ? dataUserAr[0].first_name : null}</Text>
-                        </TouchableOpacity>
-                    </View>
-                    <View style={{justifyContent: 'center', alignItems: 'center'}}>
-                        <TouchableOpacity
-                            disabled={true}
-                            style={[styles.signIn, {
-                                borderColor: '#fff',
-                                borderWidth: 1,
-                                marginTop: 25
-                            }]}
-                        >
-                            <Text style={[styles.textSign, {
-                                color: '#fff',
-                                marginLeft: 18,
-                            }]}>{dataUserAr[0].last_name ? dataUserAr[0].last_name : null}</Text>
-                        </TouchableOpacity>
-                    </View>
-                    <View style={{justifyContent: 'center', alignItems: 'center'}}>
-                        <TouchableOpacity
-                            disabled={true}
-                            style={[styles.signIn, {
-                                borderColor: '#fff',
-                                borderWidth: 1,
-                                marginTop: 25
-                            }]}
-                        >
-                            <Text style={[styles.textSign, {
-                                color: '#fff',
-                                marginLeft: 18,
-                            }]}>{dataUserAr[0].country_name ? dataUserAr[0].country_name : null}</Text>
-                        </TouchableOpacity>
-                    </View>
-                    <View style={{justifyContent: 'center', alignItems: 'center'}}>
-                        <TouchableOpacity
-                            disabled={true}
-                            style={[styles.signIn, {
-                                borderColor: '#fff',
-                                borderWidth: 1,
-                                marginTop: 25
-                            }]}
-                        >
-                            <Text style={[styles.textSign, {
-                                color: '#fff',
-                                marginLeft: 18,
-                            }]}>{have_bets !== null && have_bets !== undefined && have_bets !== '' ? have_bets[0].name : "no encontrado"}</Text>
-                        </TouchableOpacity>
-                    </View>
-                    <View style={{justifyContent: 'center', alignItems: 'center'}}>
-                        <TouchableOpacity
-                            disabled={true}
-                            style={[styles.signIn, {
-                                borderColor: '#fff',
-                                borderWidth: 1,
-                                marginTop: 25,
-                                marginBottom: 25,
-                            }]}
-                        >
-                            <Text style={[styles.textSign, {
-                                color: '#fff',
-                                marginLeft: 18,
-                            }]}>{dataUserAr[0].email ? dataUserAr[0].email : null}</Text>
-                        </TouchableOpacity>
-                    </View>
-                    {/* <View style={{justifyContent: 'center', alignItems: 'center'}}>
-                        <TouchableOpacity
-                            disabled={true}
-                            style={[styles.signIn, {
-                                borderColor: '#fff',
-                                borderWidth: 1,
-                                marginTop: 25,
-                                marginBottom: 25
-                            }]}
-                        >
-                            <Text style={[styles.textSign, {
-                                color: '#fff',
-                                marginLeft: 18,
-                            }]}>CONTRASEÑA</Text>
-                        </TouchableOpacity>
-                    </View> */}
-                    {/* <View style={{justifyContent: 'center', alignItems: 'center'}}>
-                        <TouchableOpacity
-                            disabled={true}
-                            style={[styles.signIn, {
-                                borderColor: '#fff',
-                                borderWidth: 1,
-                                marginTop: 25,
-                                marginBottom: 25
-                            }]}
-                        >
-                            <Text style={[styles.textSign, {
-                                color: '#fff',
-                                marginLeft: 18,
-                            }]}>{dataUserAr[0].first_name ? dataUserAr[0].first_name : null}</Text>
-                        </TouchableOpacity>
-                    </View> */}
-                </View>
-            </>
-        )
-    } else {
-        return(
-            <View style={styles.card}>
-                <View style={{justifyContent: 'center', alignItems: 'center'}}>
-                    <Text style={styles.title_white}>Cargando...</Text>
-                </View>
-            </View>
-        )
-    }
+    return(
+        <></>
+    )
+    // const dataUserAr = [dataUser];
+    // console.log("nuevo array", dataUserAr);
+    // if (dataUserAr !== null && dataUserAr !== '' && dataUserAr !== undefined && dataUserAr !== []) {
+    //     return(
+    //         <>
+    //             <View style={styles.card}>
+    //                 <View style={{justifyContent: 'center', alignItems: 'center'}}>
+    //                     <Title style={styles.title_white}>Datos Generales</Title>
+    //                 </View>
+    //                 <View style={{justifyContent: 'center', alignItems: 'center'}}>
+    //                     <TouchableOpacity
+    //                         disabled={true}
+    //                         style={[styles.signIn, {
+    //                             borderColor: '#fff',
+    //                             borderWidth: 1,
+    //                             marginTop: 18
+    //                         }]}
+    //                     >
+    //                         <Text style={[styles.textSign, {
+    //                             color: '#fff',
+    //                             marginLeft: 18,
+    //                         }]}>{dataUserAr[0].first_name ? dataUserAr[0].first_name : null}</Text>
+    //                     </TouchableOpacity>
+    //                 </View>
+    //                 <View style={{justifyContent: 'center', alignItems: 'center'}}>
+    //                     <TouchableOpacity
+    //                         disabled={true}
+    //                         style={[styles.signIn, {
+    //                             borderColor: '#fff',
+    //                             borderWidth: 1,
+    //                             marginTop: 25
+    //                         }]}
+    //                     >
+    //                         <Text style={[styles.textSign, {
+    //                             color: '#fff',
+    //                             marginLeft: 18,
+    //                         }]}>{dataUserAr[0].last_name ? dataUserAr[0].last_name : null}</Text>
+    //                     </TouchableOpacity>
+    //                 </View>
+    //                 <View style={{justifyContent: 'center', alignItems: 'center'}}>
+    //                     <TouchableOpacity
+    //                         disabled={true}
+    //                         style={[styles.signIn, {
+    //                             borderColor: '#fff',
+    //                             borderWidth: 1,
+    //                             marginTop: 25
+    //                         }]}
+    //                     >
+    //                         <Text style={[styles.textSign, {
+    //                             color: '#fff',
+    //                             marginLeft: 18,
+    //                         }]}>{dataUserAr[0].country_name ? dataUserAr[0].country_name : null}</Text>
+    //                     </TouchableOpacity>
+    //                 </View>
+    //                 <View style={{justifyContent: 'center', alignItems: 'center'}}>
+    //                     <TouchableOpacity
+    //                         disabled={true}
+    //                         style={[styles.signIn, {
+    //                             borderColor: '#fff',
+    //                             borderWidth: 1,
+    //                             marginTop: 25
+    //                         }]}
+    //                     >
+    //                         <Text style={[styles.textSign, {
+    //                             color: '#fff',
+    //                             marginLeft: 18,
+    //                         }]}>{have_bets !== null && have_bets !== undefined && have_bets !== '' ? have_bets[0].name : "no encontrado"}</Text>
+    //                     </TouchableOpacity>
+    //                 </View>
+    //                 <View style={{justifyContent: 'center', alignItems: 'center'}}>
+    //                     <TouchableOpacity
+    //                         disabled={true}
+    //                         style={[styles.signIn, {
+    //                             borderColor: '#fff',
+    //                             borderWidth: 1,
+    //                             marginTop: 25,
+    //                             marginBottom: 25,
+    //                         }]}
+    //                     >
+    //                         <Text style={[styles.textSign, {
+    //                             color: '#fff',
+    //                             marginLeft: 18,
+    //                         }]}>{dataUserAr[0].email ? dataUserAr[0].email : null}</Text>
+    //                     </TouchableOpacity>
+    //                 </View>
+    //                 {/* <View style={{justifyContent: 'center', alignItems: 'center'}}>
+    //                     <TouchableOpacity
+    //                         disabled={true}
+    //                         style={[styles.signIn, {
+    //                             borderColor: '#fff',
+    //                             borderWidth: 1,
+    //                             marginTop: 25,
+    //                             marginBottom: 25
+    //                         }]}
+    //                     >
+    //                         <Text style={[styles.textSign, {
+    //                             color: '#fff',
+    //                             marginLeft: 18,
+    //                         }]}>CONTRASEÑA</Text>
+    //                     </TouchableOpacity>
+    //                 </View> */}
+    //                 {/* <View style={{justifyContent: 'center', alignItems: 'center'}}>
+    //                     <TouchableOpacity
+    //                         disabled={true}
+    //                         style={[styles.signIn, {
+    //                             borderColor: '#fff',
+    //                             borderWidth: 1,
+    //                             marginTop: 25,
+    //                             marginBottom: 25
+    //                         }]}
+    //                     >
+    //                         <Text style={[styles.textSign, {
+    //                             color: '#fff',
+    //                             marginLeft: 18,
+    //                         }]}>{dataUserAr[0].first_name ? dataUserAr[0].first_name : null}</Text>
+    //                     </TouchableOpacity>
+    //                 </View> */}
+    //             </View>
+    //         </>
+    //     )
+    // } else {
+    //     return(
+    //         <View style={styles.card}>
+    //             <View style={{justifyContent: 'center', alignItems: 'center'}}>
+    //                 <Text style={styles.title_white}>Cargando...</Text>
+    //             </View>
+    //         </View>
+    //     )
+    // }
    
 }
 

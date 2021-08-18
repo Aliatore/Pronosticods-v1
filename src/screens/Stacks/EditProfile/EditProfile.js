@@ -18,7 +18,6 @@ import * as Animatable from 'react-native-animatable';
 import NetInfo from "@react-native-community/netinfo";
 import { useTheme } from '@react-navigation/native';
 import AsyncStorage from '@react-native-community/async-storage';
-import UserProfile from '../../../mixins/EditProfile/UserProfile'
 import UserProfileData from '../../../mixins/EditProfile/UserProfileData'
 import DefaultUser from '../../../assets/img/png/default_user.png';
 import UrlServices from '../../../mixins/Services/UrlServices';
