@@ -87,7 +87,8 @@ const UserProfileData = ({dataUser, have_bets}) => {
                             style={[styles.signIn, {
                                 borderColor: '#fff',
                                 borderWidth: 1,
-                                marginTop: 25
+                                marginTop: 25,
+                                marginBottom: 25,
                             }]}
                         >
                             <Text style={[styles.textSign, {
@@ -112,7 +113,7 @@ const UserProfileData = ({dataUser, have_bets}) => {
                             }]}>CONTRASEÑA</Text>
                         </TouchableOpacity>
                     </View> */}
-                    <View style={{justifyContent: 'center', alignItems: 'center'}}>
+                    {/* <View style={{justifyContent: 'center', alignItems: 'center'}}>
                         <TouchableOpacity
                             disabled={true}
                             style={[styles.signIn, {
@@ -127,7 +128,7 @@ const UserProfileData = ({dataUser, have_bets}) => {
                                 marginLeft: 18,
                             }]}>{dataUserAr[0].first_name ? dataUserAr[0].first_name : null}</Text>
                         </TouchableOpacity>
-                    </View>
+                    </View> */}
                 </View>
             </>
         )
