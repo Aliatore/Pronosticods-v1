@@ -13,6 +13,7 @@ import DefaultUser from '../../assets/img/png/default_user.png';
 import ImgToBase64 from 'react-native-image-base64';
 
 
+
 const ProfileScreen = ({navigation}) => {
 
   const [data, setData] = React.useState({
@@ -95,10 +96,6 @@ const ProfileScreen = ({navigation}) => {
                                     return order;
                                 }
                             });
-                            let are_empty = Object.keys(filter_casa_apuestas).length === 0;
-                            let result_casa_apuesta = '';
-                            are_empty ? result_casa_apuesta = "No posee" : result_casa_apuesta = filter_casa_apuestas;
-                            // console.log(typeof token_user);
                             setVisible(false)
                             setData({
                                 ...data,
@@ -106,7 +103,7 @@ const ProfileScreen = ({navigation}) => {
                                 image_user: token_user.avatar_preview,
                                 client_token: token_user.api_token,
                                 date_today: dateToday,
-                                home_gambler: result_casa_apuesta,
+                                home_gambler: filter_casa_apuestas[0].name,
                             })
                         }else{
                             let error = response.data.errors
@@ -140,35 +137,37 @@ const ProfileScreen = ({navigation}) => {
         }
     }); 
   }
-
-  const handlePicker = () => {
+  const mimeData = (e) => {
+    let data_ = {
+        filename: e.fileName,
+        type: e.type,
+        size:e.fileSize,  
+    };
+    return data_;
+  }
+  const handlePicker = async () => {
     // console.log('edit');
     const options={
-        quality:0.7, allowsEditing:true, mediaType: 'photo', noData: true,
-        storageOptions: {
-            skipBackup: true, waitUntilSave: true, path: 'images', cameraRoll: true
-        }
+   
     }
-    ImagePicker.launchImageLibrary(options, async(response) => {
-        // console.log('Response = ', response);
-        
+    ImagePicker.launchImageLibrary(options, response => {
         if (response.didCancel) {
-            // console.log('User cancelled image picker');
+            console.log('User cancelled image picker');
         } else if (response.error) {
-            // console.log('ImagePicker Error: ', response.error);
+            console.log('ImagePicker Error: ', response.error);
         } else if (response.customButton) {
-            // console.log('User tapped custom button: ', response.customButton);
+            console.log('User tapped custom button: ', response.customButton);
         } else {
-            setData({
-                ...data,
-                image_user: response.uri
-            })
             try {
+                let mime_data = mimeData(response);
                 ImgToBase64.getBase64String(response.uri)
                 .then(base64String => {
-                        logger(base64String)
+                    var b64 = base64String;
+                    const source = `data:${mime_data.type};base64,` + b64;
+                    console.log(source);
+                    logger(source, response.uri);
                 })
-                .catch(err => doSomethingWith(err));
+                .catch(err => console.log(err));
     
             } catch (e) {
                 console.log(e);
@@ -176,19 +175,39 @@ const ProfileScreen = ({navigation}) => {
         }
     });
   };
+
+const createFormData= (image) => {
+    var mime_data = mimeData(image);
+    var data = new FormData();
+    data.append(image, {
+        uri:  Platform.OS === "android" ? image.uri : image.uri.replace("file://", ""), 
+        name: `${mime_data.filename}`,
+        type: `${mime_data.type}`
+    })
+    return data;
+}
+const createBlob = async (image) => {
+    var res = await axios.get(image.uri)
+    .then(function (response) {
+       return response.blob();
+    });
+    console.log(res);
+}
+
   
-  const logger = async (e) => {
+  
+  
+  const logger = async (e, image) => {
     try {
             let urlApi = UrlServices(1);
             setVisible(true)
             NetInfo.fetch().then(state => {
-                // console.log(state.isConnected);
                 if (state.isConnected === true){
                     try {
                         axios({
                             method: 'put',
                             url: `${urlApi}/user/avatar`,
-                            timeout: 9000,
+                            timeout: 60000,
                             data: {
                                 avatar: e,
                             },
@@ -197,7 +216,7 @@ const ProfileScreen = ({navigation}) => {
                                 "Content-Type": "application/json; charset=utf-8",
                                 "X-Requested-With": "XMLHttpRequest",
                                 "Access-Control-Allow-Origin": "*",
-                                "Access-Control-Allow-Credentials": "true",
+                                "Access-Control-Allow-Credentials": "true"
                             },
                             validateStatus: (status) => {
                                 return true; 
@@ -210,10 +229,12 @@ const ProfileScreen = ({navigation}) => {
                             setError(`Ha ocurrido un error, ${error}`)
                         })
                         .then(response => {
-                            // console.log(response.data);
                             if (response.status === 200) {
-                                setB63Avatar("")
                                 setVisible(false)
+                                setData({
+                                    ...data,
+                                    image_user: image
+                                })
                             }else{
                                 setVisible(false)
                                 setAlert(true)
@@ -253,7 +274,6 @@ const ProfileScreen = ({navigation}) => {
   //state hooks for popups
   const [visible, setVisible] = React.useState(false);
   const [alert, setAlert] = React.useState(false);
-  const [b64Avatar, setB63Avatar] = useState(null);
     return (
       <>
       <View style={styles.container}>
@@ -266,7 +286,7 @@ const ProfileScreen = ({navigation}) => {
                                     // disabled={true}
                                     onPress={() => handlePicker()}
                                 >
-                            <Avatar.Image size={120} source={{uri: data.image_user != '' ? data.image_user : ''}} />    
+                            <Avatar.Image size={120} source={data.image_user != '' ? {uri: data.image_user} : require('../../assets/img/png/default_user.png')} />    
                         </TouchableOpacity>
                     </View>
                     <Card.Content>
@@ -354,7 +374,7 @@ const ProfileScreen = ({navigation}) => {
                         <TextInput 
                             label="Casa de apuestas"
                             style={styles.textInput}
-                            value={data.home_gambler}
+                            value={data.home_gambler ? data.home_gambler : "No posee"}
                             mode="outlined"
                             placeholderTextColor='#fff'
                             outlineColor='#fff'
