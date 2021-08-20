@@ -22,7 +22,7 @@ import {
 } from 'react-native-paper';
 
 import { DrawerContent } from './src/screens/SideBar/DrawerContent';
-
+import Pusher from 'pusher-js/react-native';
 import MainTabScreen from './src/screens/Home/MainTabScreen';
 import SupportScreen from './src/screens/Stacks/SupportScreen';
 import SettingsScreen from './src/screens/Stacks/SettingsScreen';
@@ -172,6 +172,17 @@ const App = () => {
       </View>
     );
   }
+  // Enable pusher logging - don't include this in production
+    Pusher.logToConsole = true;
+
+    var pusher = new Pusher('05ce2293f9a422ed81a7', {
+      cluster: 'mt1'
+    });
+
+    var channel = pusher.subscribe('my-channel');
+    channel.bind('my-event', function(data) {
+      alert(JSON.stringify(data));
+    });
   return (
     <PaperProvider theme={theme}>
     <AuthContext.Provider value={authContext}>
