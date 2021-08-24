@@ -39,6 +39,7 @@ import { AuthContext } from './src/components/context';
 import RootStackScreen from './src/screens/Auth/RootStackScreen';
 
 import AsyncStorage from '@react-native-community/async-storage';
+import PushNotification from "react-native-push-notification";
 
 const Drawer = createDrawerNavigator();
 
@@ -150,7 +151,89 @@ const App = () => {
     }
   }), []);
 
+  const createChannels = () => {
+    PushNotification.createChannel({
+      channelId: "local-channel",
+      channelName: "Local Channel"
+    })
+  }
+  
+   // Enable pusher logging - don't include this in production
+   Pusher.logToConsole = false;
+
+   var pusher = new Pusher('05ce2293f9a422ed81a7', {
+     cluster: 'mt1'
+   });
+
+   var channel1 = pusher.subscribe('my-channel');
+   var channel2 = pusher.subscribe('private-notifications');
+   var channel3 = pusher.subscribe('private-forecasts');
+   var channel4 = pusher.subscribe('private-hipismo');
+  //  var channel = pusher.subscribe(`private-user-${id}`);
+
+   channel1.bind('my-event', function (data)  {
+    //  alert(JSON.stringify(data));
+    // var value = JSON.stringify(data);
+    var datas = data ? data : null;
+    if (datas != null) {
+       PushNotification.localNotification({
+        /* Android Only Properties */
+        channelId: "local-channel", 
+        title: datas.split("(//)")[0], // (optional)
+        message: datas.split("(//)")[1], // (required)
+        playSound: true, // (optional) default: true
+        soundName: "default", // (optional) Sound to play when the notification is shown. Value of 'default' plays the default sound. It can be set to a custom sound such as 'android.resource://com.xyz/raw/my_sound'. It will look for the 'my_sound' audio file in 'res/raw' directory and play it. default: 'default' (default sound is played)
+        });
+    }
+   });
+   channel2.bind('my-event', function (data)  {
+    //  alert(JSON.stringify(data));
+    // var value = JSON.stringify(data);
+    var datas = data ? data : null;
+    if (datas != null) {
+       PushNotification.localNotification({
+        /* Android Only Properties */
+        channelId: "local-channel", 
+        title: datas.split("(//)")[0], // (optional)
+        message: datas.split("(//)")[1], // (required)
+        playSound: true, // (optional) default: true
+        soundName: "default", // (optional) Sound to play when the notification is shown. Value of 'default' plays the default sound. It can be set to a custom sound such as 'android.resource://com.xyz/raw/my_sound'. It will look for the 'my_sound' audio file in 'res/raw' directory and play it. default: 'default' (default sound is played)
+        });
+    }
+   });
+   channel3.bind('my-event', function (data)  {
+    //  alert(JSON.stringify(data));
+    // var value = JSON.stringify(data);
+    var datas = data ? data : null;
+    if (datas != null) {
+       PushNotification.localNotification({
+        /* Android Only Properties */
+        channelId: "local-channel", 
+        title: datas.split("(//)")[0], // (optional)
+        message: datas.split("(//)")[1], // (required)
+        playSound: true, // (optional) default: true
+        soundName: "default", // (optional) Sound to play when the notification is shown. Value of 'default' plays the default sound. It can be set to a custom sound such as 'android.resource://com.xyz/raw/my_sound'. It will look for the 'my_sound' audio file in 'res/raw' directory and play it. default: 'default' (default sound is played)
+        });
+    }
+   });
+   channel4.bind('my-event', function (data)  {
+    //  alert(JSON.stringify(data));
+    // var value = JSON.stringify(data);
+    var datas = data ? data : null;
+    if (datas != null) {
+       PushNotification.localNotification({
+        /* Android Only Properties */
+        channelId: "local-channel", 
+        title: datas.split("(//)")[0], // (optional)
+        message: datas.split("(//)")[1], // (required)
+        playSound: true, // (optional) default: true
+        soundName: "default", // (optional) Sound to play when the notification is shown. Value of 'default' plays the default sound. It can be set to a custom sound such as 'android.resource://com.xyz/raw/my_sound'. It will look for the 'my_sound' audio file in 'res/raw' directory and play it. default: 'default' (default sound is played)
+        });
+    }
+   });
+
   useEffect(() => {
+    createChannels();
     setTimeout(async() => {
       // setIsLoading(false);
       let userToken;
@@ -172,17 +255,7 @@ const App = () => {
       </View>
     );
   }
-  // Enable pusher logging - don't include this in production
-    Pusher.logToConsole = true;
 
-    var pusher = new Pusher('05ce2293f9a422ed81a7', {
-      cluster: 'mt1'
-    });
-
-    var channel = pusher.subscribe('my-channel');
-    channel.bind('my-event', function(data) {
-      alert(JSON.stringify(data));
-    });
   return (
     <PaperProvider theme={theme}>
     <AuthContext.Provider value={authContext}>
