@@ -11,7 +11,7 @@ import Noticias from '../../mixins/Noticias';
 import Videos from '../../mixins/N_Videos';
 import Banner from '../../mixins/Banner';
 import UrlServices from '../../mixins/Services/UrlServices';
-
+import { AuthContext } from '../../components/context';
 const HomeScreen = ({navigation}) => {
 
   const [data, setData] = React.useState({
@@ -26,7 +26,7 @@ const HomeScreen = ({navigation}) => {
   });
 
   const theme = useTheme();
-
+  const { signOut, toggleTheme, signIn } = React.useContext(AuthContext);
   //obtain the token with asyncstorage and set in state data.
   const obtainToken = async () => {
     try {
@@ -119,7 +119,9 @@ const HomeScreen = ({navigation}) => {
                             client_token: token_user,
                             client_data: JSON.parse(data_user),
                         })
-                    }else{
+                    }else if (responses[0].status === 401 || responses[1].status === 401) {
+                        signOut();
+                      }else{
                         setVisible(false)
                         setAlert(true)
                         setData({

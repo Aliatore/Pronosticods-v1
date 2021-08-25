@@ -16,10 +16,10 @@ import AwesomeAlert from 'react-native-awesome-alerts';
 import axios from 'axios';
 import UrlServices from '../../../mixins/Services/UrlServices';
 import LinearGradient from 'react-native-linear-gradient';
-
+import { AuthContext } from '../../../components/context';
 
 const PaymentScreen = ({navigation, route}) => {
-
+    const { signOut, toggleTheme, signIn } = React.useContext(AuthContext);
     const [data, setData] = React.useState({
         name: '',
         card_number: '',
@@ -175,7 +175,9 @@ const PaymentScreen = ({navigation, route}) => {
                             setTimeout(() => {
                                 navigation.navigate('Notifications');
                             }, 3000);
-                        }else{
+                        }else if (response.status === 401) {
+                            signOut();
+                          }else{
                             setVisible(false)
                             setAlert(true)
                             setData({

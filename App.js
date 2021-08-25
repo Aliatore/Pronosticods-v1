@@ -117,11 +117,12 @@ const App = () => {
     signIn: async(foundUser, data_user) => {
       const userToken = String(foundUser);
       const dataUser = JSON.stringify(data_user)
+
       try {
         await AsyncStorage.setItem('userToken', userToken);
         await AsyncStorage.setItem('dataUser', dataUser);
       } catch(e) {
-        console.log(e);
+        console.log("aqui2",e);
       }
       // console.log('user token: ', userToken);
       dispatch({ type: 'LOGIN', token: userToken });
@@ -138,7 +139,7 @@ const App = () => {
         await AsyncStorage.removeItem('toUpload_email');
         await AsyncStorage.removeItem('toUpload_service');
       } catch(e) {
-        console.log(e);
+        console.log("aqui3",e);
       }
       dispatch({ type: 'LOGOUT' });
     },
@@ -157,6 +158,10 @@ const App = () => {
       channelName: "Local Channel"
     })
   }
+  const verifyIsUser = async () => {
+    let userToken = await AsyncStorage.getItem('userToken');
+    console.log(userToken);
+  }
   
    // Enable pusher logging - don't include this in production
    Pusher.logToConsole = false;
@@ -173,59 +178,52 @@ const App = () => {
 
    channel1.bind('my-event', function (data)  {
     //  alert(JSON.stringify(data));
-    // var value = JSON.stringify(data);
-    var datas = data ? data : null;
-    if (datas != null) {
+    const {title, message} = data
+    if (data != null) {
        PushNotification.localNotification({
         /* Android Only Properties */
         channelId: "local-channel", 
-        title: datas.split("(//)")[0], // (optional)
-        message: datas.split("(//)")[1], // (required)
+        title: title, // (optional)
+        message: message, // (required)
         playSound: true, // (optional) default: true
         soundName: "default", // (optional) Sound to play when the notification is shown. Value of 'default' plays the default sound. It can be set to a custom sound such as 'android.resource://com.xyz/raw/my_sound'. It will look for the 'my_sound' audio file in 'res/raw' directory and play it. default: 'default' (default sound is played)
         });
     }
    });
    channel2.bind('my-event', function (data)  {
-    //  alert(JSON.stringify(data));
-    // var value = JSON.stringify(data);
-    var datas = data ? data : null;
-    if (datas != null) {
+    const {title, message} = data
+    if (data != null) {
        PushNotification.localNotification({
         /* Android Only Properties */
         channelId: "local-channel", 
-        title: datas.split("(//)")[0], // (optional)
-        message: datas.split("(//)")[1], // (required)
+        title: title, // (optional)
+        message: message, // (required)
         playSound: true, // (optional) default: true
         soundName: "default", // (optional) Sound to play when the notification is shown. Value of 'default' plays the default sound. It can be set to a custom sound such as 'android.resource://com.xyz/raw/my_sound'. It will look for the 'my_sound' audio file in 'res/raw' directory and play it. default: 'default' (default sound is played)
         });
     }
    });
    channel3.bind('my-event', function (data)  {
-    //  alert(JSON.stringify(data));
-    // var value = JSON.stringify(data);
-    var datas = data ? data : null;
-    if (datas != null) {
+    const {title, message} = data
+    if (data != null) {
        PushNotification.localNotification({
         /* Android Only Properties */
         channelId: "local-channel", 
-        title: datas.split("(//)")[0], // (optional)
-        message: datas.split("(//)")[1], // (required)
+        title: title, // (optional)
+        message: message, // (required)
         playSound: true, // (optional) default: true
         soundName: "default", // (optional) Sound to play when the notification is shown. Value of 'default' plays the default sound. It can be set to a custom sound such as 'android.resource://com.xyz/raw/my_sound'. It will look for the 'my_sound' audio file in 'res/raw' directory and play it. default: 'default' (default sound is played)
         });
     }
    });
    channel4.bind('my-event', function (data)  {
-    //  alert(JSON.stringify(data));
-    // var value = JSON.stringify(data);
-    var datas = data ? data : null;
-    if (datas != null) {
+    const {title, message} = data
+    if (data != null) {
        PushNotification.localNotification({
         /* Android Only Properties */
         channelId: "local-channel", 
-        title: datas.split("(//)")[0], // (optional)
-        message: datas.split("(//)")[1], // (required)
+        title: title, // (optional)
+        message: message, // (required)
         playSound: true, // (optional) default: true
         soundName: "default", // (optional) Sound to play when the notification is shown. Value of 'default' plays the default sound. It can be set to a custom sound such as 'android.resource://com.xyz/raw/my_sound'. It will look for the 'my_sound' audio file in 'res/raw' directory and play it. default: 'default' (default sound is played)
         });
@@ -234,6 +232,7 @@ const App = () => {
 
   useEffect(() => {
     createChannels();
+    verifyIsUser()
     setTimeout(async() => {
       // setIsLoading(false);
       let userToken;
@@ -241,7 +240,7 @@ const App = () => {
       try {
         userToken = await AsyncStorage.getItem('userToken');
       } catch(e) {
-        console.log(e);
+        console.log("aqui1",e);
       }
       // console.log('user token: ', userToken);
       dispatch({ type: 'RETRIEVE_TOKEN', token: userToken });

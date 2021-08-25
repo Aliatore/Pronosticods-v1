@@ -10,9 +10,9 @@ import AsyncStorage from '@react-native-community/async-storage';
 import UrlServices from '../../mixins/Services/UrlServices';
 import { Collapse, CollapseHeader, CollapseBody } from "accordion-collapse-react-native";
 import LinearGradient from 'react-native-linear-gradient';
-
+import { AuthContext } from '../../components/context';
 const ForecastsScreen = ({navigation}) => {
-
+  const { signOut, toggleTheme, signIn } = React.useContext(AuthContext);
   const [data, setData] = React.useState({
     client_token: '',
     client_data: '',
@@ -166,6 +166,8 @@ const ForecastsScreen = ({navigation}) => {
                           d_4_c: responseFourCombinadas,
                           d_4_s: responseFourSimples,
                       })
+                    }else if (responses[0].status === 401 || responses[1].status === 401) {
+                      signOut();
                     }else{
                         setVisible(false)
                         setAlert(true)

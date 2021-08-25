@@ -18,7 +18,7 @@ import AwesomeAlert from 'react-native-awesome-alerts';
 import axios from 'axios';
 import NetInfo from "@react-native-community/netinfo";
 import UrlServices from '../../../mixins/Services/UrlServices';
-
+import { AuthContext } from '../../../components/context';
 
 const ForgotPasswordScreen = ({navigation}) => {
 
@@ -27,7 +27,7 @@ const ForgotPasswordScreen = ({navigation}) => {
         password: '',
         error_message: ''
     });
-
+    const { signOut, toggleTheme, signIn } = React.useContext(AuthContext);
     const [visible, setVisible] = React.useState(false);
     const [alert, setAlert] = React.useState(false);
 
@@ -93,6 +93,8 @@ const ForgotPasswordScreen = ({navigation}) => {
                                         email: email,
                                     })
                                     setVisible(false)
+                                }else if (response.status === 401) {
+                                    signOut();
                                 }else{
                                     setVisible(false)
                                     setAlert(true)

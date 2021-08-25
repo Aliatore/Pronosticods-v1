@@ -16,10 +16,10 @@ import AwesomeAlert from 'react-native-awesome-alerts';
 import axios from 'axios';
 import UrlServices from '../../../mixins/Services/UrlServices';
 import LinearGradient from 'react-native-linear-gradient';
-
+import { AuthContext } from '../../../components/context';
 
 const CancelSuscription = ({navigation, route}) => {
-
+    const { signOut, toggleTheme, signIn } = React.useContext(AuthContext);
     const [data, setData] = React.useState({
         plan_id: '',
         u_token: '',
@@ -94,7 +94,9 @@ const CancelSuscription = ({navigation, route}) => {
                         setTimeout(() => {
                             navigation.navigate('EndCancelScreen');
                         }, 3000);
-                    }else{
+                    }else if (response.status === 401) {
+                        signOut();
+                      }else{
                         setVisible(false)
                         setAlert(true)
                         setData({

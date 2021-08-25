@@ -18,7 +18,7 @@ import { Spinner } from 'native-base'
 import AwesomeAlert from 'react-native-awesome-alerts';
 import axios from 'axios';
 import NetInfo from "@react-native-community/netinfo";
-
+import { AuthContext } from '../../../components/context';
 import UrlServices from '../../../mixins/Services/UrlServices';
 
 const ResendEmailScreen = ({navigation, route}) => {
@@ -28,7 +28,7 @@ const ResendEmailScreen = ({navigation, route}) => {
         password: '',
         error_message: ''
     });
-
+    const { signOut, toggleTheme, signIn } = React.useContext(AuthContext);
     const [visible, setVisible] = React.useState(false);
     const [alert, setAlert] = React.useState(false);
 
@@ -81,6 +81,8 @@ const ResendEmailScreen = ({navigation, route}) => {
                                         ...data,
                                         error_message: `Correo reenviado satisfactoriamente.`
                                     })
+                                }else if (response.status === 401) {
+                                    signOut();
                                 }else{
                                     setVisible(false)
                                     setAlert(true)

@@ -18,9 +18,9 @@ import { useTheme } from '@react-navigation/native';
 import AsyncStorage from '@react-native-community/async-storage';
 import Layer from '../../../assets/img/svg/Layer.svg'
 import UrlServices from '../../../mixins/Services/UrlServices';
-
+import { AuthContext } from '../../../components/context';
 const ChangePassword = ({navigation}) => {
-
+    const { signOut, toggleTheme, signIn } = React.useContext(AuthContext);
     const [data, setData] = React.useState({
         client_token: '',
         data_user: null,
@@ -178,7 +178,9 @@ const ChangePassword = ({navigation}) => {
                                                 c_new_p: '',
                                             })
                                             navigation.navigate('ResumePasswordScreen')
-                                        }else{
+                                        }else if (response.status === 401) {
+                                            signOut();
+                                          }else{
                                             console.log(response.data.message);
                                             setVisible(false)
                                             setAlert(true)

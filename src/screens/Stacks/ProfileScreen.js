@@ -11,11 +11,11 @@ import AsyncStorage from '@react-native-community/async-storage';
 import UrlServices from '../../mixins/Services/UrlServices';
 import DefaultUser from '../../assets/img/png/default_user.png';
 import ImgToBase64 from 'react-native-image-base64';
-
+import { AuthContext } from '../../components/context';
 
 
 const ProfileScreen = ({navigation}) => {
-
+    const { signOut, toggleTheme, signIn } = React.useContext(AuthContext);
   const [data, setData] = React.useState({
     client_token: '',
     data_user: [],
@@ -105,7 +105,9 @@ const ProfileScreen = ({navigation}) => {
                                 date_today: dateToday,
                                 home_gambler: filter_casa_apuestas[0].name,
                             })
-                        }else{
+                        }else if (response.status === 401) {
+                            signOut();
+                          }else{
                             let error = response.data.errors
                             let parsed_error = JSON.stringify(error)
                             console.log(parsed_error);
@@ -235,7 +237,9 @@ const createBlob = async (image) => {
                                     ...data,
                                     image_user: image
                                 })
-                            }else{
+                            }else if (response.status === 401) {
+                                signOut();
+                              }else{
                                 setVisible(false)
                                 setAlert(true)
                                 setData({

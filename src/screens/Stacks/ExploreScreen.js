@@ -12,7 +12,7 @@ import { Picker as SelectPicker } from '@react-native-picker/picker';
 import UrlServicesSports from '../../mixins/Services/UrlServicesSports';
 import { Collapse, CollapseHeader, CollapseBody } from "accordion-collapse-react-native";
 import { Thumbnail } from 'native-base';
-
+import { AuthContext } from '../../components/context';
 const ExploreScreen = ({navigation}) => {
 
   const [data, setData] = React.useState({
@@ -31,7 +31,7 @@ const ExploreScreen = ({navigation}) => {
   });
 
   const [deporte, setDesportes] = useState();
-
+  const { signOut, toggleTheme, signIn } = React.useContext(AuthContext);
   const theme = useTheme();
   const [expanded, setExpanded] = React.useState(true);
   const handlePress = () => setExpanded(!expanded);
@@ -181,7 +181,9 @@ const ExploreScreen = ({navigation}) => {
                             is_visible: false,
                             error_message: `No hay juegos disponibles`
                         })
-                      }else{
+                      }else if (response.status === 401) {
+                        signOut();
+                    }else{
                         const newDirectory = Object.values(response.data.events.reduce((acc, item) => {
                           if (!acc[item.idLeague]) acc[item.idLeague] = {
                               id: item.idLeague,

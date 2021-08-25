@@ -14,8 +14,9 @@ import UrlServices from '../../mixins/Services/UrlServices';
 import Carousel, { Pagination } from 'react-native-snap-carousel';
 import { useNavigation } from '@react-navigation/native';
 import Dots from 'react-native-dots-pagination';
-
+import { AuthContext } from '../../components/context';
 const PlansScreen = () => {
+  const { signOut, toggleTheme, signIn } = React.useContext(AuthContext);
   const [data, setData] = React.useState({
     client_token: '',
     client_data: null,
@@ -109,6 +110,8 @@ const PlansScreen = () => {
                                 client_token: token_user,
                                 client_data: userdata
                             })
+                        }else if (response.status === 401) {
+                          signOut();
                         }else{
                             let error = response.data.errors
                             let parsed_error = JSON.stringify(error)

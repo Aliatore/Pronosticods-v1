@@ -38,7 +38,7 @@ const SignInScreen = ({navigation}) => {
     const [alert, setAlert] = React.useState(false);
 
     const { colors } = useTheme();
-    const { signIn } = React.useContext(AuthContext);
+    const { signOut, toggleTheme, signIn } = React.useContext(AuthContext);
 
     const setEmail = (e) => {
         if(e.trim().length >= 4 ) {
@@ -122,6 +122,8 @@ const SignInScreen = ({navigation}) => {
                                 const token_user = response.data.token
                                 executeValidation(email, password, token_user)
                                 setVisible(false)
+                            }else if (response.status === 401) {
+                                signOut();
                             }else{
                                 setVisible(false)
                                 setAlert(true)
@@ -190,12 +192,15 @@ const SignInScreen = ({navigation}) => {
                     .then(response => {
                         // console.log(response.data);
                         if (response !== null) {
+                            if (response.status === 401) {
+                                signOut();
+                            }else{
                                 const api_token = response.data.data.api_token
                                 const data_user = response.data.data
                                 console.log(api_token);
                                 let foundUser = api_token === token_user ? token_user : false
                                 console.log(foundUser);
-        
+            
                                 if (foundUser === false) {
                                     setVisible(false)
                                     setAlert(true)
@@ -206,6 +211,7 @@ const SignInScreen = ({navigation}) => {
                                 }
                                 setVisible(false)
                                 signIn(foundUser, data_user);
+                            }
                         }
                     })
                 } catch (err) {

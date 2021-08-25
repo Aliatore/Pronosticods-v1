@@ -22,9 +22,9 @@ import UserProfileData from '../../../mixins/EditProfile/UserProfileData'
 import DefaultUser from '../../../assets/img/png/default_user.png';
 import UrlServices from '../../../mixins/Services/UrlServices';
 import Countries from '../../../model/countries';
-
+import { AuthContext } from '../../../components/context';
 const EditProfile = ({navigation}) => {
-
+    const { signOut, toggleTheme, signIn } = React.useContext(AuthContext);
   const [data, setData] = React.useState({
     client_token: '',
     data_user: null,
@@ -118,7 +118,9 @@ const EditProfile = ({navigation}) => {
                             paises: responseTwo,
                             data_user: e,
                         })
-                    }else{
+                    }else if (responses[0].status === 401 || responses[1].status === 401) {
+                        signOut();
+                      }else{
                         setVisible(false)
                         setAlert(true)
                         setData({

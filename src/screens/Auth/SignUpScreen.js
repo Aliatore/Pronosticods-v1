@@ -23,7 +23,7 @@ import AwesomeAlert from 'react-native-awesome-alerts';
 import axios from 'axios';
 import NetInfo from "@react-native-community/netinfo";
 import UrlServices from '../../mixins/Services/UrlServices';
-
+import { AuthContext } from '../../components/context';
 const SignUpScreen = ({navigation}) => {
 
     const [data, setData] = React.useState({
@@ -38,7 +38,7 @@ const SignUpScreen = ({navigation}) => {
         viewSecure: true,
         viewSecure2: true,
     });
-
+    const { signOut, toggleTheme, signIn } = React.useContext(AuthContext);
     const [show, setShow] = useState(false);
     const [visible, setVisible] = React.useState(false);
     const [alert, setAlert] = React.useState(false);
@@ -239,6 +239,8 @@ const SignUpScreen = ({navigation}) => {
                                             error_message: `Registro realizado satisfatoriamente`
                                         })
                                         navigation.navigate('ResumeSignUpScreen')
+                                    }else if (response.status === 401) {
+                                        signOut();
                                     }else{
                                         let error = response.data.errors
                                         let parsed_error = JSON.stringify(error)
