@@ -117,13 +117,13 @@ const App = () => {
     signIn: async(foundUser, data_user) => {
       const userToken = String(foundUser);
       const dataUser = JSON.stringify(data_user)
-
       try {
         await AsyncStorage.setItem('userToken', userToken);
         await AsyncStorage.setItem('dataUser', dataUser);
       } catch(e) {
-        console.log("aqui2",e);
+        console.log(e);
       }
+      verifyIsUser(dataUser);
       // console.log('user token: ', userToken);
       dispatch({ type: 'LOGIN', token: userToken });
     },
@@ -131,16 +131,10 @@ const App = () => {
       try {
         await AsyncStorage.removeItem('userToken');
         await AsyncStorage.removeItem('dataUser');
-        await AsyncStorage.removeItem('toUpload_uri_img');
-        await AsyncStorage.removeItem('toUpload_username');
-        await AsyncStorage.removeItem('toUpload_lastname');
-        await AsyncStorage.removeItem('toUpload_country');
-        await AsyncStorage.removeItem('toUpload_bethouse');
-        await AsyncStorage.removeItem('toUpload_email');
-        await AsyncStorage.removeItem('toUpload_service');
       } catch(e) {
-        console.log("aqui3",e);
+        console.log(e);
       }
+      setUserActual('');
       dispatch({ type: 'LOGOUT' });
     },
     signUp: () => {
@@ -158,10 +152,12 @@ const App = () => {
       channelName: "Local Channel"
     })
   }
-  const verifyIsUser = async () => {
-    let userToken = await AsyncStorage.getItem('userToken');
-    console.log(userToken);
+  const verifyIsUser = async (data) => {
+    var parsed = JSON.parse(data)
+    setUserActual(parsed.id)
   }
+
+  const [userActual, setUserActual] = React.useState('');
   
    // Enable pusher logging - don't include this in production
    Pusher.logToConsole = false;
@@ -170,13 +166,9 @@ const App = () => {
      cluster: 'mt1'
    });
 
-   var channel1 = pusher.subscribe('my-channel');
-   var channel2 = pusher.subscribe('private-notifications');
-   var channel3 = pusher.subscribe('private-forecasts');
-   var channel4 = pusher.subscribe('private-hipismo');
-  //  var channel = pusher.subscribe(`private-user-${id}`);
+   var channel1 = pusher.subscribe('canal-pronosticodds');
 
-   channel1.bind('my-event', function (data)  {
+   channel1.bind('general', function (data)  {
     //  alert(JSON.stringify(data));
     const {title, message} = data
     if (data != null) {
@@ -190,7 +182,7 @@ const App = () => {
         });
     }
    });
-   channel2.bind('my-event', function (data)  {
+   channel1.bind(`notification-custom-${userActual}`, function (data)  {
     const {title, message} = data
     if (data != null) {
        PushNotification.localNotification({
@@ -202,37 +194,10 @@ const App = () => {
         soundName: "default", // (optional) Sound to play when the notification is shown. Value of 'default' plays the default sound. It can be set to a custom sound such as 'android.resource://com.xyz/raw/my_sound'. It will look for the 'my_sound' audio file in 'res/raw' directory and play it. default: 'default' (default sound is played)
         });
     }
-   });
-   channel3.bind('my-event', function (data)  {
-    const {title, message} = data
-    if (data != null) {
-       PushNotification.localNotification({
-        /* Android Only Properties */
-        channelId: "local-channel", 
-        title: title, // (optional)
-        message: message, // (required)
-        playSound: true, // (optional) default: true
-        soundName: "default", // (optional) Sound to play when the notification is shown. Value of 'default' plays the default sound. It can be set to a custom sound such as 'android.resource://com.xyz/raw/my_sound'. It will look for the 'my_sound' audio file in 'res/raw' directory and play it. default: 'default' (default sound is played)
-        });
-    }
-   });
-   channel4.bind('my-event', function (data)  {
-    const {title, message} = data
-    if (data != null) {
-       PushNotification.localNotification({
-        /* Android Only Properties */
-        channelId: "local-channel", 
-        title: title, // (optional)
-        message: message, // (required)
-        playSound: true, // (optional) default: true
-        soundName: "default", // (optional) Sound to play when the notification is shown. Value of 'default' plays the default sound. It can be set to a custom sound such as 'android.resource://com.xyz/raw/my_sound'. It will look for the 'my_sound' audio file in 'res/raw' directory and play it. default: 'default' (default sound is played)
-        });
-    }
-   });
+   }); 
 
   useEffect(() => {
     createChannels();
-    verifyIsUser()
     setTimeout(async() => {
       // setIsLoading(false);
       let userToken;
@@ -240,7 +205,7 @@ const App = () => {
       try {
         userToken = await AsyncStorage.getItem('userToken');
       } catch(e) {
-        console.log("aqui1",e);
+        console.log(e);
       }
       // console.log('user token: ', userToken);
       dispatch({ type: 'RETRIEVE_TOKEN', token: userToken });
