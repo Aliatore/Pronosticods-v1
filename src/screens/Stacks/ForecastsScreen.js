@@ -130,22 +130,43 @@ const ForecastsScreen = ({navigation}) => {
                 })
             } else {
                 axios.all([requestOne, requestTwo, requestThree, requestFour]).then(axios.spread((...responses) => {
-                    const responseOneCombinadas = responses[0].data.data.combinadas;
-                    const responseOneSimples = responses[0].data.data.simples;
-                    const responseTwo = responses[1].data.data;
-                    const responseThreeCombinadas = responses[2].data.data.combinadas;
-                    const responseThreeSimples = responses[2].data.data.simples;
-                    const responseFourCombinadas = responses[3].data.data.combinadas;
-                    const responseFourSimples = responses[3].data.data.simples;
-
-                    console.log("general r1c",responseOneCombinadas);
-                    console.log("general r1s",responseOneSimples);
-                    console.log("hipismo r2",responseTwo);
-                    console.log("special r3c",responseThreeCombinadas);
-                    console.log("special r3s",responseThreeSimples);
-                    console.log("trial r4c",responseFourCombinadas);
-                    console.log("trial r4s",responseFourSimples);
-                    
+                  let responseOneCombinadas = [];
+                  let responseOneSimples = [];
+                  let responseTwo = [];
+                  let responseThreeCombinadas = [];
+                  let responseThreeSimples = [];
+                  let responseFourCombinadas = [];
+                  let responseFourSimples   = [];
+                  if (!(responses[0].data.data == undefined || responses[0].data.data == null || responses[0].data.data == '') ) {
+                    if (responses[0].data.data.hasOwnProperty('combinadas')) {
+                      responseOneCombinadas = responses[0].data.data.combinadas;  
+                    }
+                    if (responses[0].data.data.hasOwnProperty('simples')) {  
+                      responseOneSimples = responses[0].data.data.simples;
+                    }
+                  }
+                  if (!(responses[1].data.data == undefined || responses[1].data.data == null || responses[1].data.data == '') ) {
+                    if (responses[1].data.hasOwnProperty('data')) {  
+                      responseTwo = responses[1].data.data;
+                    }
+                  }
+                  if (!(responses[2].data.data == undefined || responses[2].data.data == null || responses[2].data.data == '') ) {
+                    if (responses[2].data.data.hasOwnProperty('combinadas')) {
+                      responseThreeCombinadas = responses[2].data.data.combinadas;
+                    }
+                    if (responses[2].data.data.hasOwnProperty('simples')) {  
+                      responseThreeSimples = responses[2].data.data.simples;
+                    }
+                  }
+                  if (!(responses[3].data.data == undefined || responses[3].data.data == null || responses[3].data.data == '') ) {
+                    if (responses[3].data.data.hasOwnProperty('combinadas')) {
+                      responseFourCombinadas = responses[3].data.data.combinadas;
+                    }
+                    if (responses[3].data.data.hasOwnProperty('simples')) {  
+                      responseFourSimples = responses[3].data.data.simples;
+                    }
+                  }
+                  console.log(responseThreeCombinadas);
                     if (responses[0].status === 200 || responses[0].status === 201 && responses[1].status === 200 || responses[1].status === 201) {
                         setVisible(false)
                         var date_end = data_user.trial_ends_at.split('T')[0];
@@ -195,12 +216,6 @@ const ForecastsScreen = ({navigation}) => {
         }
     }); 
   }
-
-//   const scrollCall = ({layoutMeasurement, contentOffset, contentSize}) => {
-//     const paddingToBottom = 1;
-//     return layoutMeasurement.height + contentOffset.y >= contentSize.height - paddingToBottom;
-//   }
-
   //this hook calls the token function
   useEffect(() => {
     obtainToken()
@@ -299,7 +314,7 @@ const ForecastsScreen = ({navigation}) => {
                                               <Text style={styles.text_forecast2}>{e.team1.name} - {e.team2.name}</Text>
                                               <Text numberOfLines={1} style={styles.text_forecast3}>{e.competition_name}</Text>
                                               <Text numberOfLines={1} style={styles.text_forecast4}>{e.forecast_type.name}</Text>
-                                              <Text numberOfLines={1} style={styles.text_forecast5}>{e.casa_apuesta_name} / 4.2</Text>
+                                              <Text numberOfLines={1} style={styles.text_forecast5}>{e.casa_apuesta_name} </Text>
                                               <Text style={styles.text_forecast6}>Cuota {e.cuota_decimal} / Stake {e.stake}</Text>
                                               <Text numberOfLines={1} style={[styles.text_forecast7, {marginTop: 20}]}>Análisis</Text>
                                               <Text style={styles.text_forecast8}>{e.extra}</Text>
@@ -318,11 +333,19 @@ const ForecastsScreen = ({navigation}) => {
                     data.d_1_c.map((e, i) => { 
                           return <View key={i} style={{flex: 1}}>
                                     <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-                                      <Text  style={styles.top_text}>Plan General - Combinadas</Text>
+                                      <Text  style={styles.top_text}>Plan General</Text>
                                     </View>
-                                      {e.childs.map((e, i) => {  
-                                        return <Card key={i} style={[styles.card, {marginTop: 20}]}>
-                                                <Card.Content>
+                                    <Collapse onToggle={(evt) => setButton(evt)}>
+                                      <CollapseHeader  style={styles.colapse_header2}>
+                                        <View style={styles.container_tab}>
+                                          <View style={{position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, justifyContent: 'center', alignItems: 'center'}}>
+                                            <Text style={styles.textCard}>COMBINADAS {i + 1}</Text>
+                                          </View>
+                                        </View>
+                                      </CollapseHeader>
+                                      <CollapseBody style={styles.colapsed_body}>
+                                      {e.childs.map((e, i) => {
+                                        return  <View key={i} style={styles.container_riders}>
                                                   <View style={styles.colapsed_body}>
                                                     <View style={styles.container_body}>
                                                       <View style={{width:'100%'}}>
@@ -331,17 +354,33 @@ const ForecastsScreen = ({navigation}) => {
                                                           <Text style={styles.text_forecast2}>{e.team1.name} - {e.team2.name}</Text>
                                                           <Text numberOfLines={1} style={styles.text_forecast3}>{e.competition_name}</Text>
                                                           <Text numberOfLines={1} style={styles.text_forecast4}>{e.forecast_type.name}</Text>
-                                                          <Text numberOfLines={1} style={styles.text_forecast5}>{e.casa_apuesta_name} / 4.2</Text>
+                                                          <Text numberOfLines={1} style={styles.text_forecast5}>{e.casa_apuesta_name} </Text>
                                                           <Text style={styles.text_forecast6}>Cuota {e.cuota_decimal} / Stake {e.stake}</Text>
-                                                          <Text numberOfLines={1} style={[styles.text_forecast7, {marginTop: 20}]}>Análisis</Text>
-                                                          <Text style={styles.text_forecast8}>{e.extra}</Text>
+                                                          {e.extra !== null ? 
+                                                            (
+                                                              <>
+                                                                <Text numberOfLines={1} style={[styles.text_forecast7, {marginTop: 20}]}>Análisis</Text>
+                                                                <Text style={styles.text_forecast8}>{e.extra}</Text>
+                                                              </>
+                                                            )
+                                                            :
+                                                            null
+                                                          }
+                                                          
                                                         </View>
                                                       </View>
                                                     </View>
                                                   </View>
-                                                  </Card.Content>
-                                              </Card>
+                                                  <View
+                                                    style={{
+                                                      borderBottomColor: '#fff',
+                                                      borderBottomWidth: 1,
+                                                    }}
+                                                  />
+                                                </View>
                                       })}
+                                      </CollapseBody>
+                                    </Collapse>
                                   </View>
                 })}
                 {data.d_3_s.length == 0 ? null :
@@ -360,7 +399,7 @@ const ForecastsScreen = ({navigation}) => {
                                             <Text style={styles.text_forecast2}>{e.team1.name} - {e.team2.name}</Text>
                                             <Text numberOfLines={1} style={styles.text_forecast3}>{e.competition_name}</Text>
                                             <Text numberOfLines={1} style={styles.text_forecast4}>{e.forecast_type.name}</Text>
-                                            <Text numberOfLines={1} style={styles.text_forecast5}>{e.casa_apuesta_name} / 4.2</Text>
+                                            <Text numberOfLines={1} style={styles.text_forecast5}>{e.casa_apuesta_name} </Text>
                                             <Text style={styles.text_forecast6}>Cuota {e.cuota_decimal} / Stake {e.stake}</Text>
                                             <Text numberOfLines={1} style={[styles.text_forecast7, {marginTop: 20}]}>Análisis</Text>
                                             <Text style={styles.text_forecast8}>{e.extra}</Text>
@@ -377,33 +416,57 @@ const ForecastsScreen = ({navigation}) => {
                 })}
                 {data.d_3_c.length == 0 ? null :
                     data.d_3_c.map((e, i) => { 
-                        return <View key={i} style={{flex: 1}}>
-                                  <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-                                    <Text  style={styles.top_text}>Plan Sports - Combinadas</Text>
-                                  </View>
-                                    {e.childs.map((e, i) => {  
-                                      return <Card key={i} style={[styles.card, {marginTop: 20}]}>
-                                              <Card.Content>
-                                                <View style={styles.colapsed_body}>
-                                                  <View style={styles.container_body}>
-                                                    <View style={{width:'100%'}}>
-                                                      <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-                                                        <Text style={styles.text_forecast1}>{e.competition_name}</Text>
-                                                        <Text style={styles.text_forecast2}>{e.team1.name} - {e.team2.name}</Text>
-                                                        <Text numberOfLines={1} style={styles.text_forecast3}>{e.competition_name}</Text>
-                                                        <Text numberOfLines={1} style={styles.text_forecast4}>{e.forecast_type.name}</Text>
-                                                        <Text numberOfLines={1} style={styles.text_forecast5}>{e.casa_apuesta_name} / 4.2</Text>
-                                                        <Text style={styles.text_forecast6}>Cuota {e.cuota_decimal} / Stake {e.stake}</Text>
-                                                        <Text numberOfLines={1} style={[styles.text_forecast7, {marginTop: 20}]}>Análisis</Text>
-                                                        <Text style={styles.text_forecast8}>{e.extra}</Text>
+                      return <View key={i} style={{flex: 1}}>
+                                    <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+                                      <Text  style={styles.top_text}>Plan General</Text>
+                                    </View>
+                                    <Collapse onToggle={(evt) => setButton(evt)}>
+                                      <CollapseHeader  style={styles.colapse_header2}>
+                                        <View style={styles.container_tab}>
+                                          <View style={{position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, justifyContent: 'center', alignItems: 'center'}}>
+                                            <Text style={styles.textCard}>COMBINADAS {i + 1}</Text>
+                                          </View>
+                                        </View>
+                                      </CollapseHeader>
+                                      <CollapseBody style={styles.colapsed_body}>
+                                      {e.childs.map((e, i) => {
+                                        return  <View key={i} style={styles.container_riders}>
+                                                  <View style={styles.colapsed_body}>
+                                                    <View style={styles.container_body}>
+                                                      <View style={{width:'100%'}}>
+                                                        <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+                                                          <Text style={styles.text_forecast1}>{e.competition_name}</Text>
+                                                          <Text style={styles.text_forecast2}>{e.team1.name} - {e.team2.name}</Text>
+                                                          <Text numberOfLines={1} style={styles.text_forecast3}>{e.competition_name}</Text>
+                                                          <Text numberOfLines={1} style={styles.text_forecast4}>{e.forecast_type.name}</Text>
+                                                          <Text numberOfLines={1} style={styles.text_forecast5}>{e.casa_apuesta_name} </Text>
+                                                          <Text style={styles.text_forecast6}>Cuota {e.cuota_decimal} / Stake {e.stake}</Text>
+                                                          {e.extra !== null ? 
+                                                            (
+                                                              <>
+                                                                <Text numberOfLines={1} style={[styles.text_forecast7, {marginTop: 20}]}>Análisis</Text>
+                                                                <Text style={styles.text_forecast8}>{e.extra}</Text>
+                                                              </>
+                                                            )
+                                                            :
+                                                            null
+                                                          }
+                                                          
+                                                        </View>
                                                       </View>
                                                     </View>
                                                   </View>
+                                                  <View
+                                                    style={{
+                                                      borderBottomColor: '#fff',
+                                                      borderBottomWidth: 1,
+                                                    }}
+                                                  />
                                                 </View>
-                                                </Card.Content>
-                                            </Card>
-                                    })}
-                                </View>
+                                      })}
+                                      </CollapseBody>
+                                    </Collapse>
+                                  </View>
                 })}
                 {data.d_2.length == 0 ? null :
                     data.d_2.map((e, i) => { 
@@ -411,9 +474,13 @@ const ForecastsScreen = ({navigation}) => {
                                   <Text  style={[styles.top_text_hipismo, {marginTop: 20}]}>Plan Riders</Text>
                                     <Collapse onToggle={(evt) => setButton(evt)}>
                                       <CollapseHeader  style={styles.colapse_header}>
-                                        <ImageBackground source={require('../../assets/img/jpg/Hipismo.jpg')} style={styles.image}>
-                                            <Text style={[styles.image ,{color:'#fff'}]}>{e.name}</Text>
-                                        </ImageBackground>
+                                      <ImageBackground source={require('../../assets/img/jpg/Hipismo.jpg')} style={{width: '100%', height: '100%'}}>
+                                      <View style={{width: '100%', height: '100%', backgroundColor: '#262222', opacity: .5}}>
+                                        <View style={{position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, justifyContent: 'center', alignItems: 'center', opacity: .9}}>
+                                          <Text style={styles.textCard}>{e.name}s</Text>
+                                        </View>
+                                      </View>
+                                      </ImageBackground>
                                       </CollapseHeader>
                                       <CollapseBody style={styles.colapsed_body}>
                                       {e.forecasts.map((e, i) => {
@@ -446,7 +513,7 @@ const ForecastsScreen = ({navigation}) => {
                                             <Text style={styles.text_forecast2}>{e.team1.name} - {e.team2.name}</Text>
                                             <Text numberOfLines={1} style={styles.text_forecast3}>{e.competition_name}</Text>
                                             <Text numberOfLines={1} style={styles.text_forecast4}>{e.forecast_type.name}</Text>
-                                            <Text numberOfLines={1} style={styles.text_forecast5}>{e.casa_apuesta_name} / 4.2</Text>
+                                            <Text numberOfLines={1} style={styles.text_forecast5}>{e.casa_apuesta_name} </Text>
                                             <Text style={styles.text_forecast6}>Cuota {e.cuota_decimal} / Stake {e.stake}</Text>
                                             <Text numberOfLines={1} style={[styles.text_forecast7, {marginTop: 20}]}>Análisis</Text>
                                             <Text style={styles.text_forecast8}>{e.extra}</Text>
@@ -463,33 +530,57 @@ const ForecastsScreen = ({navigation}) => {
                 })}
                 {data.d_4_c.length == 0 ? null :                    
                     data.d_4_c.map((e, i) => { 
-                        return <View key={i} style={{flex: 1}}>
-                                  <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-                                    <Text  style={styles.top_text}>Plan Trial - Combinadas</Text>
-                                  </View>
-                                    {e.childs.map((e, i) => {  
-                                      return <Card key={i} style={[styles.card, {marginTop: 20}]}>
-                                              <Card.Content>
-                                                <View style={styles.colapsed_body}>
-                                                  <View style={styles.container_body}>
-                                                    <View style={{width:'100%'}}>
-                                                      <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-                                                        <Text style={styles.text_forecast1}>{e.competition_name}</Text>
-                                                        <Text style={styles.text_forecast2}>{e.team1.name} - {e.team2.name}</Text>
-                                                        <Text numberOfLines={1} style={styles.text_forecast3}>{e.competition_name}</Text>
-                                                        <Text numberOfLines={1} style={styles.text_forecast4}>{e.forecast_type.name}</Text>
-                                                        <Text numberOfLines={1} style={styles.text_forecast5}>{e.casa_apuesta_name} / 4.2</Text>
-                                                        <Text style={styles.text_forecast6}>Cuota {e.cuota_decimal} / Stake {e.stake}</Text>
-                                                        <Text numberOfLines={1} style={[styles.text_forecast7, {marginTop: 20}]}>Análisis</Text>
-                                                        <Text style={styles.text_forecast8}>{e.extra}</Text>
+                      return <View key={i} style={{flex: 1}}>
+                                    <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+                                      <Text  style={styles.top_text}>Plan General</Text>
+                                    </View>
+                                    <Collapse onToggle={(evt) => setButton(evt)}>
+                                      <CollapseHeader  style={styles.colapse_header2}>
+                                        <View style={styles.container_tab}>
+                                          <View style={{position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, justifyContent: 'center', alignItems: 'center'}}>
+                                            <Text style={styles.textCard}>COMBINADAS {i + 1}</Text>
+                                          </View>
+                                        </View>
+                                      </CollapseHeader>
+                                      <CollapseBody style={styles.colapsed_body}>
+                                      {e.childs.map((e, i) => {
+                                        return  <View key={i} style={styles.container_riders}>
+                                                  <View style={styles.colapsed_body}>
+                                                    <View style={styles.container_body}>
+                                                      <View style={{width:'100%'}}>
+                                                        <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+                                                          <Text style={styles.text_forecast1}>{e.competition_name}</Text>
+                                                          <Text style={styles.text_forecast2}>{e.team1.name} - {e.team2.name}</Text>
+                                                          <Text numberOfLines={1} style={styles.text_forecast3}>{e.competition_name}</Text>
+                                                          <Text numberOfLines={1} style={styles.text_forecast4}>{e.forecast_type.name}</Text>
+                                                          <Text numberOfLines={1} style={styles.text_forecast5}>{e.casa_apuesta_name} </Text>
+                                                          <Text style={styles.text_forecast6}>Cuota {e.cuota_decimal} / Stake {e.stake}</Text>
+                                                          {e.extra !== null ? 
+                                                            (
+                                                              <>
+                                                                <Text numberOfLines={1} style={[styles.text_forecast7, {marginTop: 20}]}>Análisis</Text>
+                                                                <Text style={styles.text_forecast8}>{e.extra}</Text>
+                                                              </>
+                                                            )
+                                                            :
+                                                            null
+                                                          }
+                                                          
+                                                        </View>
                                                       </View>
                                                     </View>
                                                   </View>
+                                                  <View
+                                                    style={{
+                                                      borderBottomColor: '#fff',
+                                                      borderBottomWidth: 1,
+                                                    }}
+                                                  />
                                                 </View>
-                                                </Card.Content>
-                                            </Card>
-                                    })}
-                                </View>
+                                      })}
+                                      </CollapseBody>
+                                    </Collapse>
+                                  </View>
                 })}
               </>
              }
@@ -723,6 +814,21 @@ const styles = StyleSheet.create({
   red_text: {
     color: 'red'
   },
+  textCard:{
+    color: '#fff',
+    fontFamily: 'Montserrat-Medium',
+    fontSize: 19
+  },
+  colapse_header2: {
+    flexDirection:'row',
+    alignItems:'center',
+    margin:10,
+    backgroundColor:'#01CD01',
+    borderRadius: 20, 
+    justifyContent: 'center', 
+    height: 150,
+    zIndex: 1
+  },
   colapse_header: {
     flexDirection:'row',
     alignItems:'center',
@@ -731,6 +837,15 @@ const styles = StyleSheet.create({
     borderRadius: 20, 
     justifyContent: 'center', 
     height: 150,
+    zIndex: 1
+  },
+  container_tab:{
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: '100%',
+    height: '100%',
+    borderRadius: 30, 
+    zIndex: 2  
   },
   image: {
     justifyContent: 'center',
