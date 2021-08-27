@@ -346,7 +346,7 @@ const ExploreScreen = ({navigation}) => {
             {data.is_visible === false && data.data_pronosticos === null || data.data_pronosticos === undefined || data.data_pronosticos === "" ? 
               (
                 <View style={{justifyContent: 'center', alignItems: 'center'}}>
-                  <Text  style={styles.top_text}>No hay fechas disponibles</Text>
+                  <Text  style={styles.top_text}>Por favor elegir un deporte</Text>
                 </View>
               )
               :

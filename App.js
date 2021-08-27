@@ -134,7 +134,7 @@ const App = () => {
       } catch(e) {
         console.log(e);
       }
-      setUserActual('');
+      setUserActual(null);
       dispatch({ type: 'LOGOUT' });
     },
     signUp: () => {
@@ -155,9 +155,10 @@ const App = () => {
   const verifyIsUser = async (data) => {
     var parsed = JSON.parse(data)
     setUserActual(parsed.id)
+    console.log("id-user",parsed.id);
   }
 
-  const [userActual, setUserActual] = React.useState('');
+  const [userActual, setUserActual] = React.useState(null);
   
    // Enable pusher logging - don't include this in production
    Pusher.logToConsole = false;
@@ -169,7 +170,7 @@ const App = () => {
    var channel1 = pusher.subscribe('canal-pronosticodds');
 
    channel1.bind('general', function (data)  {
-    //  alert(JSON.stringify(data));
+     channel1.unbind_all();
     const {title, message} = data
     if (data != null) {
        PushNotification.localNotification({
@@ -183,6 +184,7 @@ const App = () => {
     }
    });
    channel1.bind(`notification-custom-${userActual}`, function (data)  {
+    channel1.unbind_all();
     const {title, message} = data
     if (data != null) {
        PushNotification.localNotification({
@@ -195,6 +197,8 @@ const App = () => {
         });
     }
    }); 
+  
+   
 
   useEffect(() => {
     createChannels();
