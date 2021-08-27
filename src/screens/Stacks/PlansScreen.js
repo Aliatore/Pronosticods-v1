@@ -296,14 +296,6 @@ const PlansScreen = () => {
       return (
         <>
           <View style={{backgroundColor:'#303030', flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-            {/* <View style={styles.top}>
-              <Text style={styles.title_text}>Planes de suscripción</Text>
-              <Text style={styles.title_text2}>PLAN ACTIVO</Text>
-              <View style={styles.banner_suscription}>
-                  <Text style={[styles.text_suscription, {textTransform: 'uppercase'}]}>{data.client_data.subscriptions[0].name}</Text>
-              </View>
-              <Text style={[styles.title_text, {marginTop: 25, marginBottom: 10}]}>SUGERENCIAS</Text>
-            </View> */}
             <>
             {data.client_data != null && data.client_data != undefined ? 
               (
@@ -402,13 +394,13 @@ const PlansScreen = () => {
       return (
         <>
           <View style={{backgroundColor:'#303030', flex: 1}}>
+            <ScrollView>
             <View style={styles.top}>
               <Text style={styles.title_text}>Planes de suscripción</Text>
               <Text style={styles.title_text2}>NINGUNO</Text>
               <Text style={styles.title_text3}>SUGERENCIAS</Text>
             </View>
-            <View style={styles.bot_2}>
-              <ScrollView>
+            <View style={[styles.bot_2, {marginTop: 20}]}>
                 <View style={{marginTop: 20}}>
                     {data.data_plans != null ? 
                       (
@@ -421,9 +413,9 @@ const PlansScreen = () => {
                             itemWidth={300}
                             onSnapToItem={onSnapToItem}
                           /> 
-                          <Pagination
+                           <Pagination
                             activeDotIndex={data.currentIndex}
-                            dotsLength={data.client_data.plan_id.length}
+                            dotsLength={data.data_plans.length}
                             renderDots={renderPagination}
                             containerStyle={{ backgroundColor: '#303030' }}
                             dotStyle={{
@@ -452,8 +444,8 @@ const PlansScreen = () => {
                       )
                     }
                 </View>
-              </ScrollView>
             </View>
+          </ScrollView>
           </View>
           <View>
             <Portal>

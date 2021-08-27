@@ -524,7 +524,7 @@ const ForecastsScreen = ({navigation}) => {
                 {data.d_4_s.length == 0 ? null :
                   <>
                     <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-                      <Text  style={styles.top_text}>Plan General - Simples</Text>
+                      <Text  style={styles.top_text}>La jugada del día - Simples</Text>
                     </View>
                     {
                       data.d_4_s.map((e, i) => { 
@@ -558,7 +558,7 @@ const ForecastsScreen = ({navigation}) => {
                 {data.d_4_c.length == 0 ? null :                    
                   <>
                     <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-                      <Text  style={styles.top_text}>Plan General - Combinadas</Text>
+                      <Text  style={styles.top_text}>La jugada del día - Combinadas</Text>
                     </View>
                     {
                       data.d_4_c.map((e, i) => { 
